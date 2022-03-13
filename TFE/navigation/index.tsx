@@ -12,12 +12,17 @@ import LinkingConfiguration from './LinkingConfiguration';
 
 import ChatRoomScreen from '../screens/ChatRoomScreen';
 import HomeScreen from '../screens/HomeScreen';
+import AuthScreen from '../screens/AuthScreen';
+import SignIn from '../screens/Auth/SignInScreen';
+import SignUp from '../screens/Auth/SignUpScreen';
+import ForgotPassword from '../screens/Auth/ForgotPasswordScreen';
+import ResetPassword from '../screens/Auth/ResetPasswordScreen';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
-      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      theme={colorScheme === 'dark' ?  DefaultTheme : DarkTheme}>
       <RootNavigator />
     </NavigationContainer>
   );
@@ -32,20 +37,44 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 function RootNavigator() {
   return (
     <Stack.Navigator>
-      <Stack.Screen 
-        name="Home" 
-        component={HomeScreen} 
-        options={{ headerTitle: HomeHeader }} 
-      />
-      <Stack.Screen 
-        name="ChatRoom" 
-        component={ChatRoomScreen}         
-        options={{ 
-          headerTitle: ChatRoomHeader, 
-          headerBackTitleVisible: false,
-        }} 
-      />
+      <Stack.Group>
+        <Stack.Screen 
+          name="SignIn" 
+          component={SignIn} 
+        />
+        <Stack.Screen 
+          name="SignUp" 
+          component={SignUp} 
+        />
+        <Stack.Screen 
+          name="ForgotPassword" 
+          component={ForgotPassword} 
+        />
+        <Stack.Screen 
+          name="ResetPassword" 
+          component={ResetPassword} 
+        />
+      </Stack.Group>
+      <Stack.Group>
+        <Stack.Screen 
+          name="Home" 
+          component={HomeScreen} 
+          options={{ headerTitle: HomeHeader }} 
+        />
+        <Stack.Screen 
+          name="ChatRoom" 
+          component={ChatRoomScreen}         
+          options={{ 
+            headerTitle: ChatRoomHeader, 
+            headerBackTitleVisible: false,
+          }} 
+        />
+      </Stack.Group>
+      
+      
+      
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
+      
     </Stack.Navigator>
   );
 }
