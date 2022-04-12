@@ -8,7 +8,15 @@ module.exports = (sequelize, Sequelize) => {
       },
       content: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
+      },
+      image: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      audio: {
+        type: Sequelize.STRING,
+        allowNull: true,
       }
     });
     return Message;

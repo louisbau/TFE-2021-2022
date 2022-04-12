@@ -1,3 +1,4 @@
+const bcrypt = require("bcrypt");
 module.exports = (sequelize, Sequelize) => {
     const User = sequelize.define("User", {
       id: {
@@ -32,9 +33,5 @@ module.exports = (sequelize, Sequelize) => {
       User.hasMany(models.ChatRoomUser);
       
     };
-
-  
-
-  
     return User;
 };

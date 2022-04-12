@@ -5,6 +5,10 @@ module.exports = (sequelize, Sequelize) => {
         autoIncrement: true,
         allowNull: false,
         primaryKey: true,
+      },
+      newMessages: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
       }
     });
 

@@ -17,6 +17,7 @@ import SignIn from '../screens/Auth/SignInScreen';
 import SignUp from '../screens/Auth/SignUpScreen';
 import ForgotPassword from '../screens/Auth/ForgotPasswordScreen';
 import ResetPassword from '../screens/Auth/ResetPasswordScreen';
+import UsersScreen from '../screens/UserScreen';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -64,6 +65,14 @@ function RootNavigator() {
         <Stack.Screen 
           name="ChatRoom" 
           component={ChatRoomScreen}         
+          options={{ 
+            headerTitle: ChatRoomHeader, 
+            headerBackTitleVisible: false,
+          }} 
+        />
+        <Stack.Screen 
+          name="UsersScreen" 
+          component={UsersScreen}         
           options={{ 
             headerTitle: ChatRoomHeader, 
             headerBackTitleVisible: false,

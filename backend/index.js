@@ -4,6 +4,9 @@ const db = require("./models");
 const app = express();
 require('dotenv').config();
 const user = require("./routes/User");
+const chatroomuser = require("./routes/ChatRoomUser");
+const DefaultUser = require("./fixture/addUser");
+
 
 var corsOptions = {
     origin: "*"
@@ -15,6 +18,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api", user);
+app.use("/api/ChatRoomUser", chatroomuser);
+
+DefaultUser()
+
 
 db.sequelize.sync({ force: true }).then(() => {
     console.log("Drop and re-sync db.");

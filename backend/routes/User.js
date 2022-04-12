@@ -6,7 +6,7 @@ var jwt = require('jsonwebtoken');
 require('dotenv').config()
 
 router.get("/list", async (req, res) => {
-    const listOfUser = await User.findAll();
+    const listOfUser = await User.findOne();
     res.json(listOfUser);
 });
 
