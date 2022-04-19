@@ -4,11 +4,11 @@ import { View, Text, StyleSheet } from 'react-native'
 const blue = "lightblue";
 const grey = "lightgrey";
 
-const myId = "u1";
+const myId = 1;
 
 const Messages = ({ message }) => {
 
-    const isMe = message.user.id === myId;
+    const isMe = message.UserId === myId;
 
     return (
         <View style={[styles.container, isMe ? styles.rightContainer : styles.leftContainer]}>
