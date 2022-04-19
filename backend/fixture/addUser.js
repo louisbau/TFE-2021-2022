@@ -7,9 +7,6 @@ const fixtureMessages = require("./fixtureMessages");
 const rounds = 12;
 
 
-
-
-
 async function  DefaultUser () {
     for (i in fixtureUser.Userse) {
         const hash = await bcrypt.hash(fixtureUser.Userse[i].name, rounds)
@@ -24,22 +21,29 @@ async function  DefaultUser () {
     for (i in fixtureChat.Chatroom) {
         ChatRoom.create(({
             newMessages: parseInt(fixtureChat.Chatroom[i].lastMessage.id),
-        }))
-        
-        
+        }))  
     }
+    
     for (i in fixtureChat.Chatroom) {
         const chat = fixtureChat.Chatroom[i].users
         for (a in chat) {
-            console.log(chat[a])
             const usid = await User.findByPk(parseInt(chat[a].id));
             const chatid = await ChatRoom.findByPk(parseInt(fixtureChat.Chatroom[i].id));
             ChatRoomUser.create(({
                 ChatRoomId: chatid.id,
                 UserId: usid.id
             }))
+            if (chatid.id !== 1){
+                Message.create(({
+                    content: 'first' + a,
+                    ChatRoomId: chatid.id,
+                    UserId: usid.id,
+                }))
+            }
+            
         }
     }
+
     for (i in fixtureMessages.Messages) {
         const chatid = await ChatRoom.findByPk(parseInt(fixtureMessages.Messages[i].id));
         const mess = fixtureMessages.Messages[i].messages
@@ -52,33 +56,7 @@ async function  DefaultUser () {
                 createdAt: mess[a].createdAt
             }))
         }
-        
     }
-
-    
-    /*
-    const chat = await ChatRoom.findByPk(4);
-    console.log(chat)
-    const us1 = await User.findByPk(1);
-    console.log(chat)
-    const us2 = await User.findByPk(2);
-    console.log(chat)
-    ChatRoomUser.create(({
-        ChatRoomId: chat.id,
-        UserId: us1.id
-    }))
-    ChatRoomUser.create(({
-        ChatRoomId: chat.id,
-        UserId: us2.id
-    }))
-
-    Message.create(({
-        content: 'hello',
-        ChatRoomId: chat.id,
-        UserId: us1.id
-    }))
-    */
-
 }
 
 module.exports = DefaultUser
