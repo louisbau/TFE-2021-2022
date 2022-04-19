@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { User } = require("../models");
+const { User, ChatRoomUser } = require("../models");
 const bcrypt = require("bcrypt");
 var jwt = require('jsonwebtoken');
 require('dotenv').config()
@@ -8,6 +8,15 @@ require('dotenv').config()
 router.get("/list", async (req, res) => {
     const listOfUser = await User.findOne();
     res.json(listOfUser);
+});
+
+router.get("/:id", async (req, res) => {
+    const listOfUserq = await User.findAll({ include: [{
+        model: ChatRoomUser,
+        where: {ChatRoomId: req.params.id}
+       }] 
+    });
+    res.json(listOfUserq);
 });
 
 router.post("/register", async (req, res) => {

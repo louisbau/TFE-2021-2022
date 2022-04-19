@@ -5,6 +5,8 @@ const app = express();
 require('dotenv').config();
 const user = require("./routes/User");
 const chatroomuser = require("./routes/ChatRoomUser");
+const chatroom = require("./routes/ChatRoom");
+const message = require("./routes/Message")
 const DefaultUser = require("./fixture/addUser");
 
 
@@ -19,7 +21,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api", user);
 app.use("/api/ChatRoomUser", chatroomuser);
-
+app.use("/api/ChatRoom", chatroom);
+app.use("/api/Message", message);
 DefaultUser()
 
 
