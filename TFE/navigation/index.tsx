@@ -2,7 +2,7 @@
 
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import * as React from 'react';
+import React, {useContext} from 'react'
 import { ColorSchemeName, View, Text, Image, useWindowDimensions } from 'react-native';
 import { Feather } from '@expo/vector-icons'; 
 
@@ -18,6 +18,7 @@ import ForgotPassword from '../screens/Auth/ForgotPasswordScreen';
 import ResetPassword from '../screens/Auth/ResetPasswordScreen';
 import UsersScreen from '../screens/UserScreen';
 import ChatRoomHeader from './ChatRoomHeader';
+import { AppContext } from '../components/context/AppContext';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -66,10 +67,10 @@ function RootNavigator() {
           name="ChatRoom" 
           component={ChatRoomScreen}         
           options={({ route }) => ({
-            headerTitle: () => <ChatRoomHeader id={route.params?.id} />,
+            headerTitle: () => <ChatRoomHeader id={route.params?.id} chat={route.params?.chat} />,
             headerBackTitleVisible: false,
           })}
-        />
+        /> 
         <Stack.Screen 
           name="UsersScreen" 
           component={UsersScreen}         
@@ -90,7 +91,7 @@ function RootNavigator() {
 
 const HomeHeader = (props) => {
   const { width } = useWindowDimensions();
-
+  const context = useContext(AppContext);
   return (
     <View style={{ 
       flexDirection: 'row',
@@ -99,13 +100,13 @@ const HomeHeader = (props) => {
       padding: 10,
       alignItems: 'center',
     }}>
-      <Image 
-        source={{ uri: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/vadim.jpg'}}
+      {context.user.imageUri && <Image 
+        source={{ uri: context.user.imageUri}}
         style={{ width: 30, height: 30, borderRadius: 30}}
-      />
-      <Text style={{flex: 1, textAlign: 'center', marginLeft: 50, fontWeight: 'bold', color: 'white'}}>TFE</Text>
-      <Feather name="camera" size={24} color="white" style={{ marginHorizontal: 10}} />
-      <Feather name="edit-2" size={24} color="white" style={{ marginHorizontal: 10}} />
+      />}
+      <Text style={{flex: 1, textAlign: 'center', marginLeft: 50, fontWeight: 'bold', color: 'black'}}>TFE</Text>
+      <Feather name="camera" size={24} color="black" style={{ marginHorizontal: 10}} />
+      <Feather name="edit-2" size={24} color="black" style={{ marginHorizontal: 10}} />
     </View>
   )
 };

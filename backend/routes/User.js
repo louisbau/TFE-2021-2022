@@ -3,14 +3,22 @@ const router = express.Router();
 const { User, ChatRoomUser } = require("../models");
 const bcrypt = require("bcrypt");
 var jwt = require('jsonwebtoken');
+const verifyJWT = require("./isAuth");
 require('dotenv').config()
 
-router.get("/list", async (req, res) => {
+
+router.get("/list",verifyJWT, async (req, res) => {
     const listOfUser = await User.findOne();
     res.json(listOfUser);
+
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/aller",verifyJWT, async (req, res) => {
+    const user = await User.findAll({where: {id : req.id.UserId}})
+    res.json(user);
+});
+
+router.get("/:id",verifyJWT, async (req, res) => {
     const listOfUserq = await User.findAll({ include: [{
         model: ChatRoomUser,
         where: {ChatRoomId: req.params.id}
@@ -55,10 +63,11 @@ router.post("/register", async (req, res) => {
     
 });
 
+
+
 router.post("/login", async (req, res) => {
 
     const { email, password } = req.body;
-    console.log(email, password)
     User.findOne({ where : {
         email: email, 
     }})
@@ -71,9 +80,8 @@ router.post("/login", async (req, res) => {
                 if (err) { // error while comparing
                     res.status(502).json({message: "error while checking user password"});
                 } else if (compareRes) { // password match
-                    const token = jwt.sign({ email: email }, process.env.TOKEN_SECRET, { expiresIn: '1h' });
-                    console.log(token)
-                    res.status(200).json({message: "user logged in", "token": token});
+                    const token = jwt.sign({ email: email, UserId: dbUser.id }, process.env.TOKEN_SECRET, { expiresIn: '1h' });
+                    res.status(200).json({message: "user logged in", token: token, UserId: dbUser.id});
                 } else { // password doesnt match
                     res.status(401).json({message: "invalid credentials"});
                 };
@@ -85,7 +93,7 @@ router.post("/login", async (req, res) => {
     });
 });
 
-
+/*
 const verifyJWT = (req, res, next) => {
     const authHeader = req.get("Authorization");
     if (!authHeader) {
@@ -104,14 +112,13 @@ const verifyJWT = (req, res, next) => {
         res.status(200).json({ message: 'here is your resource' });
     };
 };
-
+*/
 router.post('/isUserAuth', (req, res) => {
     const authHeader = req.get("Authorization");
     if (!authHeader) {
         return res.status(401).json({ message: 'not authenticated' });
     };
     const token = authHeader.split(' ')[1];
-    console.log(authHeader)
     let decodedToken; 
     try {
         decodedToken = jwt.verify(token, 'secret');
@@ -129,5 +136,7 @@ router.post('/isUserAuth', (req, res) => {
         
     };
 });
+
+
 
 module.exports = router;

@@ -1,58 +1,79 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import { Text, Image, View, Pressable, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
-const API_URL = Platform.OS === 'ios' ? 'http://192.168.1.44:5000/api' : 'http://192.168.1.44:5000/api';
-import axios from 'axios';
+import { API_URL } from "@env";
 import styles from "./styles";
+import * as SecureStore from 'expo-secure-store';
+import { AppContext } from "../context/AppContext";
 
 export default function ChatRoomItem({ chatRoom }) {
     const [chatRoomUsers, setChatRoomUsers] = useState();
-    const [Loading, setLoading] = useState(true);
-    console.log(chatRoom.id)
+    const [Loading, setLoading] = useState(false);
+    const id = chatRoom["id"];
+    const newMessage = chatRoom["newMessages"];
+    const name = chatRoom["name"];
+    const imageUri = chatRoom["imageUri"];
+    const context = useContext(AppContext)
+    const index = chatRoom["ChatRoomUsers"][0]["UserId"] === context.UserId ? 1 : 0
+    const User = chatRoomUsers && chatRoomUsers[index]
+    const lastMessage = chatRoom["Messages"].find((x) => x.id === chatRoom["lastMessageId"])
+    const isMe = chatRoomUsers && lastMessage.UserId === context.UserId
     useEffect(() => {
-        const getData = async () => {
-          try {
-            const response = await axios.get(
-              `${API_URL}/ChatRoomUser/${chatRoom.id}`
-            );
-            setChatRoomUsers(response.data);
-            console.log(chatRoomUsers[1].Messages.length)
-          } catch (err) {
-            console.log(err)
-          } finally {
-            setLoading(false);
-          }
-        };
-        getData();
-      }, []);
-
-    const navigation = useNavigation();
-
-    const onPress = () => {
-        console.warn('pressed on ', chatRoom.id)
-        navigation.navigate('ChatRoom', { id: chatRoom.id });
-    }
-
+      const fetchData = async () => {
+          fetch(`${API_URL}/ChatRoomUser/${id}`, {
+              method: 'GET',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
+              }
+          })
+          .then(async res => { 
+              try {
+                  const jsonRes = await res.json();
+                  if (res.status !== 200) {
+                    setChatRoomUsers(jsonRes);
+                    setLoading(true) 
+                  } else {
+                    setChatRoomUsers(jsonRes);
+                    setLoading(true)
+                    // console.log(jsonRes)
+                  }
+              } catch (err) {
+                  console.log(err);
+              };
+          })
+          .catch(err => {
+              console.log(err);
+          });
+      };
+      fetchData();
+    }, [])
     
-
+    const navigation = useNavigation();
+    const onPress = (event) => {
+      event.preventDefault()
+      context.SelectChatRoom(id)
+      context.readMessage(id)
+      context.readAll(id)
+      setLoading(true) 
+      context.readGlobale()
+      navigation.navigate("ChatRoom", { id: id, chat: chatRoomUsers });
+    }
     return (
-        <Pressable onPress={onPress} style={styles.container}>
-            { chatRoomUsers && <Image source={{ uri: chatRoomUsers[1].imageUri }} style={styles.image} />}
-            { chatRoomUsers && <View style={styles.badgeContainer}>
-                <Text style={styles.badgeText}>
-                  {chatRoomUsers[1].Messages.length}
-                </Text>
-            </View>}
-
-            <View style={styles.rightContainer}>
-                <View style={styles.row}>
-                    {chatRoomUsers && <Text style={styles.name}>{chatRoomUsers[1].name}</Text>}
-                    {chatRoomUsers && <Text style={styles.text}>{chatRoomUsers[1].Messages[chatRoomUsers[1].Messages.length - 1].createdAt}</Text>}
-                </View>
-                {chatRoomUsers && <Text numberOfLines={1} style={styles.text}>{chatRoomUsers[1].Messages[chatRoomUsers[1].Messages.length - 1].content}</Text>}
+      <Pressable onPress={onPress} style={styles.container}>
+        {Loading && <Image source={{ uri: imageUri ? imageUri : User.imageUri }} style={styles.image} />}
+        <View style={styles.badgeContainer}>
+            <Text style={styles.badgeText}>{newMessage}</Text>
+        </View>
+        <View style={styles.rightContainer}>
+            <View style={styles.row}>
+              {Loading && <Text style={styles.name}>{name ? name : User.name}</Text>}
+              {Loading && <Text style={styles.text}>{lastMessage.createdAt}</Text>}
             </View>
-        </Pressable>
+            {Loading && <Text numberOfLines={1} style={styles.text}>{ isMe ? 'me' : User.name } : {lastMessage.content}</Text>}
+        </View>
+      </Pressable>
     );
 }
 

@@ -26,6 +26,7 @@ async function  DefaultUser () {
     
     for (i in fixtureChat.Chatroom) {
         const chat = fixtureChat.Chatroom[i].users
+        
         for (a in chat) {
             const usid = await User.findByPk(parseInt(chat[a].id));
             const chatid = await ChatRoom.findByPk(parseInt(fixtureChat.Chatroom[i].id));
@@ -39,24 +40,37 @@ async function  DefaultUser () {
                     ChatRoomId: chatid.id,
                     UserId: usid.id,
                 }))
+                
+
             }
             
         }
     }
 
-    for (i in fixtureMessages.Messages) {
-        const chatid = await ChatRoom.findByPk(parseInt(fixtureMessages.Messages[i].id));
-        const mess = fixtureMessages.Messages[i].messages
-        for (a in mess) {
-            const usid = await User.findByPk(parseInt(mess[a].user.id));
-            Message.create(({
-                content: mess[a].content,
-                ChatRoomId: chatid.id,
-                UserId: usid.id,
-                createdAt: mess[a].createdAt
-            }))
-        }
+    
+        
+    const chatid = await ChatRoom.findByPk(parseInt(fixtureMessages.Messages[0].id));
+    const mess = fixtureMessages.Messages[0].messages
+    for (a in mess) {
+        const usid = await User.findByPk(parseInt(mess[a].user.id));
+        Message.create(({
+            content: mess[a].content,
+            ChatRoomId: chatid.id,
+            UserId: usid.id,
+            createdAt: mess[a].createdAt
+        }))
     }
+    
+
+    const mess2  = await Message.findAll(
+        {order: [['updatedAt', 'DESC']]}
+    )
+    for (i in mess2){
+        ChatRoom.update({lastMessageId : mess2[i].id}, {
+            where : {id : mess2[i].ChatRoomId}
+        })
+    }
+    
 }
 
 module.exports = DefaultUser

@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { View, Image, Text, useWindowDimensions, Platform } from "react-native";
 import { Feather } from "@expo/vector-icons";
 const API_URL = Platform.OS === 'ios' ? 'http://192.168.1.44:5000/api' : 'http://192.168.1.44:5000/api';
+import { AppContext } from "../components/context/AppContext";
 
-const ChatRoomHeader = ({ id }) => {
+const ChatRoomHeader = ({ id, chat }) => {
   const { width } = useWindowDimensions();
-  const [user, setUser] = useState();
-
+  const context = useContext(AppContext)
+  const room = context.app && context.app.find((x) => x[0].id === id)
+  const user = context.UserId && chat.find((x) => x.id !== context.UserId)
   /**useEffect(() => {
     if (!id) {
       return;
@@ -26,7 +28,7 @@ const ChatRoomHeader = ({ id }) => {
     };
     fetchUsers();
   }, []);**/
-
+  /*
   useEffect(() => {
     if (!id) {
         return;
@@ -59,7 +61,7 @@ const ChatRoomHeader = ({ id }) => {
     };
     fetchChat();
   }, [])
-
+  */
   return (
     <View
       style={{
@@ -73,12 +75,12 @@ const ChatRoomHeader = ({ id }) => {
     >
       {user && <Image
         source={{
-          uri: user[1].imageUri,
+          uri: room[0].imageUri ? room[0].imageUri : user.imageUri,
         }}
         style={{ width: 30, height: 30, borderRadius: 30 }}
       />}
       {user && <Text style={{ flex: 1, marginLeft: 10, fontWeight: "bold" }}>
-        {user[1].name}
+        {room[0].name ? room[0].name : user.name}
       </Text>}
       <Feather
         name="camera"

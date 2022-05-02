@@ -1,20 +1,25 @@
-import React, { useState } from "react";
-import { ImageBackground, View, Text, StyleSheet, TouchableOpacity, TextInput, Platform } from 'react-native';
-const API_URL = Platform.OS === 'ios' ? 'http://192.168.1.44:5000/api' : 'http://192.168.1.44:5000/api';
+import React, { useState, useContext } from "react";
+import { ImageBackground, View, Text, StyleSheet, Platform } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
 
-import { useRoute, useNavigation } from '@react-navigation/core';
+
+import { useNavigation } from '@react-navigation/core';
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
+import {AppContext} from "../../components/context/AppContext";
+import { API_URL } from "@env";
+async function save(key, value) {
+    await SecureStore.setItemAsync(key, value);
+}
 
 export default function SignIn() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigation = useNavigation();
-
+    const context = useContext(AppContext)
     const [isError, setIsError] = useState(false);
     const [message, setMessage] = useState('');
     const [isLogin, setIsLogin] = useState(true);
-
     
     const onForgotPassword = () => {
         navigation.navigate('ForgotPassword');
@@ -22,6 +27,7 @@ export default function SignIn() {
     const onSignUp = () => {
         navigation.navigate('SignUp');
     }
+    
 
     const onLogin = () => {
         const payload = {
@@ -45,7 +51,12 @@ export default function SignIn() {
                 } else {
                     setIsError(false);
                     setMessage(jsonRes.message);
-                    navigation.navigate('Home');
+                    save('token', jsonRes.token)
+                    context.cleanup()
+                    context.readGlobale()
+                    context.readUser()
+                    context.SelectUserID(jsonRes.UserId)
+                    navigation.navigate('Home', { UserId: jsonRes.UserId });
                 }
             } catch (err) {
                 console.log(err);

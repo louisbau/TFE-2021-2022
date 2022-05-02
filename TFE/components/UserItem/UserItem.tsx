@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, Image, View, Pressable, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 import styles from './styles';
-const API_URL = Platform.OS === 'ios' ? 'http://172.20.10.5:5000/api' : 'http://172.20.10.5:5000/api';
+import { API_URL } from "@env"
 
 export default function UserItem({ user }) {
   const navigation = useNavigation();

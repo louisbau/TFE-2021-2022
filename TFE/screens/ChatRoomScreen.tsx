@@ -1,34 +1,37 @@
-import React, { useState, useEffect } from "react";
-
+import React, { useState, useEffect, useContext } from "react";
 import { Text, View, StyleSheet, FlatList, SafeAreaView, Platform } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/core';
 import Message from "../components/Message";
-import ChatsData from "../assets/dummy-data/Chats";
 import MessageInput from "../components/MessageInput";
+import * as SecureStore from 'expo-secure-store';
+import {AppContext} from "../components/context/AppContext";
 
-const API_URL = Platform.OS === 'ios' ? 'http://192.168.1.44:5000/api' : 'http://192.168.1.44:5000/api';
+import { API_URL } from "@env"
 
 export default function ChatRoomScreen() {
-    const route = useRoute();
     const navigation = useNavigation();
-    const [chatRooms, setChatRooms] = useState();
-    const [Loading, setLoading] = useState(true);
-    console.warn("Displaying chat room: ", route.params?.id)
+    const context = useContext(AppContext)
+    
+    
+    /*
     useEffect(() => {
         const fetchChatRooms = async () => {
             fetch(`${API_URL}/Message/${route.params?.id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
                 }
             })
             .then(async res => { 
                 try {
                     const jsonRes = await res.json();
+                    
                     if (res.status !== 200) {
-                        setChatRooms(jsonRes);
+                        setMessage(jsonRes);
                     } else {
-                        setChatRooms(jsonRes);
+                        setMessage(jsonRes);
+                        
                     }
                 } catch (err) {
                     console.log(err);
@@ -39,16 +42,49 @@ export default function ChatRoomScreen() {
             });
         };
         fetchChatRooms();
-      }, [])
+    }, [])
+    
+    
+    
+    useEffect(() => {
+        const fetchChatRoom = async () => {
+            fetch(`${API_URL}/ChatRoom/${route.params?.id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
+                }
+            })
+            .then(async res => { 
+                try {
+                    const jsonRes = await res.json();
+                    
+                    if (res.status !== 200) {
+                        setChatRoom(jsonRes);
+                    } else {
+                        setChatRoom(jsonRes);
+                    }
+                } catch (err) {
+                    console.log(err);
+                };
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        };
+        fetchChatRoom();
+    }, [])
+    */
 
-    navigation.setOptions({title: 'Elon Musk'})
     return (
         <SafeAreaView style={styles.page}>
-            <FlatList 
-                data={chatRooms}
-                renderItem={({item}) => <Message message={item} />}
-            />
-            <MessageInput />
+            {context.message &&
+                <FlatList 
+                    data={context.message}
+                    renderItem={({item}) => <Message message={item} />}
+                />
+            }
+            {context.chatRoomId && <MessageInput chatRoomId={context.chatRoomId}/>}
         </SafeAreaView>
     )
 };

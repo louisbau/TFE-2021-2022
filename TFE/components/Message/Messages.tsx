@@ -1,19 +1,43 @@
-import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
-
+import React, {useContext, useState}from 'react'
+import { View, Text, StyleSheet,Image } from 'react-native'
+import AudioPlayer from "../AudioPlayer";
+import { useWindowDimensions } from "react-native";
+import { AppContext } from '../context/AppContext';
 const blue = "lightblue";
-const grey = "lightgrey";
+const green = "lightgreen";
 
-const myId = 1;
 
 const Messages = ({ message }) => {
-
-    const isMe = message.UserId === myId;
-
+    const context = useContext(AppContext)
+    const user = context.userList && context.userList.find((x) => x.id === message.UserId)
+    const isMe = context.UserId && message.UserId === context.UserId;
+    // const [soundURI, setSoundURI] = useState(null);
+    const { width } = useWindowDimensions();
     return (
         <View style={[styles.container, isMe ? styles.rightContainer : styles.leftContainer]}>
-            <Text style={{ color: isMe ? 'black' : 'white'}}>{message.content}</Text>
+            
+            <View style={[styles.container, isMe ? styles.rightMessageColor : styles.leftMessageColor]}>
+                {!!message.content && (
+                    <Text style={{ color: isMe ? 'black' : 'white'}}>
+                        {message.content}
+                    </Text>
+                )}
+                {message.image && (
+                    <View style={{ marginBottom: message.content ? 10 : 0 }}>
+                        <Image
+                            source={{ uri: message.image }}
+                            style={{ width: width * 0.7, aspectRatio: 4 / 3 }}
+                            resizeMode="contain"
+                        />
+                    </View>
+                )}
+            </View>
+            <View>
+                {user && <Image source={{ uri: user.imageUri }} style={styles.image} />}
+                {user && <Text>{user.name}</Text>}
+            </View>
         </View>
+        
   )
 }
 
@@ -25,13 +49,23 @@ const styles = StyleSheet.create({
         maxWidth: '75%',
     },
     leftContainer: {
-        backgroundColor: blue,
         marginLeft: 10,
         marginRight: 'auto'
     },
     rightContainer: {
-        backgroundColor: grey,
         marginLeft: 'auto',
+        marginRight: 10,
+    },
+    leftMessageColor: {
+        backgroundColor: blue,
+    },
+    rightMessageColor: {
+        backgroundColor: green,
+    },
+    image: {
+        height: 20,
+        width: 20,
+        borderRadius: 30,
         marginRight: 10,
     }
 });

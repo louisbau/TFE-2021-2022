@@ -19,5 +19,7 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: true,
       }
     });
+    
+
     return Message;
 };
