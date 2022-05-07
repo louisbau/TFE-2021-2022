@@ -6,7 +6,7 @@ import MessageInput from "../components/MessageInput";
 import * as SecureStore from 'expo-secure-store';
 import {AppContext} from "../components/context/AppContext";
 
-import { API_URL } from "@env"
+
 
 export default function ChatRoomScreen() {
     const navigation = useNavigation();
@@ -82,6 +82,7 @@ export default function ChatRoomScreen() {
                 <FlatList 
                     data={context.message}
                     renderItem={({item}) => <Message message={item} />}
+                    keyExtractor={(item, index) => index.toString()}
                 />
             }
             {context.chatRoomId && <MessageInput chatRoomId={context.chatRoomId}/>}

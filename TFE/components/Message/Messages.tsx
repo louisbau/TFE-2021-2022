@@ -17,11 +17,6 @@ const Messages = ({ message }) => {
         <View style={[styles.container, isMe ? styles.rightContainer : styles.leftContainer]}>
             
             <View style={[styles.container, isMe ? styles.rightMessageColor : styles.leftMessageColor]}>
-                {!!message.content && (
-                    <Text style={{ color: isMe ? 'black' : 'white'}}>
-                        {message.content}
-                    </Text>
-                )}
                 {message.image && (
                     <View style={{ marginBottom: message.content ? 10 : 0 }}>
                         <Image
@@ -30,6 +25,13 @@ const Messages = ({ message }) => {
                             resizeMode="contain"
                         />
                     </View>
+                )}
+                {message.audio && <AudioPlayer soundURI={message.audio} />}
+                
+                {!!message.content && (
+                    <Text style={{ color: isMe ? 'black' : 'white'}}>
+                        {message.content}
+                    </Text>
                 )}
             </View>
             <View>

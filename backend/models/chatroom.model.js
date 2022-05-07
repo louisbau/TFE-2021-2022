@@ -9,6 +9,7 @@ module.exports = (sequelize, Sequelize) => {
       newMessages: {
         type: Sequelize.INTEGER,
         allowNull: true,
+        defaultValue: null
       }, 
       name: {
         type: Sequelize.STRING,
@@ -17,11 +18,19 @@ module.exports = (sequelize, Sequelize) => {
       imageUri: {
         type: Sequelize.STRING,
         allowNull: true,
+      },
+      isGroupe: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+      },
+      creator: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
       }
     });
 
     ChatRoom.associate = (models) => {
-      
       ChatRoom.hasMany(models.Message);
       ChatRoom.belongsTo(models.Message, { as : 'lastMessage', constraints: false, allowNull:true, defaultValue:null })
       ChatRoom.hasMany(models.ChatRoomUser);

@@ -1,14 +1,14 @@
 import React, { useEffect, useState, useContext } from "react";
 import { View, Image, Text, useWindowDimensions, Platform } from "react-native";
 import { Feather } from "@expo/vector-icons";
-const API_URL = Platform.OS === 'ios' ? 'http://192.168.1.44:5000/api' : 'http://192.168.1.44:5000/api';
+// const API_URL = Platform.OS === 'ios' ? 'http://192.168.1.44:5000/api' : 'http://192.168.1.44:5000/api';
 import { AppContext } from "../components/context/AppContext";
 
 const ChatRoomHeader = ({ id, chat }) => {
   const { width } = useWindowDimensions();
   const context = useContext(AppContext)
   const room = context.app && context.app.find((x) => x[0].id === id)
-  const user = context.UserId && chat.find((x) => x.id !== context.UserId)
+  const user = context.UserId && chat
   /**useEffect(() => {
     if (!id) {
       return;
@@ -73,26 +73,20 @@ const ChatRoomHeader = ({ id, chat }) => {
         alignItems: "center",
       }}
     >
-      {user && <Image
+      {room && user && <Image
         source={{
           uri: room[0].imageUri ? room[0].imageUri : user.imageUri,
         }}
         style={{ width: 30, height: 30, borderRadius: 30 }}
       />}
-      {user && <Text style={{ flex: 1, marginLeft: 10, fontWeight: "bold" }}>
+      {room && user && <Text style={{ flex: 1, marginLeft: 10, fontWeight: "bold" }}>
         {room[0].name ? room[0].name : user.name}
       </Text>}
-      <Feather
-        name="camera"
-        size={24}
-        color="black"
-        style={{ marginHorizontal: 10 }}
-      />
       <Feather
         name="edit-2"
         size={24}
         color="black"
-        style={{ marginHorizontal: 10 }}
+        style={{ marginHorizontal: 50 }}
       />
     </View>
   );

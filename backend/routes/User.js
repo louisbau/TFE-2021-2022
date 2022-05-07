@@ -8,7 +8,7 @@ require('dotenv').config()
 
 
 router.get("/list",verifyJWT, async (req, res) => {
-    const listOfUser = await User.findOne();
+    const listOfUser = await User.findAll();
     res.json(listOfUser);
 
 });

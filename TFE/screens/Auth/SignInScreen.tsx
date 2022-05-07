@@ -1,13 +1,14 @@
 import React, { useState, useContext } from "react";
 import { ImageBackground, View, Text, StyleSheet, Platform } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
-
-
 import { useNavigation } from '@react-navigation/core';
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import {AppContext} from "../../components/context/AppContext";
 import { API_URL } from "@env";
+const API = API_URL
+
+
 async function save(key, value) {
     await SecureStore.setItemAsync(key, value);
 }
@@ -20,6 +21,7 @@ export default function SignIn() {
     const [isError, setIsError] = useState(false);
     const [message, setMessage] = useState('');
     const [isLogin, setIsLogin] = useState(true);
+    
     
     const onForgotPassword = () => {
         navigation.navigate('ForgotPassword');
@@ -34,21 +36,23 @@ export default function SignIn() {
             email,
             password,
         };
-        fetch(`${API_URL}/login`, {
+        fetch(`${API}/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'credentials': 'include'
             },
             body: JSON.stringify(payload),
         })
         .then(async res => { 
             try {
                 const jsonRes = await res.json();
-                
                 if (res.status !== 200) {
+                    
                     setIsError(true);
                     setMessage(jsonRes.message);
                 } else {
+                    
                     setIsError(false);
                     setMessage(jsonRes.message);
                     save('token', jsonRes.token)

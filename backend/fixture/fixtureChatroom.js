@@ -44,12 +44,17 @@ const fixtureChat = {
               id: '4',
               name: 'Zuck',
               imageUri: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/zuck.jpeg',
+            }, {
+              id: '3',
+              name: 'Jeff',
+              imageUri: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/jeff.jpeg',
             }],
             lastMessage: {
               id: '3',
               content: 'Is signal really better than my Whatsapp?',
               createdAt: '2020-10-02T14:48:00.000Z',
-            }
+            },
+            imageUri: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/4.jpg'
         }, 
         {
             id: '4',

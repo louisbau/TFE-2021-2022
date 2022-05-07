@@ -17,11 +17,20 @@ async function  DefaultUser () {
             imageUri: fixtureUser.Userse[i].imageUri
         }))
     }
-
     for (i in fixtureChat.Chatroom) {
-        ChatRoom.create(({
-            newMessages: parseInt(fixtureChat.Chatroom[i].lastMessage.id),
-        }))  
+        if (fixtureChat.Chatroom[i].users.length > 2) {
+            const image = fixtureChat.Chatroom[i].imageUri ? fixtureChat.Chatroom[i].imageUri : null
+            const name = fixtureChat.Chatroom[i].name ? fixtureChat.Chatroom[i].name : 'Group'
+            ChatRoom.create(({
+                isGroupe: true,
+                name : name,
+                imageUri: image
+            }))
+        }
+        else {
+            ChatRoom.create()
+        }
+         
     }
     
     for (i in fixtureChat.Chatroom) {
@@ -34,21 +43,23 @@ async function  DefaultUser () {
                 ChatRoomId: chatid.id,
                 UserId: usid.id
             }))
+            if (a == 0) {
+                ChatRoom.update({creator: usid.id}, {
+                    where : {id : chatid.id}
+                })
+            }
             if (chatid.id !== 1){
                 Message.create(({
                     content: 'first' + a,
                     ChatRoomId: chatid.id,
                     UserId: usid.id,
                 }))
-                
-
             }
             
         }
     }
 
-    
-        
+      
     const chatid = await ChatRoom.findByPk(parseInt(fixtureMessages.Messages[0].id));
     const mess = fixtureMessages.Messages[0].messages
     for (a in mess) {

@@ -24,7 +24,7 @@ router.post("/",verifyJWT, async (req, res) => {
     console.log(image)
     Message.create(({
         content: content,
-        image: image.blobId,
+        image: image,
         audio: audio,
         ChatRoomId: ChatRoomId,
         UserId: req.id.UserId,

@@ -1,21 +1,22 @@
 import React, { useState, useContext, useEffect } from "react";
 import {AppContext} from "../components/context/AppContext";
-import { View, StyleSheet, FlatList, Platform } from 'react-native';
+import { View, StyleSheet, FlatList, Platform, TextInput } from 'react-native';
 import ChatRoomItem from '../components/ChatRoomItem';
 import * as SecureStore from 'expo-secure-store';
-import { API_URL } from "@env"
-import { useRoute } from '@react-navigation/core';
-
+import { API_URL } from "@env";
 
 export default function TabOneScreen() {
   const context = useContext(AppContext)
-  const test = context.UserId
-
+  const [conv, setConv] = useState([]);
+  const [search, setSearch] = useState('');
+  const test = context.app
+  const API = API_URL
   
-  /*
+  
+  
   useEffect(() => {
     const fetchChatRooms = async () => {
-        fetch(`${API_URL}/ChatRoom/list`, {
+        fetch(`${API}/ChatRoom/test`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -26,10 +27,11 @@ export default function TabOneScreen() {
             try {
                 const jsonRes = await res.json();
                 if (res.status !== 200) {
-                    setChatRooms(jsonRes);
+                    setConv(jsonRes);
                     
                 } else {
-                    setChatRooms(jsonRes);
+                    console.log(jsonRes)
+                    setConv(jsonRes);
                 }
             } catch (err) {
                 console.log(err);
@@ -41,15 +43,36 @@ export default function TabOneScreen() {
     };
     fetchChatRooms();
   }, [])
-  */
+  
+  const searchFilterFunction = (text) => {
+    // Check if searched text is not blank
+    console.log(text)
+
+    if (text) {
+      setSearch(text);
+    } else {
+      setSearch(text);
+    }
+  };
+  
   
   return (
     <View style={styles.page}>
       {test && (
+        <TextInput
+            style={styles.textInputStyle}
+            onChangeText={(text) => searchFilterFunction(text)}
+            value={search}
+            underlineColorAndroid="transparent"
+            placeholder="Search Here"
+        />
+      )}
+      {test && (
         <FlatList 
-          data={context.app}
-          renderItem={({ item }) => <ChatRoomItem chatRoom={item[0]}/>}
+          data={conv}
+          renderItem={({ item }) => <ChatRoomItem chatRoom={item}/>}
           showsHorizontalScrollIndicator={false}
+          keyExtractor={(item, index) => index.toString()}
           // horizontal; allow horizental display (exemple stories)
         />
       )}
@@ -61,5 +84,16 @@ const styles = StyleSheet.create({
   page: {
     backgroundColor: 'white',
     flex:1,
+  },
+  itemStyle: {
+    padding: 10,
+  },
+  textInputStyle: {
+    height: 40,
+    borderWidth: 1,
+    paddingLeft: 20,
+    margin: 5,
+    borderColor: '#009688',
+    backgroundColor: '#FFFFFF',
   },
 })

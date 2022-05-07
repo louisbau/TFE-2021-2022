@@ -1,14 +1,15 @@
 
 
-import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme, DarkTheme, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, {useContext} from 'react'
-import { ColorSchemeName, View, Text, Image, useWindowDimensions } from 'react-native';
+import { ColorSchemeName, View, Text, Image, useWindowDimensions, Pressable } from 'react-native';
 import { Feather } from '@expo/vector-icons'; 
-
 import NotFoundScreen from '../screens/NotFoundScreen';
 import { RootStackParamList } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
 
 import ChatRoomScreen from '../screens/ChatRoomScreen';
 import HomeScreen from '../screens/HomeScreen';
@@ -18,6 +19,7 @@ import ForgotPassword from '../screens/Auth/ForgotPasswordScreen';
 import ResetPassword from '../screens/Auth/ResetPasswordScreen';
 import UsersScreen from '../screens/UserScreen';
 import ChatRoomHeader from './ChatRoomHeader';
+import GroupScreen from '../screens/GroupScreen';
 import { AppContext } from '../components/context/AppContext';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
@@ -35,6 +37,17 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
  * https://reactnavigation.org/docs/modal
  */
 const Stack = createNativeStackNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator();
+
+function Home() {
+  return (
+    <Tab.Navigator>
+      <Tab.Screen name="HomeScreen" component={HomeScreen} options={{headerShown: false}}/>
+      <Tab.Screen name="UsersScreen" component={UsersScreen} options={{headerShown: false}}/>
+      <Tab.Screen name="GroupScreen" component={GroupScreen} options={{headerShown: false}}/>
+    </Tab.Navigator>
+  );
+}
 
 function RootNavigator() {
   return (
@@ -60,8 +73,8 @@ function RootNavigator() {
       <Stack.Group>
         <Stack.Screen 
           name="Home" 
-          component={HomeScreen} 
-          options={{ headerTitle: HomeHeader }} 
+          component={Home}
+          options={{ headerTitle: HomeHeader }}
         />
         <Stack.Screen 
           name="ChatRoom" 
@@ -71,13 +84,6 @@ function RootNavigator() {
             headerBackTitleVisible: false,
           })}
         /> 
-        <Stack.Screen 
-          name="UsersScreen" 
-          component={UsersScreen}         
-          options={{ 
-            headerBackTitleVisible: false,
-          }} 
-        />
       </Stack.Group>
       
       
@@ -92,6 +98,7 @@ function RootNavigator() {
 const HomeHeader = (props) => {
   const { width } = useWindowDimensions();
   const context = useContext(AppContext);
+  const navigation = useNavigation();
   return (
     <View style={{ 
       flexDirection: 'row',
@@ -104,9 +111,7 @@ const HomeHeader = (props) => {
         source={{ uri: context.user.imageUri}}
         style={{ width: 30, height: 30, borderRadius: 30}}
       />}
-      <Text style={{flex: 1, textAlign: 'center', marginLeft: 50, fontWeight: 'bold', color: 'black'}}>TFE</Text>
-      <Feather name="camera" size={24} color="black" style={{ marginHorizontal: 10}} />
-      <Feather name="edit-2" size={24} color="black" style={{ marginHorizontal: 10}} />
+      <Text style={{flex: 1, textAlign: 'center', marginLeft: 0, fontWeight: 'bold', color: 'black'}}>TFE</Text>
     </View>
   )
 };

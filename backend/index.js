@@ -9,13 +9,14 @@ const chatroom = require("./routes/ChatRoom");
 const message = require("./routes/Message")
 const DefaultUser = require("./fixture/addUser");
 
-
+app.use(express.json());
 var corsOptions = {
-    origin: "*"
+    origin: "*", 
+    credential: true
 };
 app.use(cors(corsOptions));
 
-app.use(express.json());
+
 
 app.use(express.urlencoded({ extended: true }));
 

@@ -4,6 +4,7 @@ import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
 import { API_URL } from "@env";
 export const AppContext = createContext();
+const API = API_URL
 
 class AppContextProvider extends React.Component {
   constructor (props) {
@@ -15,6 +16,7 @@ class AppContextProvider extends React.Component {
       userList: [],
       chatRoomId:"",
       UserId: "",
+      search: []
     }
     this.readGlobale(),
     this.readUser()
@@ -22,16 +24,20 @@ class AppContextProvider extends React.Component {
 
   // read
   async readGlobale() {
-    axios.get(`${API_URL}/ChatRoom/list`, {
+    
+    
+    axios.get(`http://192.168.1.44:5000/api/ChatRoom/list`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
+          'credentials': 'include'
         }
     })
     .then((response) => { 
         const data = response.data
         this.setState({app: data})
-        // console.log(data)
+        this.setState({search: data})
+        //console.log(data)
         
     })
     .catch((err) => {
@@ -39,10 +45,12 @@ class AppContextProvider extends React.Component {
     });
   }
   async readAll(id) {
-    axios.get(`${API_URL}/${id}`, {
+    
+    axios.get(`${API}/${id}`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
+          'credentials': 'include'
         }
     })
     .then((response) => { 
@@ -57,10 +65,11 @@ class AppContextProvider extends React.Component {
   }
 
   async readUser() {
-    axios.get(`${API_URL}/aller`, {
+    axios.get(`${API}/aller`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
+          'credentials': 'include'
         }
     })
     .then((response) => { 
@@ -75,10 +84,11 @@ class AppContextProvider extends React.Component {
   
 
   async readMessage(id) {
-    axios.get(`${API_URL}/Message/${id}`, {
+    axios.get(`${API}/Message/${id}`, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
+        'credentials': 'include'
       }
     })
     .then((response) => { 
@@ -102,14 +112,20 @@ class AppContextProvider extends React.Component {
       UserId: id
     })
   }
+  SetSearch(x) {
+    this.setState({
+      search: x
+    })
+  }
   cleanup() {
     this.setState({
       app: [],
       message: [],
+      user: {},
+      userList: [],
       chatRoomId:"",
       UserId: "",
-      user: {},
-      userList: []
+      search: []
     })
   }
 
@@ -124,6 +140,7 @@ class AppContextProvider extends React.Component {
         SelectChatRoom: this.SelectChatRoom.bind(this),
         SelectUserID: this.SelectUserID.bind(this),
         cleanup: this.cleanup.bind(this),
+        SetSearch: this.SetSearch.bind(this)
       }}
       >
         {this.props.children}

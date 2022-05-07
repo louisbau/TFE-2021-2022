@@ -5,7 +5,7 @@ import { API_URL } from "@env"
 import { useRoute, useNavigation } from '@react-navigation/core';
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
-
+const API = API_URL
 export default function SignUp() {
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
@@ -25,10 +25,11 @@ export default function SignUp() {
             name,
             password,
         };
-        fetch(`${API_URL}/register`, {
+        fetch(`${API}/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'credentials': 'include'
             },
             body: JSON.stringify(payload),
         })

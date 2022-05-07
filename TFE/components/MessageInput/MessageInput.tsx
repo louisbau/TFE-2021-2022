@@ -15,9 +15,11 @@ import { AppContext } from "../context/AppContext";
 import * as ImagePicker from "expo-image-picker";
 import uuid from 'react-native-uuid';
 import EmojiSelector from "react-native-emoji-selector";
-
+import { Audio, AVPlaybackStatus } from "expo-av";
+import AudioPlayer from "../AudioPlayer";
 import { SimpleLineIcons, Feather, MaterialCommunityIcons, AntDesign, Ionicons } from '@expo/vector-icons';
 import { API_URL } from "@env";
+const API = API_URL
 
 const MessageInput = ({ chatRoomId }) => {
     const [content, setContent] = useState('');
@@ -26,9 +28,9 @@ const MessageInput = ({ chatRoomId }) => {
     const context = useContext(AppContext);
     const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
     const [progress, setProgress] = useState(0);
-    const [soundURI, setSoundURI] = useState(null);
     const [recording, setRecording] = useState(null);
-
+    
+    
     useEffect(() => {
       (async () => {
         if (Platform.OS !== "web") {
@@ -55,10 +57,84 @@ const MessageInput = ({ chatRoomId }) => {
       });
     };
 
+    async function startRecording() {
+      try {
+        await Audio.setAudioModeAsync({
+          allowsRecordingIOS: true,
+          playsInSilentModeIOS: true,
+        });
+  
+        console.log("Starting recording..");
+        const { recording } = await Audio.Recording.createAsync(
+          Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
+        );
+        setRecording(recording);
+        console.log("Recording started");
+      } catch (err) {
+        console.error("Failed to start recording", err);
+      }
+    }
+  
+    async function stopRecording() {
+      console.log("Stopping recording..");
+      console.log('pq')
+      if (!recording) {
+        return;
+      }
+  
+      setRecording(null);
+      await recording.stopAndUnloadAsync();
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: false,
+      });
+  
+      const uri = recording.getURI();
+      console.log("Recording stopped and stored at", uri);
+      if (!uri) {
+        return;
+      }
+      setAudio(uri);
+    }
+
+    const sendAudio = async () => {
+      if (!audio) {
+        return;
+      }
+      const uriParts = audio.split(".");
+      const extenstion = uriParts[uriParts.length - 1];
+      /*
+      const blob = await getBlob(audio);
+      const { key } = await Storage.put(`${uuidv4()}.${extenstion}`, blob, {
+        progressCallback,
+      });
+      */
+      // send message
+      try {
+        await axios.post(`${API}/Message`, {
+            content,
+            image,
+            audio,
+            ChatRoomId: chatRoomId
+        }, {
+          headers: {
+            'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
+            'credentials': 'include'
+          }
+        });
+      } catch (error) {
+        alert(error);
+      }
+      resetFields();
+      context.readAll(chatRoomId)
+      context.readMessage(chatRoomId)
+      context.readGlobale()
+    };
+
+
     const sendMessage = async () => {
     // send message
         try {
-            await axios.post(`${API_URL}/Message`, {
+            await axios.post(`${API}/Message`, {
                 content,
                 image,
                 audio,
@@ -66,6 +142,7 @@ const MessageInput = ({ chatRoomId }) => {
             }, {
               headers: {
                 'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
+                'credentials': 'include'
               }
             });
           } catch (error) {
@@ -82,7 +159,7 @@ const MessageInput = ({ chatRoomId }) => {
       setIsEmojiPickerOpen(false);
       setImage(null);
       setProgress(0);
-      setSoundURI(null);
+      setAudio(null);
     };
 
 
@@ -119,7 +196,7 @@ const MessageInput = ({ chatRoomId }) => {
             return;
         }
         try {
-          await axios.post(`${API_URL}/Message`, {
+          await axios.post(`${API}/Message`, {
               content,
               image,
               audio,
@@ -127,6 +204,7 @@ const MessageInput = ({ chatRoomId }) => {
           }, {
             headers: {
               'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
+              'credentials': 'include'
             }
           });
         } catch (error) {
@@ -148,6 +226,8 @@ const MessageInput = ({ chatRoomId }) => {
             sendMessage();
         } else if (image) {
             sendImage()
+        } else if (audio) {
+            sendAudio();
         } else {
             onPlusClicked();
         }
@@ -192,6 +272,7 @@ const MessageInput = ({ chatRoomId }) => {
                     </Pressable>
                 </View>
             )}
+            {audio && <AudioPlayer soundURI={audio} />}
             <View style={styles.row}>
                 <View style={styles.inputContainer}>
                     <Pressable
@@ -231,11 +312,19 @@ const MessageInput = ({ chatRoomId }) => {
                             style={styles.icon}
                         />
                     </Pressable>
+                    <Pressable onPressIn={startRecording} onPressOut={stopRecording}>
+                        <MaterialCommunityIcons
+                            name={recording ? "microphone" : "microphone-outline"}
+                            size={24}
+                            color={recording ? "red" : "#595959"}
+                            style={styles.icon}
+                        />
+                    </Pressable>
 
                 </View>
 
                 <Pressable onPress={onPress} style={styles.buttonContainer}>
-                    {content || image || soundURI ? (
+                    {content || image || audio ? (
                         <Ionicons name="send" size={18} color="white" />
                     ) : (
                         <AntDesign name="plus" size={24} color="white" />

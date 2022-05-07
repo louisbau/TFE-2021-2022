@@ -1,15 +1,18 @@
 import React, { useState, useEffect, useContext } from "react";
-
 import { Text, Image, View, Pressable, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 import { API_URL } from "@env";
 import styles from "./styles";
 import * as SecureStore from 'expo-secure-store';
 import { AppContext } from "../context/AppContext";
+const API = API_URL
+
+
 
 export default function ChatRoomItem({ chatRoom }) {
     const [chatRoomUsers, setChatRoomUsers] = useState();
     const [Loading, setLoading] = useState(false);
+    //console.log(chatRoom)
     const id = chatRoom["id"];
     const newMessage = chatRoom["newMessages"];
     const name = chatRoom["name"];
@@ -19,13 +22,15 @@ export default function ChatRoomItem({ chatRoom }) {
     const User = chatRoomUsers && chatRoomUsers[index]
     const lastMessage = chatRoom["Messages"].find((x) => x.id === chatRoom["lastMessageId"])
     const isMe = chatRoomUsers && lastMessage.UserId === context.UserId
+
     useEffect(() => {
       const fetchData = async () => {
-          fetch(`${API_URL}/ChatRoomUser/${id}`, {
+          fetch(`${API}/ChatRoomUser/${id}`, {
               method: 'GET',
               headers: {
                   'Content-Type': 'application/json',
                   'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
+                  'credentials': 'include'
               }
           })
           .then(async res => { 
@@ -58,7 +63,10 @@ export default function ChatRoomItem({ chatRoom }) {
       context.readAll(id)
       setLoading(true) 
       context.readGlobale()
-      navigation.navigate("ChatRoom", { id: id, chat: chatRoomUsers });
+      const user = context.UserId && chatRoomUsers.find((x) => x.id !== context.UserId)
+      
+      
+      navigation.navigate("ChatRoom", { id: id, chat: user });
     }
     return (
       <Pressable onPress={onPress} style={styles.container}>
