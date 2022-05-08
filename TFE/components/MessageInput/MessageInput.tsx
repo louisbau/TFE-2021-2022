@@ -21,7 +21,7 @@ import { SimpleLineIcons, Feather, MaterialCommunityIcons, AntDesign, Ionicons }
 import { API_URL } from "@env";
 const API = API_URL
 
-const MessageInput = ({ chatRoomId }) => {
+const MessageInput = ({ chatRoomId, setMessage }) => {
     const [content, setContent] = useState('');
     const [image, setImage] = useState(null);
     const [audio, setAudio] = useState(null);
@@ -29,7 +29,6 @@ const MessageInput = ({ chatRoomId }) => {
     const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
     const [progress, setProgress] = useState(0);
     const [recording, setRecording] = useState(null);
-    
     
     useEffect(() => {
       (async () => {
@@ -77,7 +76,6 @@ const MessageInput = ({ chatRoomId }) => {
   
     async function stopRecording() {
       console.log("Stopping recording..");
-      console.log('pq')
       if (!recording) {
         return;
       }
@@ -117,13 +115,21 @@ const MessageInput = ({ chatRoomId }) => {
             ChatRoomId: chatRoomId
         }, {
           headers: {
+            'Content-Type': 'application/json',
             'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
             'credentials': 'include'
           }
-        });
+        }).then(async (response) => { 
+          const data = response.data
+          
+          setMessage(data)
+          //console.log(data)
+          
+      });
       } catch (error) {
         alert(error);
       }
+      
       resetFields();
       context.readAll(chatRoomId)
       context.readMessage(chatRoomId)
@@ -144,10 +150,17 @@ const MessageInput = ({ chatRoomId }) => {
                 'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
                 'credentials': 'include'
               }
-            });
+            }).then(async (response) => { 
+              const data = response.data
+              
+              setMessage(data)
+              //console.log(data)
+              
+          });
           } catch (error) {
             alert(error);
           }
+        
         resetFields();
         context.readAll(chatRoomId)
         context.readMessage(chatRoomId)
@@ -206,7 +219,13 @@ const MessageInput = ({ chatRoomId }) => {
               'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
               'credentials': 'include'
             }
-          });
+          }).then(async (response) => { 
+            const data = response.data
+            
+            setMessage(data)
+            //console.log(data)
+            
+        });
         } catch (error) {
           alert(error);
         }

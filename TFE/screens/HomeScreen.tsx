@@ -1,56 +1,91 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useCallback } from "react";
 import {AppContext} from "../components/context/AppContext";
 import { View, StyleSheet, FlatList, Platform, TextInput } from 'react-native';
 import ChatRoomItem from '../components/ChatRoomItem';
 import * as SecureStore from 'expo-secure-store';
 import { API_URL } from "@env";
+import { useFocusEffect } from '@react-navigation/native';
+
 
 export default function TabOneScreen() {
   const context = useContext(AppContext)
   const [conv, setConv] = useState([]);
   const [search, setSearch] = useState('');
+  const [masterDataSource, setMasterDataSource] = useState([]);
   const test = context.app
   const API = API_URL
+
+  useFocusEffect(
+    useCallback(() => {
+      setSearch('')
+      fetchChatRooms()
+
+      return () => {
+        setSearch('')
+        fetchChatRooms()
+      };
+    }, [])
+  );
+
   
-  
-  
-  useEffect(() => {
-    const fetchChatRooms = async () => {
-        fetch(`${API}/ChatRoom/test`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
+
+  const fetchChatRooms = async () => {
+    fetch(`${API}/ChatRoom/test`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
+        }
+    })
+    .then(async (res) => { 
+        try {
+            const jsonRes = await res.json();
+            if (res.status !== 200) {
+                
+                setConv(jsonRes);
+                setMasterDataSource(jsonRes) 
+            } else {
+                setConv(jsonRes);
+                setMasterDataSource(jsonRes)
             }
-        })
-        .then(async res => { 
-            try {
-                const jsonRes = await res.json();
-                if (res.status !== 200) {
-                    setConv(jsonRes);
-                    
-                } else {
-                    console.log(jsonRes)
-                    setConv(jsonRes);
-                }
-            } catch (err) {
-                console.log(err);
-            };
-        })
-        .catch(err => {
+        } catch (err) {
             console.log(err);
-        });
-    };
-    fetchChatRooms();
-  }, [])
+        };
+    })
+    .catch(err => {
+        console.log(err);
+    });
+  };
+  
+ 
+
+  
   
   const searchFilterFunction = (text) => {
     // Check if searched text is not blank
-    console.log(text)
 
     if (text) {
+      // Inserted text is not blank
+      // Filter the masterDataSource and update FilteredDataSource
+      const newData = masterDataSource.filter(function (item) {
+        // Applying filter for the inserted text in search bar
+  
+        for (let i in item.Users) {
+          if (item.Users[i].id != context.UserId) {
+            const index = item.Users[i].ChatRoomUsers.pseudo ? item.Users[i].ChatRoomUsers.pseudo : item.Users[i].name
+
+            const itemData = (item.name ? item.name : index)
+                ? (item.name ? item.name.toUpperCase() : index.toUpperCase())
+                : ''.toUpperCase();
+            const textData = text.toUpperCase();
+            return itemData.indexOf(textData) > -1;
+          }  
+        }
+      });
+      setConv(newData);
       setSearch(text);
     } else {
+      setConv(masterDataSource);
       setSearch(text);
     }
   };
@@ -58,7 +93,7 @@ export default function TabOneScreen() {
   
   return (
     <View style={styles.page}>
-      {test && (
+      {conv && context.UserId && test && (
         <TextInput
             style={styles.textInputStyle}
             onChangeText={(text) => searchFilterFunction(text)}
@@ -67,10 +102,10 @@ export default function TabOneScreen() {
             placeholder="Search Here"
         />
       )}
-      {test && (
+      {conv && context.UserId && test && (
         <FlatList 
           data={conv}
-          renderItem={({ item }) => <ChatRoomItem chatRoom={item}/>}
+          renderItem={({ item }) => <ChatRoomItem chatRoom={item} isMe={context.UserId}/>}
           showsHorizontalScrollIndicator={false}
           keyExtractor={(item, index) => index.toString()}
           // horizontal; allow horizental display (exemple stories)

@@ -7,8 +7,11 @@ import { AppContext } from "../components/context/AppContext";
 const ChatRoomHeader = ({ id, chat }) => {
   const { width } = useWindowDimensions();
   const context = useContext(AppContext)
+  const otherUser = context.UserId && chat.Users.find((x) => x.id !== context.UserId)
+  /*
   const room = context.app && context.app.find((x) => x[0].id === id)
   const user = context.UserId && chat
+  */
   /**useEffect(() => {
     if (!id) {
       return;
@@ -73,15 +76,15 @@ const ChatRoomHeader = ({ id, chat }) => {
         alignItems: "center",
       }}
     >
-      {room && user && <Image
+      <Image
         source={{
-          uri: room[0].imageUri ? room[0].imageUri : user.imageUri,
+          uri: chat.imageUri ? chat.imageUri : otherUser.imageUri,
         }}
         style={{ width: 30, height: 30, borderRadius: 30 }}
-      />}
-      {room && user && <Text style={{ flex: 1, marginLeft: 10, fontWeight: "bold" }}>
-        {room[0].name ? room[0].name : user.name}
-      </Text>}
+      />
+      <Text style={{ flex: 1, marginLeft: 10, fontWeight: "bold" }}>
+        {chat.name ? chat.name : otherUser.name}
+      </Text>
       <Feather
         name="edit-2"
         size={24}

@@ -7,9 +7,10 @@ const blue = "lightblue";
 const green = "lightgreen";
 
 
-const Messages = ({ message }) => {
+const Messages = ({ message, user }) => {
+    //console.log(user)
     const context = useContext(AppContext)
-    const user = context.userList && context.userList.find((x) => x.id === message.UserId)
+    //const user = context.userList && context.userList.find((x) => x.id === message.UserId)
     const isMe = context.UserId && message.UserId === context.UserId;
     // const [soundURI, setSoundURI] = useState(null);
     const { width } = useWindowDimensions();

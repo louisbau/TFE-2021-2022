@@ -21,7 +21,6 @@ router.get("/:id",verifyJWT, async (req, res) => {
 
 router.post("/",verifyJWT, async (req, res) => {
     const { content, image, audio, ChatRoomId } = req.body;
-    console.log(image)
     Message.create(({
         content: content,
         image: image,
@@ -30,11 +29,18 @@ router.post("/",verifyJWT, async (req, res) => {
         UserId: req.id.UserId,
         createdAt : moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
     }))
-    .then((req2) => {
+    .then(async (req2) => {
         ChatRoom.update({lastMessageId : req2.id}, {
             where : {id : req2.ChatRoomId}
         })
-        res.status(200).json({message: "message store"});
+        const listOfChatRoomUser = await Message.findAll(
+            {
+                where: {
+                    ChatRoomId: ChatRoomId
+                }
+            }
+        )
+        res.json(listOfChatRoomUser);
         
     })
     .catch(err => {
