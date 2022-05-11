@@ -26,12 +26,18 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING,
         allowNull: true,
       },
+      role: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        defaultValue: 'User'
+      }
     });
 
     User.associate = (models) => {
       User.hasMany(models.Message);
       User.hasMany(models.ChatRoomUser);
-      
+      User.hasMany(models.Friend);
+      User.hasOne(models.FriendShip);
     };
     return User;
 };

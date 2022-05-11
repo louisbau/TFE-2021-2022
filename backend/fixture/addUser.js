@@ -1,4 +1,4 @@
-const { User, ChatRoom, Message, ChatRoomUser } = require("../models");
+const { User, ChatRoom, Message, ChatRoomUser, Friend, FriendShip } = require("../models");
 
 const bcrypt = require("bcrypt");
 const fixtureUser = require("./fixtureUser");
@@ -10,7 +10,7 @@ const rounds = 12;
 async function  DefaultUser () {
     for (i in fixtureUser.Userse) {
         const hash = await bcrypt.hash(fixtureUser.Userse[i].name, rounds)
-        User.create(({
+        await User.create(({
             email: fixtureUser.Userse[i].name,
             name: fixtureUser.Userse[i].name,
             password: hash,
@@ -21,14 +21,14 @@ async function  DefaultUser () {
         if (fixtureChat.Chatroom[i].users.length > 2) {
             const image = fixtureChat.Chatroom[i].imageUri ? fixtureChat.Chatroom[i].imageUri : null
             const name = fixtureChat.Chatroom[i].name ? fixtureChat.Chatroom[i].name : 'Group'
-            ChatRoom.create(({
+            await ChatRoom.create(({
                 isGroupe: true,
                 name : name,
                 imageUri: image
             }))
         }
         else {
-            ChatRoom.create()
+            await ChatRoom.create()
         }
          
     }
@@ -39,17 +39,17 @@ async function  DefaultUser () {
         for (a in chat) {
             const usid = await User.findByPk(parseInt(chat[a].id));
             const chatid = await ChatRoom.findByPk(parseInt(fixtureChat.Chatroom[i].id));
-            ChatRoomUser.create(({
+            await ChatRoomUser.create(({
                 ChatRoomId: chatid.id,
                 UserId: usid.id
             }))
             if (a == 0) {
-                ChatRoom.update({creator: usid.id}, {
+                await ChatRoom.update({creator: usid.id}, {
                     where : {id : chatid.id}
                 })
             }
             if (chatid.id !== 1){
-                Message.create(({
+                await Message.create(({
                     content: 'first' + a,
                     ChatRoomId: chatid.id,
                     UserId: usid.id,
@@ -64,7 +64,7 @@ async function  DefaultUser () {
     const mess = fixtureMessages.Messages[0].messages
     for (a in mess) {
         const usid = await User.findByPk(parseInt(mess[a].user.id));
-        Message.create(({
+        await Message.create(({
             content: mess[a].content,
             ChatRoomId: chatid.id,
             UserId: usid.id,
@@ -77,10 +77,34 @@ async function  DefaultUser () {
         {order: [['updatedAt', 'DESC']]}
     )
     for (i in mess2){
-        ChatRoom.update({lastMessageId : mess2[i].id}, {
+        await ChatRoom.update({lastMessageId : mess2[i].id}, {
             where : {id : mess2[i].ChatRoomId}
         })
     }
+
+    const listUser = await User.findAll()
+    for (i in listUser) {
+        await Friend.create(({
+            UserId: listUser[i].id
+        }))
+        
+    }
+    const listFriend = await Friend.findAll()
+    for (i in listFriend) {
+        if (i) {
+            await FriendShip.create(({
+                FriendId: 1,
+                UserId: listUser[i].id
+            }))
+        }
+        
+    }
+    
+
+    
+    
+    
+    
     
 }
 

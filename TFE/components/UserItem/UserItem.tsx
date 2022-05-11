@@ -14,7 +14,6 @@ export default function UserItem({ user }) {
   const onPress = async (event) => {
     event.preventDefault()
     try {
-      console.log('ced')
       await axios.post(`${API}/ChatRoomUser/newChatRoom`,{user: user.id}, {
         headers: {
           'Content-Type': 'application/json',
@@ -23,42 +22,13 @@ export default function UserItem({ user }) {
         }
       }).then((response) => { 
         const data = response.data
-        
-        const fetchData = async () => {
-          fetch(`${API_URL}/ChatRoomUser/${data}`, {
-              method: 'GET',
-              headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
-                  'credentials': 'include'
-              }
-          })
-          .then(async res => { 
-              try {
-                  const jsonRes = await res.json();
-                  if (res.status !== 200) {
-                    console.log('errrrr')
-                    
-                  } else {
-                    context.readGlobale()
-                    context.SelectChatRoom(data)
-                    context.readMessage(data)
-                    context.readAll(data)
-                    const user = context.UserId && jsonRes.find((x) => x.id !== context.UserId)
-                    console.log(data, user)
-                    navigation.navigate("ChatRoom", { id: data, chat: user });
-                    // console.log(jsonRes)
-                  }
-              } catch (err) {
-                  console.log(err);
-              };
-          })
-          .catch(err => {
-              console.log(err);
-          });
-        };
-        fetchData();
-        
+        context.readGlobale()
+        context.SelectChatRoom(data)
+        context.readMessage(data)
+        context.readAll(data)
+        const user = context.UserId && jsonRes.find((x) => x.id !== context.UserId)
+        console.log(data, user)
+        navigation.navigate("ChatRoom", { id: data, chat: user });
       });
     } catch (error) {
       console.log(error);
