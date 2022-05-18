@@ -5,10 +5,6 @@ module.exports = (sequelize, Sequelize) => {
         autoIncrement: true,
         allowNull: false,
         primaryKey: true,
-      },
-      pseudo: {
-        type: Sequelize.STRING,
-        allowNull: true,
       }
     });
     return ChatRoomUser;

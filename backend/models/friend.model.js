@@ -6,7 +6,12 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false,
         primaryKey: true,
       }, 
-      name: {
+      isClasse: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+      },
+      nameClasse: {
         type: Sequelize.STRING,
         allowNull: true,
       }

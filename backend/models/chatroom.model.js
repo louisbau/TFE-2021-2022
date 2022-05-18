@@ -6,11 +6,6 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false,
         primaryKey: true,
       },
-      newMessages: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-        defaultValue: null
-      }, 
       name: {
         type: Sequelize.STRING,
         allowNull: true,
@@ -31,10 +26,8 @@ module.exports = (sequelize, Sequelize) => {
     });
 
     ChatRoom.associate = (models) => {
-      ChatRoom.hasMany(models.Message);
-      ChatRoom.belongsTo(models.Message, { as : 'lastMessage', constraints: false, allowNull:true, defaultValue:null })
-      ChatRoom.hasMany(models.ChatRoomUser);
-      
+      ChatRoom.hasMany(models.SubChatRoom);
+      ChatRoom.hasMany(models.UserChatRoom);
     };
     return ChatRoom;
 };

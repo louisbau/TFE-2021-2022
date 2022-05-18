@@ -34,10 +34,9 @@ module.exports = (sequelize, Sequelize) => {
     });
 
     User.associate = (models) => {
-      User.hasMany(models.Message);
-      User.hasMany(models.ChatRoomUser);
+      User.hasMany(models.UserChatRoom);
       User.hasMany(models.Friend);
-      User.hasOne(models.FriendShip);
+      User.hasMany(models.FriendShip);
     };
     return User;
 };
