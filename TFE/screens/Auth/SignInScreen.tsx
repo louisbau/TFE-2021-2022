@@ -17,11 +17,9 @@ export default function SignIn() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigation = useNavigation();
-    const context = useContext(AppContext)
     const [isError, setIsError] = useState(false);
     const [message, setMessage] = useState('');
     const [isLogin, setIsLogin] = useState(true);
-    
     
     const onForgotPassword = () => {
         navigation.navigate('ForgotPassword');
@@ -30,7 +28,6 @@ export default function SignIn() {
         navigation.navigate('SignUp');
     }
     
-
     const onLogin = () => {
         const payload = {
             email,
@@ -56,10 +53,6 @@ export default function SignIn() {
                     setIsError(false);
                     setMessage(jsonRes.message);
                     save('token', jsonRes.token)
-                    context.cleanup()
-                    context.readGlobale()
-                    context.readUser()
-                    context.SelectUserID(jsonRes.UserId)
                     navigation.navigate('Home', { UserId: jsonRes.UserId });
                 }
             } catch (err) {

@@ -26,7 +26,7 @@ class AppContextProvider extends React.Component {
   async readGlobale() {
     
     
-    axios.get(`http://192.168.1.44:5000/api/ChatRoom/list`, {
+    axios.get(`http://192.168.1.55:5000/api/ChatRoom/listPrivateConv`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,

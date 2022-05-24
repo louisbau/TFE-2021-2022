@@ -2,14 +2,17 @@
 
 import { NavigationContainer, DefaultTheme, DarkTheme, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React, {useContext} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import { ColorSchemeName, View, Text, Image, useWindowDimensions, Pressable } from 'react-native';
 import { Feather } from '@expo/vector-icons'; 
 import NotFoundScreen from '../screens/NotFoundScreen';
 import { RootStackParamList } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
+import * as SecureStore from 'expo-secure-store';
+import { API_URL } from "@env";
+import BorderColorIcon from '@mui/icons-material/BorderColor';
+const API = API_URL
 
 import ChatRoomScreen from '../screens/ChatRoomScreen';
 import HomeScreen from '../screens/HomeScreen';
@@ -20,7 +23,9 @@ import ResetPassword from '../screens/Auth/ResetPasswordScreen';
 import UsersScreen from '../screens/UserScreen';
 import ChatRoomHeader from './ChatRoomHeader';
 import GroupScreen from '../screens/GroupScreen';
+import ChatGroupScreen from '../screens/ChatGroupScreen';
 import { AppContext } from '../components/context/AppContext';
+import ChatGroupHeader from './ChatGroupHeader';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -43,7 +48,6 @@ function Home() {
   return (
     <Tab.Navigator>
       <Tab.Screen name="HomeScreen" component={HomeScreen} options={{headerShown: false}}/>
-      <Tab.Screen name="UsersScreen" component={UsersScreen} options={{headerShown: false}}/>
       <Tab.Screen name="GroupScreen" component={GroupScreen} options={{headerShown: false}}/>
     </Tab.Navigator>
   );
@@ -84,6 +88,14 @@ function RootNavigator() {
             headerBackTitleVisible: false,
           })}
         /> 
+        <Stack.Screen 
+          name="ChatGroup" 
+          component={ChatGroupScreen}         
+          options={({ route }) => ({
+            headerTitle: () => <ChatGroupHeader id={route.params?.id} group={route.params?.chat} />,
+            headerBackTitleVisible: false,
+          })}
+        /> 
       </Stack.Group>
       
       
@@ -97,21 +109,60 @@ function RootNavigator() {
 
 const HomeHeader = (props) => {
   const { width } = useWindowDimensions();
-  const context = useContext(AppContext);
-  const navigation = useNavigation();
+  
+  const [user, setUser] = useState()
+  useEffect(() => {
+    fetchUser();
+  }, [])
+
+
+  const fetchUser = async () => {
+    fetch(`${API}/card`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
+            'credentials': 'include'
+        }
+    })
+    .then(async (res) => { 
+        try {
+            const jsonRes = await res.json();
+            if (res.status !== 200) {
+              setUser(jsonRes)
+            } else {
+              
+              setUser(jsonRes) 
+              
+            }
+        } catch (err) {
+            console.log(err);
+        };
+    })
+    .catch(err => {
+        console.log(err);
+    });
+  };
   return (
     <View style={{ 
       flexDirection: 'row',
-      justifyContent: 'space-between', 
-      width,
-      padding: 10,
+      
       alignItems: 'center',
     }}>
-      {context.user.imageUri && <Image 
-        source={{ uri: context.user.imageUri}}
-        style={{ width: 30, height: 30, borderRadius: 30}}
+      {user && <Image 
+        source={{ uri: user.imageUri}}
+        style={{ width: 30, height: 30, borderRadius: 30, marginLeft: 15, marginRight: 75}}
       />}
-      <Text style={{flex: 1, textAlign: 'center', marginLeft: 0, fontWeight: 'bold', color: 'black'}}>TFE</Text>
+      <Text style={{fontWeight: 'bold', color: 'black',flex:2}}>Chat</Text>
+
+      <Feather
+        name="edit"
+        size={24}
+        color="black"
+        style={{ flex:1 }}
+      />
+      
+      
     </View>
   )
 };

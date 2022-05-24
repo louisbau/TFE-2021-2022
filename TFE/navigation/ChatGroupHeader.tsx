@@ -4,9 +4,9 @@ import { Feather } from "@expo/vector-icons";
 // const API_URL = Platform.OS === 'ios' ? 'http://192.168.1.44:5000/api' : 'http://192.168.1.44:5000/api';
 import { AppContext } from "../components/context/AppContext";
 
-const ChatRoomHeader = ({ id, chat }) => {
+const ChatGroupHeader = ({ id, group }) => {
   const { width } = useWindowDimensions();
-  console.log(chat,id,'lol')
+  console.log(group)
   return (
     <View
       style={{
@@ -20,12 +20,12 @@ const ChatRoomHeader = ({ id, chat }) => {
     >
       <Image
         source={{
-          uri: chat.imageUri
+          uri: group.imageUri
         }}
         style={{ width: 30, height: 30, borderRadius: 30 }}
       />
       <Text style={{ flex: 1, marginLeft: 10, fontWeight: "bold" }}>
-        {chat.pseudo}
+        {group.name}
       </Text>
       <Feather
         name="edit-2"
@@ -37,4 +37,4 @@ const ChatRoomHeader = ({ id, chat }) => {
   );
 };
 
-export default ChatRoomHeader;
+export default ChatGroupHeader;

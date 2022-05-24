@@ -4,12 +4,12 @@ import { useRoute, useNavigation,f } from '@react-navigation/core';
 import Message from "../components/Message";
 import MessageInput from "../components/MessageInput";
 import * as SecureStore from 'expo-secure-store';
-
+import {AppContext} from "../components/context/AppContext";
 import { API_URL } from "@env";
 
 
 
-export default function ChatRoomScreen() {
+export default function ChatGroupScreen() {
     const navigation = useNavigation();
     const route = useRoute();
     const [message, setMessage] = useState([])

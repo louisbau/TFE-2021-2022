@@ -5,48 +5,108 @@ import ChatRoomItem from '../components/ChatRoomItem';
 import * as SecureStore from 'expo-secure-store';
 import { API_URL } from "@env";
 import { useFocusEffect } from '@react-navigation/native';
-
+import UserItem from "../components/UserItem";
 
 export default function TabOneScreen() {
-  const context = useContext(AppContext)
   const [conv, setConv] = useState([]);
   const [search, setSearch] = useState('');
+  const [userId, setUserId] = useState();
+  const [role, setRole] = useState();
+  const [friends, setFriends] = useState();
   const [masterDataSource, setMasterDataSource] = useState([]);
-  const test = context.app
   const API = API_URL
+
+  useEffect(() => {
+    fetchAuthentification()
+    
+  }, [])
   
   useFocusEffect(
     useCallback(() => {
       setSearch('')
       fetchChatRooms()
-
+      fetchFriends()
       return () => {
         setSearch('')
-        fetchChatRooms()
       };
     }, [])
   );
 
   
-
-  const fetchChatRooms = async () => {
-    fetch(`${API}/ChatRoom/test`, {
+  const fetchAuthentification = async () => {
+    fetch(`${API}/authentification`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
+            'credentials': 'include'
         }
     })
     .then(async (res) => { 
         try {
             const jsonRes = await res.json();
             if (res.status !== 200) {
+              setRole(jsonRes.role) 
+              setUserId(jsonRes.UserId)
+            } else {
+              setRole(jsonRes.role) 
+              setUserId(jsonRes.UserId)
                 
-                setConv(jsonRes);
-                setMasterDataSource(jsonRes) 
+            }
+        } catch (err) {
+            console.log(err);
+        };
+    })
+    .catch(err => {
+        console.log(err);
+    });
+  };
+  
+  
+  const fetchChatRooms = async () => {
+    fetch(`${API}/ChatRoom/listPrivateConv`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
+            'credentials': 'include'
+        }
+    })
+    .then(async (res) => { 
+        try {
+            const jsonRes = await res.json();
+            if (res.status !== 200) {
+                console.log('error fetch conv private')
             } else {
                 setConv(jsonRes);
                 setMasterDataSource(jsonRes)
+            }
+        } catch (err) {
+            console.log(err);
+        };
+    })
+    .catch(err => {
+        console.log(err);
+    });
+  };
+
+  const fetchFriends = async () => {
+    fetch(`${API}/Friends/list`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
+            'credentials': 'include'
+        }
+    })
+    .then(async (res) => { 
+        try {
+            const jsonRes = await res.json();
+            if (res.status !== 200) {
+                console.log('error fetch conv private')
+            } else {
+                setFriends(jsonRes)
+                console.log(jsonRes)
             }
         } catch (err) {
             console.log(err);
@@ -71,17 +131,17 @@ export default function TabOneScreen() {
         // Applying filter for the inserted text in search bar
   
         for (let i in item.Users) {
-          if (item.Users[i].id != context.UserId) {
-            const index = item.Users[i].ChatRoomUsers.pseudo ? item.Users[i].ChatRoomUsers.pseudo : item.Users[i].name
-
-            const itemData = (item.name ? item.name : index)
-                ? (item.name ? item.name.toUpperCase() : index.toUpperCase())
-                : ''.toUpperCase();
+          if (item.Users[i].UserId != userId) {
+            const index = item.Users[i].pseudo
+            const itemData = index
+              ? index.toUpperCase()
+              : ''.toUpperCase();
             const textData = text.toUpperCase();
             return itemData.indexOf(textData) > -1;
           }  
         }
       });
+      
       setConv(newData);
       setSearch(text);
     } else {
@@ -93,24 +153,30 @@ export default function TabOneScreen() {
   
   return (
     <View style={styles.page}>
-      {conv && context.UserId && test && (
-        <TextInput
-            style={styles.textInputStyle}
-            onChangeText={(text) => searchFilterFunction(text)}
-            value={search}
-            underlineColorAndroid="transparent"
-            placeholder="Search Here"
-        />
-      )}
-      {conv && context.UserId && test && (
-        <FlatList 
-          data={conv}
-          renderItem={({ item }) => <ChatRoomItem chatRoom={item} isMe={context.UserId}/>}
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item, index) => index.toString()}
-          // horizontal; allow horizental display (exemple stories)
-        />
-      )}
+      
+      <TextInput
+          style={styles.textInputStyle}
+          onChangeText={(text) => searchFilterFunction(text)}
+          value={search}
+          underlineColorAndroid="transparent"
+          placeholder="Search Here"
+      />
+      {friends&&friends.FriendShips !== null && <FlatList 
+        data={friends.FriendShips}
+        renderItem={({ item }) => <UserItem user={item} isMe={userId}/>}
+        showsHorizontalScrollIndicator={false}
+        keyExtractor={(item, index) => index.toString()}
+        horizontal
+      />}
+      
+      <FlatList 
+        data={conv}
+        renderItem={({ item }) => <ChatRoomItem chatRoom={item} isMe={userId}/>}
+        showsHorizontalScrollIndicator={false}
+        keyExtractor={(item, index) => index.toString()}
+        // horizontal; allow horizental display (exemple stories)
+      />
+      
     </View>
   );
 }

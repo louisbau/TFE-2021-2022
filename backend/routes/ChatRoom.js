@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { ChatRoomUser, User, Message, ChatRoom } = require("../models");
+const { ChatRoomUser, User, Message, ChatRoom, UserChatRoom, SubChatRoom } = require("../models");
 const verifyJWT = require('./isAuth')
 const { Op } = require("sequelize");
 
@@ -39,6 +39,127 @@ router.get("/test",verifyJWT, async (req, res) => {
         }
         
         
+        res.json(table);
+    } catch (error) {
+        res.status(400).send(error)
+    }
+    
+});
+
+
+
+
+
+router.get("/listPrivateConv",verifyJWT, async (req, res) => {
+    try {
+        index = []
+        table = []
+        dic = {}
+        
+        const listUserChatRooms = await UserChatRoom.findAll({where: {UserId: req.id.UserId}})
+
+        for (i in listUserChatRooms) {
+            index.push(listUserChatRooms[i].ChatRoomId)
+        }
+        
+        
+        const listChatRoomPrivate = await ChatRoom.findAll({
+            include: {
+                model: SubChatRoom,
+                right: true, // will create a right join
+            },
+            where: {
+              [Op.and]: [
+                { id: index },
+                { isGroupe: false }
+              ]
+            }
+        });
+
+        for (i in listChatRoomPrivate) {
+            dic = listChatRoomPrivate[i].dataValues
+            
+            const UserMessage = await UserChatRoom.findOne({
+                include: {
+                    model: Message,
+                    where : {id: dic["SubChatRooms"][0]["lastMessageId"]}
+                }
+            })
+            dic["SubChatRooms"] = dic["SubChatRooms"][0]
+            const listUser = await UserChatRoom.findAll({
+                include: {
+                    model: ChatRoomUser, 
+                    where: {SubChatRoomId:dic["SubChatRooms"].id}
+                },
+                
+            })
+            
+            listUserCopy = listUser.map(x => x.dataValues);
+            for (a in listUserCopy) {
+                let img = await User.findOne({
+                    where : {id : listUserCopy[a].UserId}
+                })
+                img = img.dataValues
+                listUserCopy[a]["imageUri"] = img.imageUri
+            }
+            
+            dic["Users"] = listUserCopy            
+            dic["lastMessage"] = UserMessage.dataValues
+            dic["lastMessage"]["Messages"] = dic["lastMessage"]["Messages"][0]
+            table.push(dic)
+        }
+
+        res.json(table);
+    } catch (error) {
+        res.status(400).send(error)
+    }
+    
+});
+
+router.get("/listGroup",verifyJWT, async (req, res) => {
+    try {
+        index = []
+        table = []
+        dic = {}
+        
+        const listUserChatRooms = await UserChatRoom.findAll({where: {UserId: req.id.UserId}})
+
+        for (i in listUserChatRooms) {
+            index.push(listUserChatRooms[i].ChatRoomId)
+        }
+        
+        
+        const listChatRoomPrivate = await ChatRoom.findAll({
+            include: {
+                model: SubChatRoom,
+                right: true, // will create a right join
+            },
+            where: {
+              [Op.and]: [
+                { id: index },
+                { isGroupe: true }
+              ]
+            }
+        });
+
+        for (i in listChatRoomPrivate) {
+            dic = listChatRoomPrivate[i].dataValues
+            
+            
+            dic["SubChatRooms"] = dic["SubChatRooms"]
+            const listUser = await UserChatRoom.findAll({
+                where : {ChatRoomId : dic.id},
+                include: {
+                    model: ChatRoomUser
+                },
+                
+            })
+            listUserCopy = listUser.map(x => x.dataValues);
+            dic["Users"] = listUserCopy 
+            
+            table.push(dic)
+        }
+
         res.json(table);
     } catch (error) {
         res.status(400).send(error)

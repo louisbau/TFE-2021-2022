@@ -7,13 +7,14 @@ const blue = "lightblue";
 const green = "lightgreen";
 
 
-const Messages = ({ message, user }) => {
-    //console.log(user)
-    const context = useContext(AppContext)
-    //const user = context.userList && context.userList.find((x) => x.id === message.UserId)
-    const isMe = context.UserId && message.UserId === context.UserId;
+const Messages = ({ message, user, isMeUserId }) => {
+    const UserMessageID = message.UserChatRoomId
+    const isMeUserChatID = user.find((x) => x.UserId === isMeUserId).ChatRoomUsers[0].UserChatRoomId
+    const UserMessage = user.find((x) => x.ChatRoomUsers[0].UserChatRoomId === UserMessageID)
+    const isMe = UserMessageID === isMeUserChatID
     // const [soundURI, setSoundURI] = useState(null);
     const { width } = useWindowDimensions();
+    
     return (
         <View style={[styles.container, isMe ? styles.rightContainer : styles.leftContainer]}>
             
@@ -36,8 +37,8 @@ const Messages = ({ message, user }) => {
                 )}
             </View>
             <View>
-                {user && <Image source={{ uri: user.imageUri }} style={styles.image} />}
-                {user && <Text>{user.name}</Text>}
+                {user && <Image source={{ uri: UserMessage.imageUri }} style={styles.image} />}
+                {user && <Text>{UserMessage.pseudo}</Text>}
             </View>
         </View>
         

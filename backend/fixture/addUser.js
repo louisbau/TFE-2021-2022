@@ -53,6 +53,7 @@ async function  DefaultUser () {
             const us = await UserChatRoom.create(({
                 UserId: chat[a].id,
                 ChatRoomId: chatid.id,
+                pseudo: chat[a].name
             }))
             
             await ChatRoomUser.create(({
@@ -115,7 +116,7 @@ async function  DefaultUser () {
     }
     const listFriend = await Friend.findAll()
     for (i in listFriend) {
-        if (i) {
+        if (listUser[i].id !== 1) {
             await FriendShip.create(({
                 FriendId: 1,
                 UserId: listUser[i].id
@@ -123,6 +124,7 @@ async function  DefaultUser () {
         }
         
     }
+    
     
 
     

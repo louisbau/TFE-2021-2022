@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { User, ChatRoomUser } = require("../models");
+const { User, ChatRoomUser, ChatRoom, UserChatRoom, SubChatRoom } = require("../models");
 const bcrypt = require("bcrypt");
 var jwt = require('jsonwebtoken');
 const verifyJWT = require("./isAuth");
@@ -18,13 +18,35 @@ router.get("/aller",verifyJWT, async (req, res) => {
     res.json(user);
 });
 
+router.get("/card",verifyJWT, async (req, res) => {
+    const user = await User.findOne({where: {id : req.id.UserId}})
+    res.json(user);
+});
+
+router.get("/authentification",verifyJWT, async (req, res) => {
+    const result = {UserId :req.id.UserId, role: req.id.role}
+    res.json(result);
+});
+
 router.get("/:id",verifyJWT, async (req, res) => {
-    const listOfUserq = await User.findAll({ include: [{
+    const listOfUserq = await UserChatRoom.findAll({ include: [{
         model: ChatRoomUser,
-        where: {ChatRoomId: req.params.id}
+        where: {SubChatRoomId: req.params.id}
        }] 
     });
-    res.json(listOfUserq);
+
+    
+    listUserCopy = listOfUserq.map(x => x.dataValues);
+    for (a in listUserCopy) {
+        let img = await User.findOne({
+            where : {id : listUserCopy[a].UserId}
+        })
+        img = img.dataValues
+        listUserCopy[a]["imageUri"] = img.imageUri
+    }
+    
+
+    res.json(listUserCopy);
 });
 
 router.post("/register", async (req, res) => {
@@ -80,7 +102,7 @@ router.post("/login", async (req, res) => {
                 if (err) { // error while comparing
                     res.status(502).json({message: "error while checking user password"});
                 } else if (compareRes) { // password match
-                    const token = jwt.sign({ email: email, UserId: dbUser.id }, process.env.TOKEN_SECRET, { expiresIn: '1h' });
+                    const token = jwt.sign({ email: email, UserId: dbUser.id, role:  dbUser.role}, process.env.TOKEN_SECRET, { expiresIn: '1h' });
                     res.status(200).json({message: "user logged in", token: token, UserId: dbUser.id});
                 } else { // password doesnt match
                     res.status(401).json({message: "invalid credentials"});

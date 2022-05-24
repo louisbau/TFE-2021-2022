@@ -1,42 +1,42 @@
 const express = require("express");
 const router = express.Router();
-const { Message, User, ChatRoomUser, ChatRoom } = require("../models");
+const { Message, User, ChatRoomUser, ChatRoom, SubChatRoom } = require("../models");
 const moment = require("moment");
 const verifyJWT = require("./isAuth");
 
 
 
 router.get("/:id",verifyJWT, async (req, res) => {
-    const listOfChatRoomUser = await Message.findAll(
+    const listMessage = await Message.findAll(
         {
             where: {
-                ChatRoomId: req.params.id
+                SubChatRoomId: req.params.id
             }
         }
     )
-    res.json(listOfChatRoomUser);
+    res.json(listMessage);
 });
 
 
 
 router.post("/",verifyJWT, async (req, res) => {
-    const { content, image, audio, ChatRoomId } = req.body;
-    Message.create(({
+    const { content, image, audio, SubChatRoomId, UserChatRoomId } = req.body;
+    await Message.create(({
         content: content,
         image: image,
         audio: audio,
-        ChatRoomId: ChatRoomId,
-        UserId: req.id.UserId,
+        SubChatRoomId: SubChatRoomId,
+        UserChatRoomId: UserChatRoomId,
         createdAt : moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
     }))
     .then(async (req2) => {
-        ChatRoom.update({lastMessageId : req2.id}, {
-            where : {id : req2.ChatRoomId}
+        SubChatRoom.update({lastMessageId : req2.id}, {
+            where : {id : req2.SubChatRoomId}
         })
         const listOfChatRoomUser = await Message.findAll(
             {
                 where: {
-                    ChatRoomId: ChatRoomId
+                    SubChatRoomId: SubChatRoomId
                 }
             }
         )

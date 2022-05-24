@@ -1,8 +1,12 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-  container: {
+  containerList: {
     flexDirection: 'row',
+    padding: 10,
+  },
+  container: {
+    flexDirection: 'column',
     padding: 10,
   },
   image: {

@@ -21,14 +21,14 @@ import { SimpleLineIcons, Feather, MaterialCommunityIcons, AntDesign, Ionicons }
 import { API_URL } from "@env";
 const API = API_URL
 
-const MessageInput = ({ chatRoomId, setMessage }) => {
+const MessageInput = ({ subChatRoomId, userChatRoomId, setMessage }) => {
     const [content, setContent] = useState('');
     const [image, setImage] = useState(null);
     const [audio, setAudio] = useState(null);
-    const context = useContext(AppContext);
     const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
     const [progress, setProgress] = useState(0);
     const [recording, setRecording] = useState(null);
+    
     
     useEffect(() => {
       (async () => {
@@ -93,7 +93,7 @@ const MessageInput = ({ chatRoomId, setMessage }) => {
       }
       setAudio(uri);
     }
-
+    
     const sendAudio = async () => {
       if (!audio) {
         return;
@@ -112,7 +112,8 @@ const MessageInput = ({ chatRoomId, setMessage }) => {
             content,
             image,
             audio,
-            ChatRoomId: chatRoomId
+            SubChatRoomId: subChatRoomId,
+            UserChatRoomId: userChatRoomId
         }, {
           headers: {
             'Content-Type': 'application/json',
@@ -131,9 +132,7 @@ const MessageInput = ({ chatRoomId, setMessage }) => {
       }
       
       resetFields();
-      context.readAll(chatRoomId)
-      context.readMessage(chatRoomId)
-      context.readGlobale()
+      
     };
 
 
@@ -144,7 +143,8 @@ const MessageInput = ({ chatRoomId, setMessage }) => {
                 content,
                 image,
                 audio,
-                ChatRoomId: chatRoomId
+                SubChatRoomId: subChatRoomId,
+                UserChatRoomId: userChatRoomId
             }, {
               headers: {
                 'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
@@ -162,9 +162,6 @@ const MessageInput = ({ chatRoomId, setMessage }) => {
           }
         
         resetFields();
-        context.readAll(chatRoomId)
-        context.readMessage(chatRoomId)
-        context.readGlobale()
     }
 
     const resetFields = () => {
@@ -213,7 +210,8 @@ const MessageInput = ({ chatRoomId, setMessage }) => {
               content,
               image,
               audio,
-              ChatRoomId: chatRoomId
+              SubChatRoomId: subChatRoomId,
+              UserChatRoomId: userChatRoomId
           }, {
             headers: {
               'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,

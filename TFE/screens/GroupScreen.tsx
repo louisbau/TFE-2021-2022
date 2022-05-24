@@ -9,12 +9,11 @@ export default function GroupScreen() {
     const [group, setGroup] = useState([]);
     const [search, setSearch] = useState('');
     const [masterDataSource, setMasterDataSource] = useState([]);
-
+    
 
     useEffect(() => {
         const fetchGroup = async () => {
-            console.log('')
-            fetch(`${API}/ChatRoom/list/Group`, {
+            fetch(`${API}/ChatRoom/listGroup`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -31,6 +30,7 @@ export default function GroupScreen() {
                     } else {
                         setGroup(jsonRes);
                         setMasterDataSource(jsonRes)
+                        
                     }
                 } catch (err) {
                     console.log(err);
