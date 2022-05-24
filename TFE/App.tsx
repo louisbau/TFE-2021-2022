@@ -4,7 +4,10 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
 import Navigation from './navigation';
-import AppContextProvider from './components/context/AppContext';
+
+import { MainStackNavigator } from './navigation/StackNavigator';
+import DrawerNavigator from './navigation/DrawerNavigator';
+import { NavigationContainer } from "@react-navigation/native";
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -14,12 +17,16 @@ export default function App() {
     return null;
   } else {
     return (
-      <SafeAreaProvider>
-        <AppContextProvider>
-          <Navigation colorScheme={colorScheme} />
-        </AppContextProvider>
-        <StatusBar />
-      </SafeAreaProvider>
+      // <SafeAreaProvider>
+      //   <AppContextProvider>
+      //     <Navigation colorScheme={colorScheme} />
+      //   </AppContextProvider>
+      //   <StatusBar />
+      // </SafeAreaProvider>
+      <NavigationContainer>
+        <MainStackNavigator />
+      </NavigationContainer>
+
     );
   }
 }

@@ -67,6 +67,7 @@ async function  DefaultUser () {
                 await UserChatRoom.update({role: "admin"}, {
                     where : {ChatRoomId : chatid.id}
                 })
+                
                 await SubChatRoom.update({creator: us.id}, {
                     where : {ChatRoomId : chatid.id}
                 })

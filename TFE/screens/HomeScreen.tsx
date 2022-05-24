@@ -130,9 +130,9 @@ export default function TabOneScreen() {
       const newData = masterDataSource.filter(function (item) {
         // Applying filter for the inserted text in search bar
   
-        for (let i in item.Users) {
-          if (item.Users[i].UserId != userId) {
-            const index = item.Users[i].pseudo
+        for (let i in item["Users"]) {
+          if (item["Users"][i]["UserId"] != userId) {
+            const index = item["Users"][i]["pseudo"]
             const itemData = index
               ? index.toUpperCase()
               : ''.toUpperCase();
@@ -161,8 +161,8 @@ export default function TabOneScreen() {
           underlineColorAndroid="transparent"
           placeholder="Search Here"
       />
-      {friends&&friends.FriendShips !== null && <FlatList 
-        data={friends.FriendShips}
+      {friends&&friends["FriendShips"] !== null && <FlatList 
+        data={friends["FriendShips"]}
         renderItem={({ item }) => <UserItem user={item} isMe={userId}/>}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}

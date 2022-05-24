@@ -4,7 +4,7 @@ import * as SecureStore from 'expo-secure-store';
 import { useNavigation } from '@react-navigation/core';
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
-import {AppContext} from "../../components/context/AppContext";
+
 import { API_URL } from "@env";
 const API = API_URL
 

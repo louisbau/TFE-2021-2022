@@ -10,8 +10,6 @@ export default function UsersScreen() {
 
   return (
     <View style={styles.page}>
-        
-        
     </View>
   );
 }
