@@ -20,6 +20,343 @@ router.post("/newChatRoom/", async (req, res) => {
     res.json(users);
 });
 
+router.patch("/renameUserChat", verifyJWT, async (req, res) => {
+    const { userchatname, userchatid } = req.body;
+    
+    const group = await UserChatRoom.update({pseudo: userchatname}, {
+        where : {id : userchatid}
+    })
+    
+    
+
+
+    const ChatRoomGroup = await ChatRoom.findAll({
+        include: [
+            {
+                model: SubChatRoom,
+                right: true, // will create a right join
+            },
+            {
+                model: UserChatRoom,
+                right: true, // will create a right join
+            }
+        ],
+        where: {
+          [Op.and]: [
+            { id: group.ChatRoomId },
+            { isGroupe: true }
+          ]
+        }
+    });
+
+    res.json(ChatRoomGroup[0])
+
+    
+});
+
+router.patch("/deleteUserChat", verifyJWT, async (req, res) => {
+    const { id } = req.body;
+
+    
+    await Message.destroy(({
+        where : {UserChatRoomId : id}
+    }))
+
+    await ChatRoomUser.destroy(({
+        where : {UserChatRoomId : id}
+    }))
+    
+    
+    
+    await UserChatRoom.destroy(({
+        where : {id : id}
+    }))
+    
+    
+
+
+    res.json("succes")
+
+    
+});
+
+router.patch("/deleteChatRoom", verifyJWT, async (req, res) => {
+    const { id } = req.body;
+
+    
+    await Message.destroy(({
+        where : {SubChatRoomId : id}
+    }))
+
+    await ChatRoomUser.destroy(({
+        where : {SubChatRoomId : id}
+    }))
+    
+    
+    
+    await SubChatRoom.destroy(({
+        where : {id : id}
+    }))
+    
+    
+
+
+    res.json("succes")
+
+    
+});
+
+router.patch("/deleteSubRoom", verifyJWT, async (req, res) => {
+    const { id } = req.body;
+
+    const listSub = await SubChatRoom.findAll(({
+        where: {ChatRoomId: id}
+    }))
+    const listUser = await UserChatRoom.findAll(({
+        where: {ChatRoomId: id}
+    }))
+    for (i in listSub) {
+        await Message.destroy(({
+            where : {SubChatRoomId : listSub[i].id}
+        }))
+    }
+    for (i in listUser) {
+        await ChatRoomUser.destroy(({
+            where : {UserChatRoom : listUser[i].id}
+        }))
+    }
+    
+    await UserChatRoom.destroy(({
+        where : {ChatRoomId : id}
+    }))
+    await SubChatRoom.destroy(({
+        where : {ChatRoomId : id}
+    }))
+    
+    
+
+
+    res.json("succes")
+
+    
+});
+
+router.patch("/renameGroup", verifyJWT, async (req, res) => {
+    const { groupname, groupid } = req.body;
+    
+    const group = await ChatRoom.update({name: groupname}, {
+        where : {id : groupid}
+    })
+    
+    
+
+
+    const ChatRoomGroup = await ChatRoom.findAll({
+        include: [
+            {
+                model: SubChatRoom,
+                right: true, // will create a right join
+            },
+            {
+                model: UserChatRoom,
+                right: true, // will create a right join
+            }
+        ],
+        where: {
+          [Op.and]: [
+            { id: group.id },
+            { isGroupe: true }
+          ]
+        }
+    });
+
+    res.json(ChatRoomGroup[0])
+
+    
+});
+
+router.patch("/renameSub", verifyJWT, async (req, res) => {
+    const { subname, subnameid } = req.body;
+    
+    const subchat = await SubChatRoom.update({name: subname}, {
+        where : {id : subnameid}
+    })
+    
+    
+
+
+    const ChatRoomGroup = await ChatRoom.findAll({
+        include: [
+            {
+                model: SubChatRoom,
+                right: true, // will create a right join
+            },
+            {
+                model: UserChatRoom,
+                right: true, // will create a right join
+            }
+        ],
+        where: {
+          [Op.and]: [
+            { id: subchat.ChatRoomId },
+            { isGroupe: true }
+          ]
+        }
+    });
+
+    res.json(ChatRoomGroup[0])
+
+    
+});
+
+router.post("/newChat", verifyJWT, async (req, res) => {
+    const { subname, ChatRoomId } = req.body;
+    console.log(subname, ChatRoomId, req.id.UserId)
+    const userCreator = await UserChatRoom.findOne(({
+        where: {
+            [Op.and]: [
+                { ChatRoomId: ChatRoomId},
+                { UserId: req.id.UserId }
+            ]
+        }
+    }))
+    const subchat = await SubChatRoom.create(({
+        name: subname,
+        ChatRoomId : ChatRoomId,
+        creator: userCreator.id
+    }))
+    const allUserChatRoom = await UserChatRoom.findAll(({where : {ChatRoomId: ChatRoomId}}))
+    for (i in allUserChatRoom) {
+        await ChatRoomUser.create(({
+            SubChatRoomId: subchat.id,
+            UserChatRoomId: allUserChatRoom[i].id
+        }))
+    }
+    
+
+
+    const ChatRoomGroup = await ChatRoom.findAll({
+        include: [
+            {
+                model: SubChatRoom,
+                right: true, // will create a right join
+            },
+            {
+                model: UserChatRoom,
+                right: true, // will create a right join
+            }
+        ],
+        where: {
+          [Op.and]: [
+            { id: ChatRoomId },
+            { isGroupe: true }
+          ]
+        }
+    });
+
+    res.json(ChatRoomGroup[0])
+
+    
+});
+
+router.post("/addUserGroup", verifyJWT, async (req, res) => {
+    const { name, ChatRoomId } = req.body;
+    const IsUser = await User.findOne(({
+        where : {name : name}
+    }));
+
+    const UserChatRoom1 = await UserChatRoom.create(({
+        pseudo: name,
+        ChatRoomId: ChatRoomId,
+        UserId: IsUser.id
+    }))
+    
+    const allSubChatRoom = await SubChatRoom.findAll(({where : {ChatRoomId: ChatRoomId}}))
+    for (i in allSubChatRoom) {
+        await ChatRoomUser.create(({
+            SubChatRoomId: allSubChatRoom[i].id,
+            UserChatRoomId: UserChatRoom1.id
+        }))
+    }
+
+    const ChatRoomGroup = await ChatRoom.findAll({
+        include: [
+            {
+                model: SubChatRoom,
+                right: true, // will create a right join
+            },
+            {
+                model: UserChatRoom,
+                right: true, // will create a right join
+            }
+        ],
+        where: {
+          [Op.and]: [
+            { id: ChatRoomId },
+            { isGroupe: true }
+          ]
+        }
+    });
+
+    res.json(ChatRoomGroup[0])
+
+    
+});
+
+router.post("/newGroup", verifyJWT, async (req, res) => {
+    const { name, subname } = req.body;
+    const createChatRoom = await ChatRoom.create(({
+        isGroupe: true,
+        name: name,
+    }))
+
+    const creator = await User.findOne(({where : {id : req.id.UserId}}))
+    const UserChatRoom1 = await UserChatRoom.create(({
+        pseudo: creator.name,
+        role: "admin",
+        ChatRoomId: createChatRoom.id,
+        UserId: creator.id
+    }))
+
+    await ChatRoom.update({creator:  UserChatRoom1.id}, {
+        where : {id : createChatRoom.id}
+    })
+
+    const subchat = await SubChatRoom.create(({
+        name: subname,
+        ChatRoomId : createChatRoom.id,
+        creator:  UserChatRoom1.id
+    }))
+
+    await ChatRoomUser.create(({
+        SubChatRoomId: subchat.id,
+        UserChatRoomId: UserChatRoom1.id
+    }))
+
+    const ChatRoomGroup = await ChatRoom.findAll({
+        include: [
+            {
+                model: SubChatRoom,
+                right: true, // will create a right join
+            },
+            {
+                model: UserChatRoom,
+                right: true, // will create a right join
+            }
+        ],
+        where: {
+          [Op.and]: [
+            { id: createChatRoom.id },
+            { isGroupe: true }
+          ]
+        }
+    });
+
+    res.json(ChatRoomGroup[0])
+
+    
+});
+
 router.post("/newConv",verifyJWT, async (req, res) => {
     const { name } = req.body;
     const IsUser = await User.findOne(({
@@ -64,6 +401,7 @@ router.post("/newConv",verifyJWT, async (req, res) => {
                 const createChatRoom = await ChatRoom.create(({
                     isGroupe: false
                 }))
+                console.log(req.id.UserId)
                 const creator = await User.findOne(({where : {id : req.id.UserId}}))
                 const UserChatRoom1= await UserChatRoom.create(({
                     pseudo: creator.name,
@@ -92,15 +430,6 @@ router.post("/newConv",verifyJWT, async (req, res) => {
                     SubChatRoomId: subchat.id,
                     UserChatRoomId: UserChatRoom2.id
                 }))
-
-                const mess = await Message.create(({
-                    content: 'hello',
-                    SubChatRoomId: subchat.id,
-                    UserChatRoomId: UserChatRoom1.id,
-                }))
-                await SubChatRoom.update({lastMessageId:  mess.id}, {
-                    where : {id : subchat.id}
-                })
 
                 const ChatRoomPrivate = await ChatRoom.findAll({
                     include: [

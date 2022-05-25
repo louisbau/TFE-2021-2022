@@ -85,6 +85,7 @@ router.get("/listPrivateConv",verifyJWT, async (req, res) => {
                     where : {id: dic["SubChatRooms"][0]["lastMessageId"]}
                 }
             })
+            
             dic["SubChatRooms"] = dic["SubChatRooms"][0]
             const listUser = await UserChatRoom.findAll({
                 include: {
@@ -103,14 +104,17 @@ router.get("/listPrivateConv",verifyJWT, async (req, res) => {
                 listUserCopy[a]["imageUri"] = img.imageUri
             }
             
-            dic["Users"] = listUserCopy            
-            dic["lastMessage"] = UserMessage.dataValues
-            dic["lastMessage"]["Messages"] = dic["lastMessage"]["Messages"][0]
+            dic["Users"] = listUserCopy 
+            if (UserMessage) {
+                dic["lastMessage"] = UserMessage.dataValues
+                dic["lastMessage"]["Messages"] = dic["lastMessage"]["Messages"][0]
+            }           
             table.push(dic)
         }
 
         res.json(table);
     } catch (error) {
+        console.log(error)
         res.status(400).send(error)
     }
     
@@ -162,6 +166,7 @@ router.get("/listGroup",verifyJWT, async (req, res) => {
 
         res.json(table);
     } catch (error) {
+        console.log(error)
         res.status(400).send(error)
     }
     

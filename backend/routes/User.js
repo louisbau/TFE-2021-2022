@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { User, ChatRoomUser, ChatRoom, UserChatRoom, SubChatRoom } = require("../models");
+const { User, ChatRoomUser, ChatRoom, UserChatRoom, SubChatRoom, Friend } = require("../models");
 const bcrypt = require("bcrypt");
 var jwt = require('jsonwebtoken');
 const verifyJWT = require("./isAuth");
@@ -54,11 +54,11 @@ router.post("/register", async (req, res) => {
     User.findOne({ where : {
         email: email, 
     }})
-    .then(dbUser => {
+    .then(async (dbUser)  => {
         if(dbUser) {
             return res.status(409).json({message: "email already exists"});
         } else if (email && password) {
-            bcrypt.hash(password, 12, (err, passwordHash) => {
+            await bcrypt.hash(password, 12, (err, passwordHash) => {
                 if (err) {
                     return res.status(500).json({message: "couldnt hash the password"}); 
                 } else if (passwordHash) {
@@ -67,7 +67,10 @@ router.post("/register", async (req, res) => {
                         name: name,
                         password: passwordHash,
                     }))
-                    .then(() => {
+                    .then(async (result)  => {
+                        await Friend.create(({
+                            UserId: result.id
+                        }))
                         res.status(200).json({message: "user created"});
                     })
                     .catch(err => {

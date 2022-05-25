@@ -1,88 +1,24 @@
-import {  useNavigation } from '@react-navigation/native';
+import {  useNavigation, useNavigationState } from '@react-navigation/native';
 import React, { useEffect, useState} from 'react'
 import {  View, Switch, Text, Image, useWindowDimensions, Pressable,TextInput,  Alert,Modal, StyleSheet } from 'react-native';
-import { Feather } from '@expo/vector-icons'; 
+import { Feather } from '@expo/vector-icons';
+import CustomFeather from '../components/CustomFeather';
 import * as SecureStore from 'expo-secure-store';
 import { API_URL } from "@env";
 const API = API_URL
+import AddGroupItem from '../components/AddGroupItem';
+import AddConvItem from '../components/AddConvItem';
 
-
-const HomeHeader = () => {
-    const { width } = useWindowDimensions();
+const HomeHeader = ({ nav }) => {
     const [modalVisible, setModalVisible] = useState(false);
-    const [user, setUser] = useState()
-    const [text, onChangeText] = useState("");
-    const navigation = useNavigation();
-    const [isEnabled, setIsEnabled] = useState(false);
-    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
     
-    useEffect(() => {
-      fetchUser();
-    }, [])
-  
-    const onPress = (event) => {
-      event.preventDefault()
-      fetchAddConv()
-  
-    }
-    const fetchAddConv = async () => {
-      fetch(`${API}/ChatRoomUser/NewConv`, {
-          method: 'Post',
-          headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
-              'credentials': 'include'
-          },
-          body: JSON.stringify({ name: text })
-      })
-      .then(async (res) => { 
-          try {
-              const jsonRes = await res.json();
-              if (res.status !== 200) {
-                console.log(jsonRes)
-              } else {
-                setModalVisible(!modalVisible);
-                onChangeText("")
-                navigation.navigate("ChatRoom", { id: jsonRes.SubChatRooms[0].id, chat: jsonRes.UserChatRooms.find((x)=> x.UserId !== user.id) });
-                
-              }
-          } catch (err) {
-              console.log(err);
-          };
-      })
-      .catch(err => {
-          console.log(err);
-      });
-    };
-  
-  
-    const fetchUser = async () => {
-      fetch(`${API}/card`, {
-          method: 'GET',
-          headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
-              'credentials': 'include'
-          }
-      })
-      .then(async (res) => { 
-          try {
-              const jsonRes = await res.json();
-              if (res.status !== 200) {
-                setUser(jsonRes)
-              } else {
-                
-                setUser(jsonRes) 
-                
-              }
-          } catch (err) {
-              console.log(err);
-          };
-      })
-      .catch(err => {
-          console.log(err);
-      });
-    };
+    
+    
+    
+    const index = useNavigationState(state => state.routes);
+    const Tab = index[0].state ? index[0].state.index : 0
+    
+    
     return (
       <View style={styles.centeredView}>
         <Modal
@@ -94,70 +30,15 @@ const HomeHeader = () => {
             setModalVisible(!modalVisible);
           }}
         >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <View style={{ 
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}>
-                <Text style={styles.modalText}>New Conv</Text>
-                <Pressable
-                  style={[styles.button, styles.buttonClose]}
-                  onPress={() => setModalVisible(!modalVisible)}
-                >  
-                  <Text style={styles.textStyle}>Cancel</Text>
-                  
-                </Pressable>
-              </View>
-              <View style={{ 
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}>
-                <Switch
-                    trackColor={{ false: "#767577", true: "#81b0ff" }}
-                    thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
-                    
-                    onValueChange={toggleSwitch}
-                    value={isEnabled}
-                />
-                <TextInput
-                style={styles.input}
-                onChangeText={onChangeText}
-                value={text}
-                />
-                <Pressable
-                  style={[styles.button, styles.buttonClose]}
-                  onPress={onPress}
-                >  
-                  <Text style={styles.textStyle}>Add</Text>
-                    
-                </Pressable>
-              </View>
-              
-            </View>
-          </View>
+          {Tab ? <AddGroupItem modalVisible={modalVisible} setModalVisible={setModalVisible}/> : <AddConvItem modalVisible={modalVisible} setModalVisible={setModalVisible}/> }
         </Modal>
         <View style={{ 
          flexDirection: 'row',
          alignItems: 'center',
          justifyContent: "center",
         }}>
-          {user && <Image 
-            source={{ uri: user.imageUri}}
-            style={{ width: 30, height: 30, borderRadius: 30, backgroundColor:'blue'}}
-          />}
-          <Text style={{fontWeight: 'bold', color: 'black' , backgroundColor:'red'}}>Chat</Text>
-          <Pressable
-            onPress={() => setModalVisible(true)}
-            style={{backgroundColor:'green'}}
-          >
-            <Feather
-              name="edit"
-              size={24}
-              color="black"
-            />
-          </Pressable>
-  
+          <Text style={{fontWeight: 'bold', color: 'black' , backgroundColor:'red'}}>{Tab ? "Group" : "Chat"}</Text>
+          <CustomFeather name="edit" size={24} onPress={() => setModalVisible(true)} color="black"/>
         </View>
       </View>
     )

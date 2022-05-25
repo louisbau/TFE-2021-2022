@@ -1,11 +1,12 @@
 import React, { useState, useContext, useEffect, useCallback } from "react";
 import {AppContext} from "../components/context/AppContext";
-import { View, StyleSheet, FlatList, Platform, TextInput } from 'react-native';
+import { View, StyleSheet, FlatList, Platform, TextInput, SafeAreaView, StatusBar } from 'react-native';
 import ChatRoomItem from '../components/ChatRoomItem';
 import * as SecureStore from 'expo-secure-store';
 import { API_URL } from "@env";
 import { useFocusEffect } from '@react-navigation/native';
 import UserItem from "../components/UserItem";
+import CustomInput from "../components/CustomInput";
 
 export default function TabOneScreen() {
   const [conv, setConv] = useState([]);
@@ -76,7 +77,7 @@ export default function TabOneScreen() {
         try {
             const jsonRes = await res.json();
             if (res.status !== 200) {
-                console.log('error fetch conv private')
+                console.log('error fetch conv private room')
             } else {
                 setConv(jsonRes);
                 setMasterDataSource(jsonRes)
@@ -106,7 +107,6 @@ export default function TabOneScreen() {
                 console.log('error fetch conv private')
             } else {
                 setFriends(jsonRes)
-                console.log(jsonRes)
             }
         } catch (err) {
             console.log(err);
@@ -152,15 +152,9 @@ export default function TabOneScreen() {
   
   
   return (
-    <View style={styles.page}>
+    <SafeAreaView style={styles.container}>
       
-      <TextInput
-          style={styles.textInputStyle}
-          onChangeText={(text) => searchFilterFunction(text)}
-          value={search}
-          underlineColorAndroid="transparent"
-          placeholder="Search Here"
-      />
+      <CustomInput placeholder='Search Here' value={search} setValue={searchFilterFunction} secureTextEntry={false}/>
       {friends&&friends["FriendShips"] !== null && <FlatList 
         data={friends["FriendShips"]}
         renderItem={({ item }) => <UserItem user={item} isMe={userId}/>}
@@ -177,7 +171,7 @@ export default function TabOneScreen() {
         // horizontal; allow horizental display (exemple stories)
       />
       
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -196,5 +190,10 @@ const styles = StyleSheet.create({
     margin: 5,
     borderColor: '#009688',
     backgroundColor: '#FFFFFF',
+  },
+  container: {
+    backgroundColor: 'white',
+    flex: 1,
+    paddingTop: StatusBar.currentHeight
   },
 })

@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screens/HomeScreen';
 import GroupScreen from '../screens/GroupScreen';
 import { MainStackNavigator, ContactStackNavigator } from './StackNavigator'
+import UsersScreen from '../screens/UserScreen';
 
 const Tab = createBottomTabNavigator();
 

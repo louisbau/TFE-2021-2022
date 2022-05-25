@@ -13,6 +13,8 @@ import SignUp from '../screens/Auth/SignUpScreen';
 import ForgotPassword from '../screens/Auth/ForgotPasswordScreen';
 import ResetPassword from '../screens/Auth/ResetPasswordScreen';
 import DrawerNavigator from "./DrawerNavigator";
+import TabNavigator from "./TabNavigator";
+import UsersScreen from "../screens/UserScreen";
 
 const Stack = createStackNavigator();
 
@@ -25,7 +27,7 @@ const screenOptionStyle = {
 };
 
 
-const MainStackNavigator = () => {
+const MainStackNavigator = ({ nav }) => {
     return (
         <Stack.Navigator screenOptions={screenOptionStyle}>
             <Stack.Group screenOptions={{ headerShown: false }}>
@@ -68,17 +70,17 @@ const MainStackNavigator = () => {
                         headerBackTitleVisible: false,
                     })}
                 /> 
+                
             </Stack.Group>
+            <Stack.Screen 
+                name="User" 
+                component={UsersScreen}
+            />
+            
         </Stack.Navigator>
     );
 };
 
-const ContactStackNavigator = () => {
-  return (
-    <Stack.Navigator screenOptions={screenOptionStyle}>
-      <Stack.Screen name="Contact" component={Contact} />
-    </Stack.Navigator>
-  );
-};
 
-export { MainStackNavigator, ContactStackNavigator };
+
+export { MainStackNavigator };

@@ -17,6 +17,35 @@ router.get("/:id",verifyJWT, async (req, res) => {
     res.json(listMessage);
 });
 
+router.patch("/renameMessage", verifyJWT, async (req, res) => {
+    const { newmessage, id } = req.body;
+    
+    const group = await Message.update({content: newmessage}, {
+        where : {id : id}
+    })
+    
+    
+
+
+    res.json(group)
+
+    
+});
+
+router.patch("/deleteMessage", verifyJWT, async (req, res) => {
+    const { id } = req.body;
+    
+    const group = await Message.destroy(({
+        where : {id : id}
+    }))
+    
+    
+
+
+    res.json(group)
+
+    
+});
 
 
 router.post("/",verifyJWT, async (req, res) => {

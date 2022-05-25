@@ -10,21 +10,29 @@ router.get("/list",verifyJWT, async (req, res) => {
             model: FriendShip,
         }
     }));
-    const list = listOfFriends.dataValues
-    
-    if(!list["FriendShips"][0]){
+    if (!listOfFriends) {
+        const list = {}
         list["FriendShips"] = null
+        res.json(list);
     }
     else {
-        for (i in list.FriendShips) {
-            list["FriendShips"][i] = list.FriendShips[i].dataValues
-            const u = await User.findOne(({where: {id : list.FriendShips[i]["UserId"]}}))
-            const userValue = u.dataValues
-            list.FriendShips[i]["imageUri"] = userValue.imageUri
-            list.FriendShips[i]["status"] = userValue.status
+        const list = listOfFriends.dataValues
+        
+        if(!list["FriendShips"][0]){
+            list["FriendShips"] = null
         }
+        else {
+            for (i in list.FriendShips) {
+                list["FriendShips"][i] = list.FriendShips[i].dataValues
+                const u = await User.findOne(({where: {id : list.FriendShips[i]["UserId"]}}))
+                const userValue = u.dataValues
+                list.FriendShips[i]["imageUri"] = userValue.imageUri
+                list.FriendShips[i]["status"] = userValue.status
+            }
+        }
+        res.json(list);
     }
-    res.json(list);
+    
 });
 
 router.get("/:id",verifyJWT, async (req, res) => {

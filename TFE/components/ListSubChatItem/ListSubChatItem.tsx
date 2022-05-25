@@ -4,25 +4,104 @@ import { useNavigation } from '@react-navigation/core';
 import styles from './styles';
 import { API_URL } from "@env";
 import * as SecureStore from 'expo-secure-store';
-import { AppContext } from '../context/AppContext';
-import axios from 'axios';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
+import CustomButton from '../CustomButton';
+import CustomInput from '../CustomInput';
 const API =  API_URL
 
-export default function ListSubChatItem({ list }) {
+export default function ListSubChatItem({ list, isAdmin, IsOnEdit }) {
   const navigation = useNavigation();
-  const context = useContext(AppContext)
+  const [isRename, setIsRename] = useState(false);
+  const [name, setName] = useState(list.name);
   const onPress = async (event) => {
     event.preventDefault()
     navigation.navigate("ChatGroup", { id: list.id, chat: list });
   }
 
-  return (
-    <Pressable onPress={onPress} style={styles.container}>
-      <View style={styles.rightContainer}>
-        <View style={styles.row}>
-          <Text style={styles.name}>{list.name}</Text>
-        </View>
+  const onPress1 = async (event) => {
+    event.preventDefault()
+    setIsRename(!isRename)
+  }
+  const onPress2 = async (event) => {
+    event.preventDefault()
+    fetchRenameSub()
+    setIsRename(!isRename)
+  }
+  const swipeFromRightOpen = () => {
+    alert('Swipe from right delete sub');
+
+  };
+
+  const fetchRenameSub = async () => {
+    fetch(`${API}/ChatRoomUser/renameSub`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
+            'credentials': 'include'
+        },
+        body: JSON.stringify({ subname: name, subnameid: list.id })
+    })
+    .then(async (res) => { 
+        try {
+            const jsonRes = await res.json();
+            if (res.status !== 200) {
+              console.log(jsonRes)
+            } else {
+            }
+        } catch (err) {
+            console.log(err);
+        };
+    })
+    .catch(err => {
+        console.log(err);
+    });
+  };
+  const rightSwipeActions = () => {
+    return (
+      <View
+        style={{
+          backgroundColor: '#ff8303',
+          justifyContent: 'center',
+          alignItems: 'flex-end',
+        }}
+      >
+        <Text
+          style={{
+            color: '#1b1a17',
+            paddingHorizontal: 10,
+            fontWeight: '600',
+            paddingVertical: 20,
+          }}
+        >
+          Delete
+        </Text>
       </View>
-    </Pressable>
+    );
+  };
+
+  return (
+    <Swipeable
+      renderRightActions={rightSwipeActions}
+      onSwipeableRightOpen={swipeFromRightOpen}
+      enabled={IsOnEdit}
+    >
+      {!IsOnEdit && (<Pressable onPress={onPress} style={styles.container}>
+        <View style={styles.rightContainer}>
+          <View style={styles.row}>
+            <Text style={styles.name}>{list.name}</Text>
+          </View>
+        </View>
+      </Pressable>)}
+      {IsOnEdit &&
+       <View style={styles.rightContainer}>
+          <View style={styles.row}>
+            {isRename ? <CustomInput placeholder='' value={name} setValue={setName} secureTextEntry={false}/> : <Text style={styles.name}>{list.name}</Text>}
+            {isRename && <CustomButton text={'OK'} onPress={onPress2}/>}
+            <CustomButton text={'Rename'} onPress={onPress1}/>
+          </View>
+        </View>}
+    </Swipeable>
+    
   );
 }

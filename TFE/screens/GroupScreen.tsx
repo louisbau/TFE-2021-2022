@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import * as SecureStore from 'expo-secure-store';
-import { View, StyleSheet, FlatList, Platform, TextInput } from 'react-native';
+import { View, StyleSheet, FlatList, Text, SectionList, StatusBar, SafeAreaView, Image } from 'react-native';
 import GroupItem from '../components/GroupItem';
 import { API_URL } from "@env";
+import CustomInput from '../components/CustomInput';
 const API = API_URL
 
 export default function GroupScreen() {
@@ -10,38 +12,44 @@ export default function GroupScreen() {
     const [search, setSearch] = useState('');
     const [masterDataSource, setMasterDataSource] = useState([]);
     
-
-    useEffect(() => {
-        const fetchGroup = async () => {
-            fetch(`${API}/ChatRoom/listGroup`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
-                    'credentials': 'include'
+    useFocusEffect(
+        useCallback(() => {
+            setSearch('')
+            fetchGroup()
+            return () => {
+                setSearch('')
+            };
+        }, [])
+    );
+    const fetchGroup = async () => {
+        fetch(`${API}/ChatRoom/listGroup`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
+                'credentials': 'include'
+            }
+        })
+        .then(async res => { 
+            try {
+                const jsonRes = await res.json();
+                if (res.status !== 200) {
+                    setGroup(jsonRes);
+                    setMasterDataSource(jsonRes)
+                } else {
+                    setGroup(jsonRes);
+                    setMasterDataSource(jsonRes)
+                    
                 }
-            })
-            .then(async res => { 
-                try {
-                    const jsonRes = await res.json();
-                    if (res.status !== 200) {
-                        setGroup(jsonRes);
-                        setMasterDataSource(jsonRes)
-                    } else {
-                        setGroup(jsonRes);
-                        setMasterDataSource(jsonRes)
-                        
-                    }
-                } catch (err) {
-                    console.log(err);
-                };
-            })
-            .catch(err => {
+            } catch (err) {
                 console.log(err);
-            });
-        };
-        fetchGroup();
-    }, [])
+            };
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    };
+    
     const searchFilterFunction = (text) => {
         // Check if searched text is not blank
         console.log(text)
@@ -67,21 +75,15 @@ export default function GroupScreen() {
     };
 
     return (
-        <View style={styles.page}>
-            <TextInput
-                style={styles.textInputStyle}
-                onChangeText={(text) => searchFilterFunction(text)}
-                value={search}
-                underlineColorAndroid="transparent"
-                placeholder="Search Here"
-            />
+        <SafeAreaView style={styles.container1}>
+            <CustomInput placeholder='Search Here' value={search} setValue={searchFilterFunction} secureTextEntry={false}/>
             <FlatList 
                 data={group}
-                renderItem={({ item }) => <GroupItem group={item} />}
+                renderItem={({ item }) => <GroupItem group={item} setGroup={setGroup}/>}
                 showsVerticalScrollIndicator={false}
                 keyExtractor={(item, index) => index.toString()}
             />
-        </View>
+        </SafeAreaView>
     );
 
 }
@@ -102,4 +104,57 @@ const styles = StyleSheet.create({
       borderColor: '#009688',
       backgroundColor: '#FFFFFF',
     },
+    container1: {
+        flex: 1,
+        paddingTop: StatusBar.currentHeight,
+        backgroundColor: "white"
+    },
+
+    containerList: {
+        flexDirection: 'row',
+        padding: 10,
+    },
+    container: {
+        flexDirection: 'column',
+        padding: 10,
+    },
+    image: {
+        height: 50,
+        width: 50,
+        borderRadius: 30,
+        marginRight: 10,
+    },
+    badgeContainer: {
+        backgroundColor: '#3777f0',
+        width: 20,
+        height: 20,
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: 'white',
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'absolute',
+        left: 45,
+        top: 10,
+    },
+    badgeText: {
+        color: 'white',
+        fontSize: 12
+    },
+    rightContainer: {
+        flex: 1,
+        justifyContent: 'center',
+    },
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    name: {
+        fontWeight: 'bold',
+        fontSize: 18,
+        marginBottom: 3,
+    },
+    text: {
+        color: 'grey',
+    }
 });

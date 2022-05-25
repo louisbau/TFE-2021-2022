@@ -15,7 +15,6 @@ export default function SignUp() {
     const [isError, setIsError] = useState(false);
     const [message, setMessage] = useState('');
     const [isLogin, setIsLogin] = useState(true);
-
     const onLogin = () => {
         navigation.navigate('SignIn');
     }

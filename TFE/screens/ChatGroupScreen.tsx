@@ -4,7 +4,6 @@ import { useRoute, useNavigation,f } from '@react-navigation/core';
 import Message from "../components/Message";
 import MessageInput from "../components/MessageInput";
 import * as SecureStore from 'expo-secure-store';
-import {AppContext} from "../components/context/AppContext";
 import { API_URL } from "@env";
 
 
@@ -124,7 +123,7 @@ export default function ChatGroupScreen() {
                     keyExtractor={(item, index) => index.toString()}
                 />
             }
-            {user && <MessageInput subChatRoomId={route.params?.id} userChatRoomId={user.find(x => x.UserId === userId).ChatRoomUsers[0].UserChatRoomId} setMessage={setMessage}/>}
+            {message && user && <MessageInput subChatRoomId={route.params?.id} userChatRoomId={user && user.find(x => x.UserId === userId).ChatRoomUsers[0].UserChatRoomId} setMessage={setMessage}/>}
         </SafeAreaView>
     )
 };
