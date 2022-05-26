@@ -4,13 +4,15 @@ import { Feather } from "@expo/vector-icons";
 // const API_URL = Platform.OS === 'ios' ? 'http://192.168.1.44:5000/api' : 'http://192.168.1.44:5000/api';
 import { AppContext } from "../components/context/AppContext";
 import CustomFeather from "../components/CustomFeather";
+import { useNavigation } from '@react-navigation/core';
 
 const ChatRoomHeader = ({ id, chat }) => {
   const { width } = useWindowDimensions();
+  const navigation = useNavigation();
   console.log(chat,id,'lol')
   const onPress = (event) => {
     event.preventDefault()
-    console.log('call or video')
+    navigation.navigate("Call");
 
   }
   return (

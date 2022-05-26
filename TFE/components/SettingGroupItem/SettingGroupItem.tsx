@@ -12,7 +12,7 @@ const API = API_URL
 
 export default function SettingGroupItem({ modalVisible, setModalVisible, group }) {
     const [name, setName] = useState("");
-    const [subName, setSubName] = useState("");
+    const [subName, setSubName] = useState(group.name);
     const navigation = useNavigation();
     const [isEnabled, setIsEnabled] = useState(false);
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
@@ -20,7 +20,7 @@ export default function SettingGroupItem({ modalVisible, setModalVisible, group 
     useEffect(() => {
         fetchUser();
       }, [])
-      const fetchUser = async () => {
+    const fetchUser = async () => {
         fetch(`${API}/card`, {
             method: 'GET',
             headers: {
@@ -46,7 +46,7 @@ export default function SettingGroupItem({ modalVisible, setModalVisible, group 
         .catch(err => {
             console.log(err);
         });
-      };
+    };
     
     
   
@@ -57,11 +57,16 @@ export default function SettingGroupItem({ modalVisible, setModalVisible, group 
     }
     const onPress1 = (event) => {
       event.preventDefault()
-      
+      fetchRenamaGroup()
+  
+    }
+    const onPress2 = (event) => {
+      event.preventDefault()
+      fetchDeleteGroup()
   
     }
     const fetchAddUser = async () => {
-      fetch(`${API}/ChatRoomUser/addUserGroup`, {
+      fetch(`${API}/UserChatRoom/addUserGroup`, {
           method: 'Post',
           headers: {
               'Content-Type': 'application/json',
@@ -86,7 +91,60 @@ export default function SettingGroupItem({ modalVisible, setModalVisible, group 
           console.log(err);
       });
     };
+
+    const fetchDeleteGroup = async () => {
+      fetch(`${API}/ChatRoom/deleteChatRoom`, {
+          method: 'DELETE',
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
+              'credentials': 'include'
+          },
+          body: JSON.stringify({ id: group.id })
+      })
+      .then(async (res) => { 
+          try {
+              const jsonRes = await res.json();
+              if (res.status !== 200) {
+                console.log(jsonRes)
+              } else {
+                setName("")
+              }
+          } catch (err) {
+              console.log(err);
+          };
+      })
+      .catch(err => {
+          console.log(err);
+      });
+    };
     
+    const fetchRenamaGroup = async () => {
+      fetch(`${API}/ChatRoom/renameGroup`, {
+          method: 'PATCH',
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
+              'credentials': 'include'
+          },
+          body: JSON.stringify({ groupname: subName, groupid: group.id })
+      })
+      .then(async (res) => { 
+          try {
+              const jsonRes = await res.json();
+              if (res.status !== 200) {
+                console.log(jsonRes)
+              } else {
+                setName("")
+              }
+          } catch (err) {
+              console.log(err);
+          };
+      })
+      .catch(err => {
+          console.log(err);
+      });
+    };
     
     
     return (
@@ -124,6 +182,7 @@ export default function SettingGroupItem({ modalVisible, setModalVisible, group 
                     
                 </View>
                 <CustomButton text={'Add'} onPress={onPress1}/>
+                <CustomButton text={'Delete'} onPress={onPress2}/>
                 
             </View>
         </View>

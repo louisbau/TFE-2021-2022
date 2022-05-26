@@ -89,6 +89,7 @@ const DrawerNavigator = ({ navigation, nav }) => {
                             value={isEnabledTheme}
                         />
                     </View>
+                    {user && <DrawerItem label="Friend" onPress={() => props.navigation.navigate("Friend")} />}
                     {user && <DrawerItem label="SignIn" onPress={() => props.navigation.navigate("SignIn")} />}
                     
                     

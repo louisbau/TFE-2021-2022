@@ -32,7 +32,7 @@ router.patch("/renameMessage", verifyJWT, async (req, res) => {
     
 });
 
-router.patch("/deleteMessage", verifyJWT, async (req, res) => {
+router.delete("/deleteMessage", verifyJWT, async (req, res) => {
     const { id } = req.body;
     
     const group = await Message.destroy(({

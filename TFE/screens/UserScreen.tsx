@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import { View, StyleSheet, FlatList, Platform, TextInput, Text, Image } from 'react-native';
 import UserItem from '../components/UserItem';
+import CustomInput from '../components/CustomInput';
+import CustomButton from '../components/CustomButton';
+import CustomFeather from '../components/CustomFeather';
 import { API_URL } from "@env";
 const API = API_URL
 
@@ -10,6 +13,7 @@ export default function UsersScreen() {
   useEffect(() => {
       fetchUser();
   }, [])
+
   const fetchUser = async () => {
       fetch(`${API}/card`, {
           method: 'GET',

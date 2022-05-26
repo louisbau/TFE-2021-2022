@@ -27,6 +27,7 @@ router.get("/list",verifyJWT, async (req, res) => {
                 const u = await User.findOne(({where: {id : list.FriendShips[i]["UserId"]}}))
                 const userValue = u.dataValues
                 list.FriendShips[i]["imageUri"] = userValue.imageUri
+                list.FriendShips[i]["name"] = userValue.name
                 list.FriendShips[i]["status"] = userValue.status
             }
         }

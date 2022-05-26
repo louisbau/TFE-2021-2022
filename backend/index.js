@@ -8,6 +8,9 @@ const chatroomuser = require("./routes/ChatRoomUser");
 const chatroom = require("./routes/ChatRoom");
 const message = require("./routes/Message")
 const friends = require("./routes/Friends")
+const friendships = require('./routes/FriendShip.js')
+const userchatrooms = require('./routes/UserChatRoom.js')
+const subchatrooms = require('./routes/SubChatRoom.js')
 const DefaultUser = require("./fixture/addUser");
 
 app.use(express.json());
@@ -26,6 +29,9 @@ app.use("/api/ChatRoomUser", chatroomuser);
 app.use("/api/ChatRoom", chatroom);
 app.use("/api/Message", message);
 app.use("/api/Friends", friends);
+app.use("/api/UserChatRoom", userchatrooms);
+app.use("/api/FriendShips", friendships);
+app.use("/api/SubChatRoom", subchatrooms);
 DefaultUser()
 
 

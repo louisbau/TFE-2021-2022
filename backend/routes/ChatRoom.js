@@ -195,6 +195,41 @@ router.get("/list", verifyJWT, async (req, res) => {
     
 });
 
+
+router.patch("/renameGroup", verifyJWT, async (req, res) => {
+    const { groupname, groupid } = req.body;
+    
+    await ChatRoom.update({name: groupname}, {
+        where : {id : groupid}
+    })
+    console.log(groupname, groupid)
+    
+
+
+    const ChatRoomGroup = await ChatRoom.findAll({
+        include: [
+            {
+                model: SubChatRoom,
+                right: true, // will create a right join
+            },
+            {
+                model: UserChatRoom,
+                right: true, // will create a right join
+            }
+        ],
+        where: {
+          [Op.and]: [
+            { id: groupid },
+            { isGroupe: true }
+          ]
+        }
+    });
+
+    res.json(ChatRoomGroup[0])
+
+    
+});
+
 router.get("/list/Group",verifyJWT, async (req, res) => {
     try {
         const listOfChatRoom = await ChatRoom.findAll({
@@ -229,6 +264,32 @@ router.get("/:id",verifyJWT, async (req, res) => {
     } catch (error) {
         res.status(400).json(error)
     }
+});
+
+router.delete("/deleteChatRoom", verifyJWT, async (req, res) => {
+    const { id } = req.body;
+
+    
+    await Message.destroy(({
+        where : {SubChatRoomId : id}
+    }))
+
+    await ChatRoomUser.destroy(({
+        where : {SubChatRoomId : id}
+    }))
+    
+    
+    
+    await SubChatRoom.destroy(({
+        where : {id : id}
+    }))
+    
+    
+
+
+    res.json("succes")
+
+    
 });
 
 module.exports = router;

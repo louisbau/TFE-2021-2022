@@ -27,13 +27,13 @@ export default function ListSubChatItem({ list, isAdmin, IsOnEdit }) {
     fetchRenameSub()
     setIsRename(!isRename)
   }
-  const swipeFromRightOpen = () => {
-    alert('Swipe from right delete sub');
+  const swipeFromRightOpen = async () => {
+    fetchDeleteSub()
 
   };
 
   const fetchRenameSub = async () => {
-    fetch(`${API}/ChatRoomUser/renameSub`, {
+    fetch(`${API}/SubChatRoom/renameSub`, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
@@ -46,6 +46,7 @@ export default function ListSubChatItem({ list, isAdmin, IsOnEdit }) {
         try {
             const jsonRes = await res.json();
             if (res.status !== 200) {
+              console.log('lol')
               console.log(jsonRes)
             } else {
             }
@@ -57,6 +58,33 @@ export default function ListSubChatItem({ list, isAdmin, IsOnEdit }) {
         console.log(err);
     });
   };
+
+  const fetchDeleteSub = async () => {
+    fetch(`${API}/SubChatRoom/deleteSubRoom`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
+            'credentials': 'include'
+        },
+        body: JSON.stringify({ id: list.id })
+    })
+    .then(async (res) => { 
+        try {
+            const jsonRes = await res.json();
+            if (res.status !== 200) {
+              console.log('lol')
+              console.log(jsonRes)
+            } else {
+            }
+        } catch (err) {
+            console.log(err);
+        };
+    })
+    .catch(err => {
+        console.log(err);
+    });
+  }
   const rightSwipeActions = () => {
     return (
       <View

@@ -17,9 +17,12 @@ module.exports = (sequelize, Sequelize) => {
       audio: {
         type: Sequelize.STRING,
         allowNull: true,
+      },
+      reference: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
       }
     });
-    
-
+  
     return Message;
 };

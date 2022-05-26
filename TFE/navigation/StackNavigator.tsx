@@ -15,7 +15,9 @@ import ResetPassword from '../screens/Auth/ResetPasswordScreen';
 import DrawerNavigator from "./DrawerNavigator";
 import TabNavigator from "./TabNavigator";
 import UsersScreen from "../screens/UserScreen";
-
+import FriendsScreen from "../screens/FriendsScreen";
+import FriendHeader from "./FriendHeader";
+import CallScreen from "../screens/CallScreen";
 const Stack = createStackNavigator();
 
 const screenOptionStyle = {
@@ -76,6 +78,14 @@ const MainStackNavigator = ({ nav }) => {
                 name="User" 
                 component={UsersScreen}
             />
+            <Stack.Screen 
+                name="Friend" 
+                component={FriendsScreen}
+                options={() => ({
+                    headerTitle: () => <FriendHeader />
+                })}
+            />
+            <Stack.Screen name="Call" component={CallScreen} />
             
         </Stack.Navigator>
     );

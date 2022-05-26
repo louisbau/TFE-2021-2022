@@ -1,9 +1,29 @@
 const express = require("express");
 const router = express.Router();
-const { ChatRoomUser, User, Message, ChatRoom, UserChatRoom,SubChatRoom } = require("../models");
+const { ChatRoomUser, User, Message, ChatRoom, UserChatRoom,SubChatRoom, FriendShip, Friend } = require("../models");
 const verifyJWT = require('./isAuth')
 const { QueryTypes } = require("sequelize");
 const { Op } = require("sequelize");
+
+
+router.get("/list", async (req, res) => {
+    const listOfChatRoomUser = await ChatRoomUser.findOne();
+    res.json(listOfChatRoomUser);
+});
+
+router.get("/:id",verifyJWT, async (req, res) => {
+    const listOfChatRoomUser = await User.findAll({ include: [{
+        model: ChatRoomUser,
+        where: {ChatRoomId: req.params.id}
+       }, {
+        model: Message,
+        where: {ChatRoomId: req.params.id}
+       }] 
+    });
+    res.json(listOfChatRoomUser);
+});
+
+
 
 router.post("/newChatRoom/", async (req, res) => {
     const { user } = req.body;
@@ -20,194 +40,6 @@ router.post("/newChatRoom/", async (req, res) => {
     res.json(users);
 });
 
-router.patch("/renameUserChat", verifyJWT, async (req, res) => {
-    const { userchatname, userchatid } = req.body;
-    
-    const group = await UserChatRoom.update({pseudo: userchatname}, {
-        where : {id : userchatid}
-    })
-    
-    
-
-
-    const ChatRoomGroup = await ChatRoom.findAll({
-        include: [
-            {
-                model: SubChatRoom,
-                right: true, // will create a right join
-            },
-            {
-                model: UserChatRoom,
-                right: true, // will create a right join
-            }
-        ],
-        where: {
-          [Op.and]: [
-            { id: group.ChatRoomId },
-            { isGroupe: true }
-          ]
-        }
-    });
-
-    res.json(ChatRoomGroup[0])
-
-    
-});
-
-router.patch("/deleteUserChat", verifyJWT, async (req, res) => {
-    const { id } = req.body;
-
-    
-    await Message.destroy(({
-        where : {UserChatRoomId : id}
-    }))
-
-    await ChatRoomUser.destroy(({
-        where : {UserChatRoomId : id}
-    }))
-    
-    
-    
-    await UserChatRoom.destroy(({
-        where : {id : id}
-    }))
-    
-    
-
-
-    res.json("succes")
-
-    
-});
-
-router.patch("/deleteChatRoom", verifyJWT, async (req, res) => {
-    const { id } = req.body;
-
-    
-    await Message.destroy(({
-        where : {SubChatRoomId : id}
-    }))
-
-    await ChatRoomUser.destroy(({
-        where : {SubChatRoomId : id}
-    }))
-    
-    
-    
-    await SubChatRoom.destroy(({
-        where : {id : id}
-    }))
-    
-    
-
-
-    res.json("succes")
-
-    
-});
-
-router.patch("/deleteSubRoom", verifyJWT, async (req, res) => {
-    const { id } = req.body;
-
-    const listSub = await SubChatRoom.findAll(({
-        where: {ChatRoomId: id}
-    }))
-    const listUser = await UserChatRoom.findAll(({
-        where: {ChatRoomId: id}
-    }))
-    for (i in listSub) {
-        await Message.destroy(({
-            where : {SubChatRoomId : listSub[i].id}
-        }))
-    }
-    for (i in listUser) {
-        await ChatRoomUser.destroy(({
-            where : {UserChatRoom : listUser[i].id}
-        }))
-    }
-    
-    await UserChatRoom.destroy(({
-        where : {ChatRoomId : id}
-    }))
-    await SubChatRoom.destroy(({
-        where : {ChatRoomId : id}
-    }))
-    
-    
-
-
-    res.json("succes")
-
-    
-});
-
-router.patch("/renameGroup", verifyJWT, async (req, res) => {
-    const { groupname, groupid } = req.body;
-    
-    const group = await ChatRoom.update({name: groupname}, {
-        where : {id : groupid}
-    })
-    
-    
-
-
-    const ChatRoomGroup = await ChatRoom.findAll({
-        include: [
-            {
-                model: SubChatRoom,
-                right: true, // will create a right join
-            },
-            {
-                model: UserChatRoom,
-                right: true, // will create a right join
-            }
-        ],
-        where: {
-          [Op.and]: [
-            { id: group.id },
-            { isGroupe: true }
-          ]
-        }
-    });
-
-    res.json(ChatRoomGroup[0])
-
-    
-});
-
-router.patch("/renameSub", verifyJWT, async (req, res) => {
-    const { subname, subnameid } = req.body;
-    
-    const subchat = await SubChatRoom.update({name: subname}, {
-        where : {id : subnameid}
-    })
-    
-    
-
-
-    const ChatRoomGroup = await ChatRoom.findAll({
-        include: [
-            {
-                model: SubChatRoom,
-                right: true, // will create a right join
-            },
-            {
-                model: UserChatRoom,
-                right: true, // will create a right join
-            }
-        ],
-        where: {
-          [Op.and]: [
-            { id: subchat.ChatRoomId },
-            { isGroupe: true }
-          ]
-        }
-    });
-
-    res.json(ChatRoomGroup[0])
-
-    
-});
 
 router.post("/newChat", verifyJWT, async (req, res) => {
     const { subname, ChatRoomId } = req.body;
@@ -259,49 +91,6 @@ router.post("/newChat", verifyJWT, async (req, res) => {
     
 });
 
-router.post("/addUserGroup", verifyJWT, async (req, res) => {
-    const { name, ChatRoomId } = req.body;
-    const IsUser = await User.findOne(({
-        where : {name : name}
-    }));
-
-    const UserChatRoom1 = await UserChatRoom.create(({
-        pseudo: name,
-        ChatRoomId: ChatRoomId,
-        UserId: IsUser.id
-    }))
-    
-    const allSubChatRoom = await SubChatRoom.findAll(({where : {ChatRoomId: ChatRoomId}}))
-    for (i in allSubChatRoom) {
-        await ChatRoomUser.create(({
-            SubChatRoomId: allSubChatRoom[i].id,
-            UserChatRoomId: UserChatRoom1.id
-        }))
-    }
-
-    const ChatRoomGroup = await ChatRoom.findAll({
-        include: [
-            {
-                model: SubChatRoom,
-                right: true, // will create a right join
-            },
-            {
-                model: UserChatRoom,
-                right: true, // will create a right join
-            }
-        ],
-        where: {
-          [Op.and]: [
-            { id: ChatRoomId },
-            { isGroupe: true }
-          ]
-        }
-    });
-
-    res.json(ChatRoomGroup[0])
-
-    
-});
 
 router.post("/newGroup", verifyJWT, async (req, res) => {
     const { name, subname } = req.body;
@@ -464,23 +253,71 @@ router.post("/newConv",verifyJWT, async (req, res) => {
     
 });
 
-router.get("/list", async (req, res) => {
-    const listOfChatRoomUser = await ChatRoomUser.findOne();
-    res.json(listOfChatRoomUser);
-});
 
-router.get("/:id",verifyJWT, async (req, res) => {
-    const listOfChatRoomUser = await User.findAll({ include: [{
-        model: ChatRoomUser,
-        where: {ChatRoomId: req.params.id}
-       }, {
-        model: Message,
-        where: {ChatRoomId: req.params.id}
-       }] 
+
+
+
+
+
+router.patch("/renameGroup", verifyJWT, async (req, res) => {
+    const { groupname, groupid } = req.body;
+    
+    const group = await ChatRoom.update({name: groupname}, {
+        where : {id : groupid}
+    })
+    
+    
+
+
+    const ChatRoomGroup = await ChatRoom.findAll({
+        include: [
+            {
+                model: SubChatRoom,
+                right: true, // will create a right join
+            },
+            {
+                model: UserChatRoom,
+                right: true, // will create a right join
+            }
+        ],
+        where: {
+          [Op.and]: [
+            { id: group.id },
+            { isGroupe: true }
+          ]
+        }
     });
-    res.json(listOfChatRoomUser);
+
+    res.json(ChatRoomGroup[0])
+
+    
 });
 
 
+router.delete("/deleteChatRoom", verifyJWT, async (req, res) => {
+    const { id } = req.body;
+
+    
+    await Message.destroy(({
+        where : {SubChatRoomId : id}
+    }))
+
+    await ChatRoomUser.destroy(({
+        where : {SubChatRoomId : id}
+    }))
+    
+    
+    
+    await SubChatRoom.destroy(({
+        where : {id : id}
+    }))
+    
+    
+
+
+    res.json("succes")
+
+    
+});
 
 module.exports = router;
