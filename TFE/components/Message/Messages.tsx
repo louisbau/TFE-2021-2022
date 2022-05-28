@@ -60,27 +60,33 @@ const Messages = ({ message, user, isMeUserId, setOnReply }) => {
         });
     };
     useEffect(() => {
-        if (!message?.content || !UserMessage?.publicKey) {
+        if (!message?.content || !isMeUserChatID?.publicKey) {
             if (!message.isCrypted) {
                 setDecryptedContent(message.content);
-                return
+                return;
             }
             return;
         }
+        else{
+            const decryptMessage = async () => {
+                const myKey = await getMySecretKey(navigation);
+                if (!myKey) {
+                  return;
+                }
+                // decrypt message.content
+                else {
+                    const sharedKey = box.before(stringToUint8Array(UserMessage.publicKey), myKey);
+                    const decrypted = decrypt(sharedKey, message.content);
+                    setDecryptedContent(decrypted.content);
+                }
+                
+            };
+            decryptMessage()
+        }
     
-        const decryptMessage = async () => {
-          const myKey = await getMySecretKey(navigation);
-          if (!myKey) {
-            return;
-          }
-          // decrypt message.content
-          
-          const sharedKey = box.before(stringToUint8Array(UserMessage.publicKey), myKey);
-          const decrypted = decrypt(sharedKey, message.content);
-          setDecryptedContent(decrypted.content);
-        };
+        
     
-        decryptMessage();
+        
     }, [message, user]);
 
     const onPressReply = async (event) => {

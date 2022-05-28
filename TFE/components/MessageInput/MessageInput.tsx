@@ -107,6 +107,7 @@ const MessageInput = ({ subChatRoomId, userChatRoomId, setMessage, IsCrypted, on
 
     const sendMessageToUser = async (user) => {
       // send message
+      let error = false
       let encryptedMessage = content;
       if (IsCrypted) {
         const ourSecretKey = await getMySecretKey(navigation);
@@ -116,50 +117,56 @@ const MessageInput = ({ subChatRoomId, userChatRoomId, setMessage, IsCrypted, on
         }
         console.log(ourSecretKey)
         if (!user.publicKey) {
+          error = true
           Alert.alert(
             "The user haven't set his keypair yet",
             "Until the user generates the keypair, you cannot securely send him messages"
           );
-          return;
+          
+        }
+        else {
+          console.log("private key", user.publicKey);
+        
+          const sharedKey = box.before(
+            stringToUint8Array(user.publicKey),
+            ourSecretKey
+          );
+          console.log("shared key", sharedKey);
+      
+          encryptedMessage = encrypt(sharedKey, { content });
         }
     
-        console.log("private key", user.publicKey);
         
-        const sharedKey = box.before(
-          stringToUint8Array(user.publicKey),
-          ourSecretKey
-        );
-        console.log("shared key", sharedKey);
-    
-        encryptedMessage = encrypt(sharedKey, { content });
       }
       
       const referenceId = onReply ? onReply[1].id : null
-  
-      try {
-        await axios.post(`${API}/Message`, {
-            content: encryptedMessage,
-            image,
-            audio,
-            SubChatRoomId: subChatRoomId,
-            forUserId: user.id,
-            isCrypted: IsCrypted,
-            UserChatRoomId: userChatRoomId,
-            reference: referenceId
-        }, {
-          headers: {
-            'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
-            'credentials': 'include'
-          }
-        }).then(async (response) => { 
-          const data = response.data
-          
-          setMessage(data)
-          //console.log(data)
-          
-      });
-      } catch (error) {
-        alert(error);
+      if (!error) {
+        try {
+          await axios.post(`${API}/Message`, {
+              content: encryptedMessage,
+              image,
+              audio,
+              SubChatRoomId: subChatRoomId,
+              forUserId: user.id,
+              isCrypted: IsCrypted,
+              UserChatRoomId: userChatRoomId,
+              reference: referenceId
+          }, {
+            headers: {
+              'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
+              'credentials': 'include'
+            }
+          }).then(async (response) => { 
+            const data = response.data
+            
+            setMessage(data)
+            //console.log(data)
+            
+        });
+        } catch (error) {
+          alert(error);
+        }
+
       }
     
     
