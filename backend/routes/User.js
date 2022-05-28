@@ -43,10 +43,20 @@ router.get("/:id",verifyJWT, async (req, res) => {
         })
         img = img.dataValues
         listUserCopy[a]["imageUri"] = img.imageUri
+        listUserCopy[a]["publicKey"] = img.publicKey
     }
     
 
     res.json(listUserCopy);
+});
+
+router.post("/addPublicKey",verifyJWT, async (req, res) => {
+    const { publicKey } = req.body;
+    const userResult = await User.update({publicKey: publicKey}, {
+        where : {id : req.id.UserId}
+    })
+    
+    res.json(userResult);
 });
 
 router.post("/register", async (req, res) => {

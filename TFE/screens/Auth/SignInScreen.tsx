@@ -4,7 +4,7 @@ import * as SecureStore from 'expo-secure-store';
 import { useNavigation } from '@react-navigation/core';
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
-
+import { SocketContext } from "../../components/context/socket";
 import { API_URL } from "@env";
 const API = API_URL
 
@@ -20,7 +20,7 @@ export default function SignIn() {
     const [isError, setIsError] = useState(false);
     const [message, setMessage] = useState('');
     const [isLogin, setIsLogin] = useState(true);
-    
+    const socket = useContext(SocketContext);
     const onForgotPassword = () => {
         navigation.navigate('ForgotPassword');
     }
@@ -53,6 +53,7 @@ export default function SignIn() {
                     setIsError(false);
                     setMessage(jsonRes.message);
                     save('token', jsonRes.token)
+                    socket.emit("Join", { userId: jsonRes.UserId })
                     navigation.navigate('Home', { UserId: jsonRes.UserId });
                 }
             } catch (err) {

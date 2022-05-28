@@ -8,8 +8,7 @@ import CustomButton from '../CustomButton';
 const API =  API_URL
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 
-
-export default function UserItem({ user, isMe }) {
+export default function UserListItem({ user }) {
   const navigation = useNavigation();
   const swipeableRef = useRef(null);
   const index = useNavigationState(state => state.type);
@@ -60,13 +59,23 @@ export default function UserItem({ user, isMe }) {
   };
 
   return (
-    <Swipeable
-      renderRightActions={rightSwipeActions}
-      ref={swipeableRef}
-      enabled={isEnabled}
-    >
-      <Image source={{ uri: user.imageUri}} style={styles.image} />
-      <Text>{user.name}</Text>
-    </Swipeable>
+    
+      <Swipeable
+        renderRightActions={rightSwipeActions}
+        ref={swipeableRef}
+        enabled={isEnabled}
+      >
+        <View style={styles.container}>
+          <Image source={{ uri: user.imageUri}} style={styles.image} />
+          <View style={styles.rightContainer}>
+            <Text>{user.name}</Text>
+          </View>
+        </View>
+        
+        
+        
+      </Swipeable>
+    
+    
   );
 }

@@ -21,6 +21,15 @@ module.exports = (sequelize, Sequelize) => {
       reference: {
         type: Sequelize.INTEGER,
         allowNull: true,
+      },
+      forUserId: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+      },
+      isCrypted: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
       }
     });
   

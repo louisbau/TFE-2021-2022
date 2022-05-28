@@ -3,15 +3,27 @@ const router = express.Router();
 const { Message, User, ChatRoomUser, ChatRoom, SubChatRoom } = require("../models");
 const moment = require("moment");
 const verifyJWT = require("./isAuth");
-
+const { Op } = require("sequelize");
 
 
 router.get("/:id",verifyJWT, async (req, res) => {
     const listMessage = await Message.findAll(
         {
             where: {
-                SubChatRoomId: req.params.id
+                [Op.and]: [
+                    { SubChatRoomId: req.params.id},
+                    { [Op.or]: [{ forUserId: req.id.UserId }, { forUserId: null }] }
+                ]
             }
+        }
+    )
+    res.json(listMessage);
+});
+
+router.get("/reference/:id",verifyJWT, async (req, res) => {
+    const listMessage = await Message.findOne(
+        {
+            where: {id : req.params.id}
         }
     )
     res.json(listMessage);
@@ -49,13 +61,16 @@ router.delete("/deleteMessage", verifyJWT, async (req, res) => {
 
 
 router.post("/",verifyJWT, async (req, res) => {
-    const { content, image, audio, SubChatRoomId, UserChatRoomId } = req.body;
+    const { content, image, audio, SubChatRoomId, UserChatRoomId, forUserId, isCrypted, reference } = req.body;
     await Message.create(({
         content: content,
         image: image,
         audio: audio,
         SubChatRoomId: SubChatRoomId,
         UserChatRoomId: UserChatRoomId,
+        forUserId: forUserId,
+        isCrypted: isCrypted,
+        reference: reference,
         createdAt : moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
     }))
     .then(async (req2) => {
@@ -65,7 +80,10 @@ router.post("/",verifyJWT, async (req, res) => {
         const listOfChatRoomUser = await Message.findAll(
             {
                 where: {
-                    SubChatRoomId: SubChatRoomId
+                    [Op.and]: [
+                        { SubChatRoomId: SubChatRoomId},
+                        { [Op.or]: [{ forUserId: req.id.UserId }, { forUserId: null }] }
+                    ]
                 }
             }
         )

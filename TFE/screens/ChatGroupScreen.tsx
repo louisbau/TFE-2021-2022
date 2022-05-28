@@ -17,6 +17,7 @@ export default function ChatGroupScreen() {
     const [role, setRole] = useState();
     const [subId, setsubId] = useState()
     const API = API_URL
+    const [onReply, setOnReply] = useState();
     
     useEffect(() => {
         fetchAuthentification()
@@ -75,6 +76,7 @@ export default function ChatGroupScreen() {
                     setMessage(jsonRes);
                 } else {
                     setMessage(jsonRes);
+                    console.log(jsonRes)
                 }
             } catch (err) {
                 console.log(err);
@@ -119,11 +121,11 @@ export default function ChatGroupScreen() {
             {message && user &&
                 <FlatList 
                     data={message}
-                    renderItem={({item}) => <Message message={item} user={user} isMeUserId={userId} />}
+                    renderItem={({item}) => <Message message={item} user={user} isMeUserId={userId} setOnReply={setOnReply} />}
                     keyExtractor={(item, index) => index.toString()}
                 />
             }
-            {message && user && <MessageInput subChatRoomId={route.params?.id} userChatRoomId={user && user.find(x => x.UserId === userId).ChatRoomUsers[0].UserChatRoomId} setMessage={setMessage}/>}
+            {message && user && <MessageInput subChatRoomId={route.params?.id} userChatRoomId={user && user.find(x => x.UserId === userId).ChatRoomUsers[0].UserChatRoomId} setMessage={setMessage} IsCrypted={false} onReply={onReply} setOnReply={setOnReply}/>}
         </SafeAreaView>
     )
 };

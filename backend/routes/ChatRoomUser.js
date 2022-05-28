@@ -23,6 +23,18 @@ router.get("/:id",verifyJWT, async (req, res) => {
     res.json(listOfChatRoomUser);
 });
 
+router.get("/:id",verifyJWT, async (req, res) => {
+    const listOfChatRoomUser = await User.findAll({ include: [{
+        model: ChatRoomUser,
+        where: {ChatRoomId: req.params.id}
+       }, {
+        model: Message,
+        where: {ChatRoomId: req.params.id}
+       }] 
+    });
+    res.json(listOfChatRoomUser);
+});
+
 
 
 router.post("/newChatRoom/", async (req, res) => {

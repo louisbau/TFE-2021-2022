@@ -1,14 +1,17 @@
-import React, { useState, useContext, useEffect, useCallback } from "react";
+import React, { useState, useContext, useEffect, useCallback, useRef } from "react";
 import {AppContext} from "../components/context/AppContext";
-import { View, StyleSheet, FlatList, Platform, TextInput, SafeAreaView, StatusBar } from 'react-native';
+import { View, StyleSheet, FlatList, Platform, TextInput, SafeAreaView, StatusBar, Text } from 'react-native';
 import ChatRoomItem from '../components/ChatRoomItem';
 import * as SecureStore from 'expo-secure-store';
 import { API_URL } from "@env";
 import { useFocusEffect } from '@react-navigation/native';
 import UserItem from "../components/UserItem";
 import CustomInput from "../components/CustomInput";
-
+import { io } from "socket.io-client";
+import CustomButton from "../components/CustomButton";
+import { SocketContext } from "../components/context/socket";
 export default function TabOneScreen() {
+  
   const [conv, setConv] = useState([]);
   const [search, setSearch] = useState('');
   const [userId, setUserId] = useState();
@@ -16,6 +19,9 @@ export default function TabOneScreen() {
   const [friends, setFriends] = useState();
   const [masterDataSource, setMasterDataSource] = useState([]);
   const API = API_URL
+  
+  
+  
 
   useEffect(() => {
     fetchAuthentification()
@@ -155,8 +161,8 @@ export default function TabOneScreen() {
     <SafeAreaView style={styles.container}>
       
       <CustomInput placeholder='Search Here' value={search} setValue={searchFilterFunction} secureTextEntry={false}/>
-      {friends&&friends["FriendShips"] !== null && <FlatList 
-        data={friends["FriendShips"]}
+      {friends !== null && <FlatList 
+        data={friends}
         renderItem={({ item }) => <UserItem user={item} isMe={userId}/>}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}

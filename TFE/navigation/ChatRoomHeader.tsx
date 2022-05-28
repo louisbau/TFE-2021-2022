@@ -9,12 +9,12 @@ import { useNavigation } from '@react-navigation/core';
 const ChatRoomHeader = ({ id, chat }) => {
   const { width } = useWindowDimensions();
   const navigation = useNavigation();
-  console.log(chat,id,'lol')
   const onPress = (event) => {
     event.preventDefault()
     navigation.navigate("Call");
 
   }
+  
   return (
     <View
       style={{

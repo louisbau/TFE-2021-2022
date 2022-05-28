@@ -1,24 +1,105 @@
-import React, {useContext, useState}from 'react'
-import { View, Text, StyleSheet,Image } from 'react-native'
+import React, {useContext, useState, useEffect}from 'react'
+import { View, Text, StyleSheet,Image, Keyboard } from 'react-native'
 import AudioPlayer from "../AudioPlayer";
 import { useWindowDimensions } from "react-native";
-import { AppContext } from '../context/AppContext';
+import { useNavigation } from "@react-navigation/core";
 const blue = "lightblue";
 const green = "lightgreen";
+import { box } from "tweetnacl";
+import {
+  decrypt,
+  getMySecretKey,
+  stringToUint8Array,
+} from "../../utils/crypto";
+import CustomFeather from '../CustomFeather';
+import { API_URL } from "@env";
+const API = API_URL
+import * as SecureStore from 'expo-secure-store';
 
-
-const Messages = ({ message, user, isMeUserId }) => {
+const Messages = ({ message, user, isMeUserId, setOnReply }) => {
     const UserMessageID = message.UserChatRoomId
     const isMeUserChatID = user.find((x) => x.UserId === isMeUserId).ChatRoomUsers[0].UserChatRoomId
     const UserMessage = user.find((x) => x.ChatRoomUsers[0].UserChatRoomId === UserMessageID)
     const isMe = UserMessageID === isMeUserChatID
+    const [decryptedContent, setDecryptedContent] = useState("");
+    const [replyMessage, setReplyMessage] = useState();
+    
     // const [soundURI, setSoundURI] = useState(null);
     const { width } = useWindowDimensions();
+    const navigation = useNavigation()
+    useEffect(() => {
+        if (message.reference) {
+            fetchMessage()
+        }
+    }, []);
+    const fetchMessage = async () => {
+        fetch(`${API}/Message/reference/${message.reference}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
+                'credentials': 'include'
+            }
+        })
+        .then(async res => { 
+            try {
+                const jsonRes = await res.json();
+                
+                if (res.status !== 200) {
+                    setReplyMessage(jsonRes);
+                } else {
+                    setReplyMessage(jsonRes);
+                    console.log(jsonRes)
+                }
+            } catch (err) {
+                console.log(err);
+            };
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    };
+    useEffect(() => {
+        if (!message?.content || !UserMessage?.publicKey) {
+            if (!message.isCrypted) {
+                setDecryptedContent(message.content);
+                return
+            }
+            return;
+        }
+    
+        const decryptMessage = async () => {
+          const myKey = await getMySecretKey(navigation);
+          if (!myKey) {
+            return;
+          }
+          // decrypt message.content
+          
+          const sharedKey = box.before(stringToUint8Array(UserMessage.publicKey), myKey);
+          const decrypted = decrypt(sharedKey, message.content);
+          setDecryptedContent(decrypted.content);
+        };
+    
+        decryptMessage();
+    }, [message, user]);
+
+    const onPressReply = async (event) => {
+        event.preventDefault()
+        if (message.image) {
+            setOnReply(['image', message])
+        }
+        if (message.audio) {
+            setOnReply(['audio', message])
+        }
+        if (!!decryptedContent) {
+            setOnReply([decryptedContent, message])
+        }
+    }
     
     return (
         <View style={[styles.container, isMe ? styles.rightContainer : styles.leftContainer]}>
-            
             <View style={[styles.container, isMe ? styles.rightMessageColor : styles.leftMessageColor]}>
+                {replyMessage && <Text style={{ backgroundColor:"grey" }}>{replyMessage.content}</Text>}
                 {message.image && (
                     <View style={{ marginBottom: message.content ? 10 : 0 }}>
                         <Image
@@ -30,15 +111,18 @@ const Messages = ({ message, user, isMeUserId }) => {
                 )}
                 {message.audio && <AudioPlayer soundURI={message.audio} />}
                 
-                {!!message.content && (
-                    <Text style={{ color: isMe ? 'black' : 'white'}}>
-                        {message.content}
+                {!!decryptedContent && (
+                    <Text style={{ color: isMe ? "black" : "white" }}>
+                        {decryptedContent}
                     </Text>
                 )}
             </View>
             <View>
                 {user && <Image source={{ uri: UserMessage.imageUri }} style={styles.image} />}
                 {user && <Text>{UserMessage.pseudo}</Text>}
+                
+                <CustomFeather name="corner-down-right" size={24} onPress={onPressReply} color="black"/>
+
             </View>
         </View>
         

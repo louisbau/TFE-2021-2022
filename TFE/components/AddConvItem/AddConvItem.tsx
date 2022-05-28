@@ -17,38 +17,38 @@ export default function AddConvItem({modalVisible, setModalVisible}) {
     const [user, setUser] = useState()
     useEffect(() => {
         fetchUser();
-      }, [])
+    }, [])
     
       
     
     
-      const fetchUser = async () => {
-        fetch(`${API}/card`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
-                'credentials': 'include'
-            }
-        })
-        .then(async (res) => { 
-            try {
-                const jsonRes = await res.json();
-                if (res.status !== 200) {
-                  setUser(jsonRes)
-                } else {
-                  
-                  setUser(jsonRes) 
-                  
-                }
-            } catch (err) {
-                console.log(err);
-            };
-        })
-        .catch(err => {
-            console.log(err);
-        });
-      };
+    const fetchUser = async () => {
+      fetch(`${API}/card`, {
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
+              'credentials': 'include'
+          }
+      })
+      .then(async (res) => { 
+          try {
+              const jsonRes = await res.json();
+              if (res.status !== 200) {
+                setUser(jsonRes)
+              } else {
+                
+                setUser(jsonRes) 
+                
+              }
+          } catch (err) {
+              console.log(err);
+          };
+      })
+      .catch(err => {
+          console.log(err);
+      });
+    };
     
   
     const onPress = (event) => {

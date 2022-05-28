@@ -15,7 +15,8 @@ import { API_URL } from "@env";
 import {  View, Switch, Text, Image, useWindowDimensions, Pressable,TextInput,  Alert,Modal, StyleSheet } from 'react-native';
 const API = API_URL
 const Drawer = createDrawerNavigator();
-
+import { PRIVATE_KEY } from '../utils/crypto';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const DrawerNavigator = ({ navigation, nav }) => {
@@ -24,6 +25,11 @@ const DrawerNavigator = ({ navigation, nav }) => {
     const [isEnabledDispo, setIsEnabledDispo] = useState(false);
     const toggleSwitchDispo = () => setIsEnabledDispo(previousState => !previousState);
     const [user, setUser] = useState()
+    const logout = (props) => {
+        SecureStore.deleteItemAsync('token')
+        AsyncStorage.removeItem(PRIVATE_KEY)
+        props.navigation.navigate("SignIn")
+    }
     useEffect(() => {
         fetchUser();
     }, [])
@@ -75,22 +81,10 @@ const DrawerNavigator = ({ navigation, nav }) => {
                             value={isEnabledDispo}
                         />
                     </View>
-                    <View style={{ 
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                    }}>
-                        <Text>
-                            {isEnabledTheme ? 'White : ' : 'Black : '}
-                        </Text>
-                        <Switch
-                            trackColor={{ false: "#767577", true: "#81b0ff" }}
-                            thumbColor={isEnabledTheme ? "#f5dd4b" : "#f4f3f4"}
-                            onValueChange={toggleSwitchTheme}
-                            value={isEnabledTheme}
-                        />
-                    </View>
                     {user && <DrawerItem label="Friend" onPress={() => props.navigation.navigate("Friend")} />}
-                    {user && <DrawerItem label="SignIn" onPress={() => props.navigation.navigate("SignIn")} />}
+                    {user && <DrawerItem label="Settings" onPress={() => props.navigation.navigate("Setting")} />}
+                    {user && <DrawerItem label="Sign out" onPress={()=>logout(props)} />}
+                    
                     
                     
                 </DrawerContentScrollView>

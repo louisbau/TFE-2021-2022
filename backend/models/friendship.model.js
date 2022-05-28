@@ -5,8 +5,12 @@ module.exports = (sequelize, Sequelize) => {
         autoIncrement: true,
         allowNull: false,
         primaryKey: true,
+      },
+      status: {
+        type: Sequelize.STRING,
+        allowNull: true,
+        defaultValue: 'Waiting'
       }
     });
-    
     return FriendShip;
 };

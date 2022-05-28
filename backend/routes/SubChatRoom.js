@@ -4,6 +4,19 @@ const { ChatRoomUser, User, Message, ChatRoom, UserChatRoom, SubChatRoom } = req
 const verifyJWT = require('./isAuth')
 const { Op } = require("sequelize");
 
+
+router.post("/list",verifyJWT, async (req, res) => {
+    const { subChatRoomId, userChatRoomId } = req.body;
+    const chatroomID = await SubChatRoom.findOne(({where : {id : subChatRoomId}}));
+    const listofallUser = await UserChatRoom.findAll(({where : {ChatRoomId : chatroomID.id}}));
+    index = []
+    for (i in listofallUser) {
+        index.push(listofallUser[i].UserId)
+    }
+    const list = await User.findAll(({where : {id : index}}));
+    res.json(list);
+});
+
 router.post("/newChat", verifyJWT, async (req, res) => {
     const { subname, ChatRoomId } = req.body;
     console.log(subname, ChatRoomId, req.id.UserId)

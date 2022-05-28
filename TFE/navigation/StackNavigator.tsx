@@ -18,6 +18,7 @@ import UsersScreen from "../screens/UserScreen";
 import FriendsScreen from "../screens/FriendsScreen";
 import FriendHeader from "./FriendHeader";
 import CallScreen from "../screens/CallScreen";
+import Settings from "../screens/Settings";
 const Stack = createStackNavigator();
 
 const screenOptionStyle = {
@@ -85,7 +86,8 @@ const MainStackNavigator = ({ nav }) => {
                     headerTitle: () => <FriendHeader />
                 })}
             />
-            <Stack.Screen name="Call" component={CallScreen} />
+            {/* <Stack.Screen name="Call" component={CallScreen} /> */}
+            <Stack.Screen name="Setting" component={Settings} />
             
         </Stack.Navigator>
     );

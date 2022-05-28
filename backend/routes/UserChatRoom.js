@@ -4,6 +4,13 @@ const { ChatRoomUser, User, Message, ChatRoom, UserChatRoom, SubChatRoom } = req
 const verifyJWT = require('./isAuth')
 const { Op } = require("sequelize");
 
+router.get("/:id",verifyJWT, async (req, res) => {
+    const OneUserChatRoom = await UserChatRoom.findOne({ 
+        where: {id: req.params.id}
+    });
+    res.json(OneUserChatRoom);
+});
+
 
 router.post("/addUserGroup", verifyJWT, async (req, res) => {
     const { name, ChatRoomId } = req.body;

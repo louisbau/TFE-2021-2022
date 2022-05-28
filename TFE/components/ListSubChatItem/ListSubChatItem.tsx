@@ -1,4 +1,4 @@
-import React, {useContext, useState}from 'react';
+import React, {useContext, useState, useRef}from 'react';
 import { Text, Image, View, Pressable, Platform, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 import styles from './styles';
@@ -12,6 +12,7 @@ const API =  API_URL
 export default function ListSubChatItem({ list, isAdmin, IsOnEdit }) {
   const navigation = useNavigation();
   const [isRename, setIsRename] = useState(false);
+  const swipeableRef = useRef(null);
   const [name, setName] = useState(list.name);
   const onPress = async (event) => {
     event.preventDefault()
@@ -28,8 +29,8 @@ export default function ListSubChatItem({ list, isAdmin, IsOnEdit }) {
     setIsRename(!isRename)
   }
   const swipeFromRightOpen = async () => {
+    swipeableRef.current.close();
     fetchDeleteSub()
-
   };
 
   const fetchRenameSub = async () => {
@@ -46,7 +47,7 @@ export default function ListSubChatItem({ list, isAdmin, IsOnEdit }) {
         try {
             const jsonRes = await res.json();
             if (res.status !== 200) {
-              console.log('lol')
+              
               console.log(jsonRes)
             } else {
             }
@@ -112,6 +113,7 @@ export default function ListSubChatItem({ list, isAdmin, IsOnEdit }) {
     <Swipeable
       renderRightActions={rightSwipeActions}
       onSwipeableRightOpen={swipeFromRightOpen}
+      ref={swipeableRef}
       enabled={IsOnEdit}
     >
       {!IsOnEdit && (<Pressable onPress={onPress} style={styles.container}>

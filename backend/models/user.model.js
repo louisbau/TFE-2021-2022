@@ -24,12 +24,17 @@ module.exports = (sequelize, Sequelize) => {
       },
       status: {
         type: Sequelize.STRING,
-        allowNull: true,
+        allowNull: false,
+        defaultValue: 'Absent'
       },
       role: {
         type: Sequelize.STRING,
         allowNull: false,
         defaultValue: 'User'
+      },
+      publicKey: {
+        type: Sequelize.STRING,
+        allowNull: true
       }
     });
 

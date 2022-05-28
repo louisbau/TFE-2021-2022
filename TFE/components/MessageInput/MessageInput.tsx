@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import { 
     View, 
     Text, 
@@ -7,29 +7,57 @@ import {
     Pressable, 
     KeyboardAvoidingView, 
     Platform,
-    Image
+    Image,
+    Alert,
+    Keyboard
 } from 'react-native';
+import { useNavigation } from "@react-navigation/core";
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
-import { AppContext } from "../context/AppContext";
+import { SocketContext } from '../context/socket';
 import * as ImagePicker from "expo-image-picker";
 import uuid from 'react-native-uuid';
 import EmojiSelector from "react-native-emoji-selector";
 import { Audio, AVPlaybackStatus } from "expo-av";
 import AudioPlayer from "../AudioPlayer";
 import { SimpleLineIcons, Feather, MaterialCommunityIcons, AntDesign, Ionicons } from '@expo/vector-icons';
+import { TypingAnimation } from "react-native-typing-animation";
 import { API_URL } from "@env";
 const API = API_URL
+import { box } from "tweetnacl";
+import {
+  encrypt,
+  getMySecretKey,
+  stringToUint8Array,
+} from "../../utils/crypto";
 
-const MessageInput = ({ subChatRoomId, userChatRoomId, setMessage }) => {
+
+const MessageInput = ({ subChatRoomId, userChatRoomId, setMessage, IsCrypted, onReply, setOnReply, typing, setTyping, nameTyping }) => {
     const [content, setContent] = useState('');
+    const [users, setUser] = useState();
     const [image, setImage] = useState(null);
     const [audio, setAudio] = useState(null);
     const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
     const [progress, setProgress] = useState(0);
     const [recording, setRecording] = useState(null);
+    const [userTyping, setUserTyping] = useState();
+    const socket = useContext(SocketContext);
+    const navigation = useNavigation();
+    useEffect(() => {
+      
+      fetchListUser();
+    }, [])
     
-    
+    const onChange = (e)=>{
+      setContent(e)
+      
+      if (e === "") {
+        socket.emit('StopTyping', {subChatRoomId: subChatRoomId, userChatRoomId: userChatRoomId})
+      }
+      else {
+        socket.emit('Typing', {subChatRoomId: subChatRoomId, userChatRoomId: userChatRoomId})
+      }
+    }
     useEffect(() => {
       (async () => {
         if (Platform.OS !== "web") {
@@ -47,6 +75,97 @@ const MessageInput = ({ subChatRoomId, userChatRoomId, setMessage }) => {
         }
       })();
     }, []);
+
+    const fetchListUser = async () => {
+      fetch(`${API}/SubChatRoom/list`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
+              'credentials': 'include'
+          },
+          body: JSON.stringify({ subChatRoomId: subChatRoomId, userChatRoomId: userChatRoomId })
+      })
+      .then(async (res) => { 
+          try {
+              const jsonRes = await res.json();
+              if (res.status !== 200) {
+                console.log(jsonRes)
+                
+              } else {
+                setUser(jsonRes)
+              }
+          } catch (err) {
+              console.log(err);
+          };
+      })
+      .catch(err => {
+          console.log(err);
+      });
+    };
+    
+
+    const sendMessageToUser = async (user) => {
+      // send message
+      let encryptedMessage = content;
+      if (IsCrypted) {
+        const ourSecretKey = await getMySecretKey(navigation);
+        if (!ourSecretKey) {
+          console.log("error 99")
+          return;
+        }
+        console.log(ourSecretKey)
+        if (!user.publicKey) {
+          Alert.alert(
+            "The user haven't set his keypair yet",
+            "Until the user generates the keypair, you cannot securely send him messages"
+          );
+          return;
+        }
+    
+        console.log("private key", user.publicKey);
+        
+        const sharedKey = box.before(
+          stringToUint8Array(user.publicKey),
+          ourSecretKey
+        );
+        console.log("shared key", sharedKey);
+    
+        encryptedMessage = encrypt(sharedKey, { content });
+      }
+      
+      const referenceId = onReply ? onReply[1].id : null
+  
+      try {
+        await axios.post(`${API}/Message`, {
+            content: encryptedMessage,
+            image,
+            audio,
+            SubChatRoomId: subChatRoomId,
+            forUserId: user.id,
+            isCrypted: IsCrypted,
+            UserChatRoomId: userChatRoomId,
+            reference: referenceId
+        }, {
+          headers: {
+            'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
+            'credentials': 'include'
+          }
+        }).then(async (response) => { 
+          const data = response.data
+          
+          setMessage(data)
+          //console.log(data)
+          
+      });
+      } catch (error) {
+        alert(error);
+      }
+    
+    
+  
+      // updateLastMessage(newMessage);
+    };
 
     const getBlob = async (uri: string ,name:string) => {
       const response = await fetch(uri);
@@ -107,13 +226,15 @@ const MessageInput = ({ subChatRoomId, userChatRoomId, setMessage }) => {
       });
       */
       // send message
+      const referenceId = onReply ? onReply[1].id : null
       try {
         await axios.post(`${API}/Message`, {
             content,
             image,
             audio,
             SubChatRoomId: subChatRoomId,
-            UserChatRoomId: userChatRoomId
+            UserChatRoomId: userChatRoomId,
+            reference: referenceId
         }, {
           headers: {
             'Content-Type': 'application/json',
@@ -137,29 +258,10 @@ const MessageInput = ({ subChatRoomId, userChatRoomId, setMessage }) => {
 
 
     const sendMessage = async () => {
-    // send message
-        try {
-            await axios.post(`${API}/Message`, {
-                content,
-                image,
-                audio,
-                SubChatRoomId: subChatRoomId,
-                UserChatRoomId: userChatRoomId
-            }, {
-              headers: {
-                'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
-                'credentials': 'include'
-              }
-            }).then(async (response) => { 
-              const data = response.data
-              
-              setMessage(data)
-              //console.log(data)
-              
-          });
-          } catch (error) {
-            alert(error);
-          }
+        
+        await Promise.all(
+          users.map((user) => sendMessageToUser(user))
+        );
         
         resetFields();
     }
@@ -170,6 +272,7 @@ const MessageInput = ({ subChatRoomId, userChatRoomId, setMessage }) => {
       setImage(null);
       setProgress(0);
       setAudio(null);
+      setOnReply()
     };
 
 
@@ -206,12 +309,14 @@ const MessageInput = ({ subChatRoomId, userChatRoomId, setMessage }) => {
             return;
         }
         try {
+          const referenceId = onReply ? onReply[1].id : null
           await axios.post(`${API}/Message`, {
               content,
               image,
               audio,
               SubChatRoomId: subChatRoomId,
-              UserChatRoomId: userChatRoomId
+              UserChatRoomId: userChatRoomId,
+              reference: referenceId
           }, {
             headers: {
               'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
@@ -228,9 +333,6 @@ const MessageInput = ({ subChatRoomId, userChatRoomId, setMessage }) => {
           alert(error);
         }
         resetFields();
-        context.readAll(chatRoomId);
-        context.readMessage(chatRoomId);
-        context.readGlobale();
 
     }
     
@@ -239,6 +341,8 @@ const MessageInput = ({ subChatRoomId, userChatRoomId, setMessage }) => {
     }
 
     const onPress = () => {
+        socket.emit("StopTyping", {subChatRoomId: subChatRoomId, userChatRoomId: userChatRoomId})
+        setTyping(false)
         if (content) {
             sendMessage();
         } else if (image) {
@@ -256,6 +360,45 @@ const MessageInput = ({ subChatRoomId, userChatRoomId, setMessage }) => {
             behavior={Platform.OS === "ios" ? "padding" : "height"}
             keyboardVerticalOffset={100}
         >
+            {typing && (
+              <View
+                style={{
+                  backgroundColor: "#f2f2f2",
+                  padding: 5,
+                  flexDirection: "row",
+                  alignSelf: "stretch",
+                  justifyContent: "space-between",
+                }}
+              >
+                <View>
+                  {/* <Text>{typing.user}</Text> */}
+                  <Text>{nameTyping}<TypingAnimation dotMargin={3} style={{margin:0, paddingBottom:12}}/></Text>
+                </View>
+              </View>
+            )}
+            {onReply && (
+              <View
+                style={{
+                  backgroundColor: "#f2f2f2",
+                  padding: 5,
+                  flexDirection: "row",
+                  alignSelf: "stretch",
+                  justifyContent: "space-between",
+                }}
+              >
+                <View style={{ flex: 1 }}>
+                  <Text>Reply to: {onReply[0]}</Text>
+                </View>
+                <Pressable onPress={() => setOnReply()}>
+                  <AntDesign
+                    name="close"
+                    size={24}
+                    color="black"
+                    style={{ margin: 5 }}
+                  />
+                </Pressable>
+              </View>
+            )}
             {image && (
                 <View style={styles.sendImageContainer}>
                     <Image
@@ -308,7 +451,7 @@ const MessageInput = ({ subChatRoomId, userChatRoomId, setMessage }) => {
                     <TextInput
                         style={styles.input}
                         value={content}
-                        onChangeText={setContent}
+                        onChangeText={(content) => onChange(content)}
                         placeholder="Signal message..."
                     />
 

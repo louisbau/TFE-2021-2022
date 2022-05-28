@@ -1,20 +1,60 @@
 import React, { useEffect, useState, useContext } from "react";
-import { View, Image, Text, useWindowDimensions, Platform, Modal, Pressable, StyleSheet } from "react-native";
+import { View, Image, Text, Modal, Pressable, StyleSheet, FlatList } from "react-native";
 import CustomInput from "../components/CustomInput";
 import CustomFeather from "../components/CustomFeather";
 import CustomButton from "../components/CustomButton";
 import { API_URL } from "@env";
 const API = API_URL
 import * as SecureStore from 'expo-secure-store';
+import UserListInvitationItem from "../components/UserListInvitationItem";
 
 const FriendHeader = ( ) => {
     const [modalVisible, setModalVisible] = useState(false);
+    const [modalVisible1, setModalVisible1] = useState(false);
     const [friend, setFriend] = useState("")
     const onPress = (event) => {
         event.preventDefault()
         fetchAddFriend()
         setModalVisible(!modalVisible)
     }
+    const [friends, setFriends] = useState([]);
+
+    useEffect(() => {
+
+        fetchFriends();
+    }, [])
+  
+    
+  
+    
+    const fetchFriends = async () => {
+      fetch(`${API}/Friends/listWaiting`, {
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
+              'credentials': 'include'
+          }
+      })
+      .then(async (res) => { 
+          try {
+              const jsonRes = await res.json();
+              if (res.status !== 200) {
+                  console.log('error fetch conv private')
+                  setFriends(jsonRes)
+                  
+              } else {
+                  setFriends(jsonRes)
+                  console.log(jsonRes)
+              }
+          } catch (err) {
+              console.log(err);
+          };
+      })
+      .catch(err => {
+          console.log(err);
+      });
+    };
     
 
     const fetchAddFriend = async () => {
@@ -31,9 +71,9 @@ const FriendHeader = ( ) => {
             try {
                 const jsonRes = await res.json();
                 if (res.status !== 200) {
-                console.log(jsonRes)
+                    console.log(jsonRes)
                 } else {
-                setFriend("")
+                    setFriend("")
                 }
             } catch (err) {
                 console.log(err);
@@ -77,6 +117,45 @@ const FriendHeader = ( ) => {
                 </View>
                 
             </Modal>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible1}
+                onRequestClose={() => {
+                    setModalVisible1(!modalVisible1);
+                }}
+            >
+                
+
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <View style={{ 
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                        }}>
+                            <Text style={styles.modalText}>Invitation</Text>
+                            <Pressable
+                                style={[styles.button, styles.buttonClose]}
+                                onPress={() => setModalVisible1(!modalVisible1)}
+                            >  
+                                <Text style={styles.textStyle}>Cancel</Text>
+                            
+                            </Pressable>
+                            
+
+                        </View>
+                        <View style={styles.list}>
+                            {friends !== null && <FlatList 
+                                data={friends}
+                                renderItem={({ item }) => <UserListInvitationItem user={item} />}
+                                showsHorizontalScrollIndicator={false}
+                                keyExtractor={(item, index) => index.toString()}
+                            />}
+                        </View>                   
+                    </View>
+                </View>
+                
+            </Modal>
             <View
             style={{
                 flexDirection: "row",
@@ -88,6 +167,7 @@ const FriendHeader = ( ) => {
                     Friend
                 </Text>
                 <CustomFeather name="edit-2" size={24} onPress={() => setModalVisible(true)} color="black"/>
+                <CustomFeather name="edit-2" size={24} onPress={() => setModalVisible1(true)} color="black"/>
                 
             </View>
         </View>
@@ -102,8 +182,8 @@ const styles = StyleSheet.create({
     },
     modalView: {
       width: "100%",
-      height: "95%",
-      marginTop: "30%",
+      height: "100%",
+      marginTop: "20%",
       margin: 20,
       backgroundColor: "white",
       borderRadius: 20,
@@ -116,12 +196,15 @@ const styles = StyleSheet.create({
       },
       shadowOpacity: 0.25,
       shadowRadius: 4,
-      elevation: 5
+      elevation: 5,
     },
     button: {
       borderRadius: 20,
       padding: 10,
-      elevation: 2
+      elevation: 2,
+    },
+    list: {
+        width: "auto",
     },
     buttonOpen: {
       backgroundColor: "#F194FF",
