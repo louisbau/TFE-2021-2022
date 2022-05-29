@@ -31,12 +31,11 @@ services:
         stdin_open: true
         tty: true
     nginx:
+        image: nginx:latest
         depends_on:
             - mysqldb
             - nodeserver
         restart: always
-        build:
-            context: ./nginx
         ports:
             - "80:80"
             - "443:443"
