@@ -40,7 +40,6 @@ const MessageInput = ({ subChatRoomId, userChatRoomId, setMessage, IsCrypted, on
     const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
     const [progress, setProgress] = useState(0);
     const [recording, setRecording] = useState(null);
-    const [userTyping, setUserTyping] = useState();
     const socket = useContext(SocketContext);
     const navigation = useNavigation();
     useEffect(() => {

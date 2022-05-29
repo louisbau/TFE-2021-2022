@@ -59,6 +59,15 @@ router.post("/addPublicKey",verifyJWT, async (req, res) => {
     res.json(userResult);
 });
 
+router.post("/addPics",verifyJWT, async (req, res) => {
+    const { pics } = req.body;
+    const userResult = await User.update({imageUri: pics}, {
+        where : {id : req.id.UserId}
+    })
+    
+    res.json(userResult);
+});
+
 router.post("/register", async (req, res) => {
     const { email, password, name } = req.body;
     User.findOne({ where : {

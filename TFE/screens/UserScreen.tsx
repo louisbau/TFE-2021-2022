@@ -7,12 +7,57 @@ import CustomButton from '../components/CustomButton';
 import CustomFeather from '../components/CustomFeather';
 import { API_URL } from "@env";
 const API = API_URL
+import * as ImagePicker from "expo-image-picker";
+
 
 export default function UsersScreen() {
   const [user, setUser] = useState()
+  const [image, setImage] = useState()
   useEffect(() => {
       fetchUser();
   }, [])
+
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 0.5,
+    });
+
+    if (!result.cancelled) {
+      
+      const fetchAddPics = async () => {
+        fetch(`${API}/addPics`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
+                'credentials': 'include'
+            },
+            body: JSON.stringify({ pics: result.uri })
+        })
+        .then(async (res) => { 
+            try {
+                const jsonRes = await res.json();
+                if (res.status !== 200) {
+                  console.log(jsonRes)
+                } else {
+                  console.log(jsonRes)
+                }
+            } catch (err) {
+                console.log(err);
+            };
+        })
+        .catch(err => {
+            console.log(err);
+        });
+      };
+      fetchAddPics()
+    }
+  };
+
+  
 
   const fetchUser = async () => {
       fetch(`${API}/card`, {
@@ -48,7 +93,8 @@ export default function UsersScreen() {
           source={{ uri: user.imageUri}}
           style={{ width: 30, height: 30, borderRadius: 30, backgroundColor:'blue'}}
       />}
-      {user && <Text>Modifier la photo</Text>}
+      <CustomButton text={'modify pics'} onPress={pickImage}/>
+      
       {user && <Text>nom généré</Text>}
 
       {user && <Text>Name : {user.name}</Text>}

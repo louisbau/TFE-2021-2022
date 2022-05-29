@@ -70,7 +70,7 @@ export default function ChatRoomScreen() {
         .catch(err => {
             console.log(err);
         });
-      };
+    };
 
     const fetchAuthentification = async () => {
         fetch(`${API}/authentification`, {
@@ -165,17 +165,18 @@ export default function ChatRoomScreen() {
                     keyExtractor={(item, index) => index.toString()}
                 />
             }
-            {user && <
-                MessageInput 
-                subChatRoomId={route.params?.id} 
-                userChatRoomId={user.find(x => x.UserId === userId).ChatRoomUsers[0].UserChatRoomId} 
-                setMessage={setMessage} 
-                IsCrypted={route.params?.IsCrypted} 
-                onReply={onReply} 
-                setOnReply={setOnReply} 
-                typing={typing} 
-                setTyping={setTyping} 
-                nameTyping={nameTyping}/>
+            {user && 
+                <MessageInput 
+                    subChatRoomId={route.params?.id} 
+                    userChatRoomId={user.find(x => x.UserId === userId).ChatRoomUsers[0].UserChatRoomId} 
+                    setMessage={setMessage} 
+                    IsCrypted={route.params?.IsCrypted} 
+                    onReply={onReply} 
+                    setOnReply={setOnReply} 
+                    typing={typing} 
+                    setTyping={setTyping} 
+                    nameTyping={nameTyping}
+                />
             }
         </SafeAreaView>
     )

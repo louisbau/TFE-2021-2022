@@ -7,15 +7,18 @@ import * as SecureStore from 'expo-secure-store';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import CustomButton from '../CustomButton';
 import CustomInput from '../CustomInput';
+import { SocketContext } from "../context/socket";
 const API =  API_URL
 
 export default function ListSubChatItem({ list, isAdmin, IsOnEdit }) {
   const navigation = useNavigation();
+  const socket = useContext(SocketContext);
   const [isRename, setIsRename] = useState(false);
   const swipeableRef = useRef(null);
   const [name, setName] = useState(list.name);
   const onPress = async (event) => {
     event.preventDefault()
+    socket.emit("Room", {subchatRoomid : list.id})
     navigation.navigate("ChatGroup", { id: list.id, chat: list });
   }
 

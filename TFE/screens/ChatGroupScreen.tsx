@@ -5,6 +5,7 @@ import Message from "../components/Message";
 import MessageInput from "../components/MessageInput";
 import * as SecureStore from 'expo-secure-store';
 import { API_URL } from "@env";
+import { SocketContext } from "../components/context/socket";
 
 
 
@@ -16,6 +17,9 @@ export default function ChatGroupScreen() {
     const [userId, setUserId] = useState();
     const [role, setRole] = useState();
     const [subId, setsubId] = useState()
+    const [typing, setTyping] = useState(false)
+    const [nameTyping, setNameTyping] = useState()
+    const socket = useContext(SocketContext);
     const API = API_URL
     const [onReply, setOnReply] = useState();
     
@@ -30,6 +34,44 @@ export default function ChatGroupScreen() {
     useEffect(() => {
         fetchUser();
     }, [])
+
+    useEffect(() => {
+        socket.on('connectToRoom',function(data){
+            setTyping(true) 
+            fetchUserChatRoom(data[1])
+            if (!data[2])  {
+                setTyping(false)
+                fetchMessage()
+            }
+        });
+    }, [])
+
+    const fetchUserChatRoom = async (id) => {
+        fetch(`${API}/UserChatRoom/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
+                'credentials': 'include'
+            }
+        })
+        .then(async (res) => { 
+            try {
+                const jsonRes = await res.json();
+                if (res.status !== 200) {
+                  console.log(jsonRes)
+                } else {
+                    console.log(jsonRes)
+                    setNameTyping(jsonRes.pseudo)
+                }
+            } catch (err) {
+                console.log(err);
+            };
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    };
 
     const fetchAuthentification = async () => {
         fetch(`${API}/authentification`, {
@@ -125,7 +167,19 @@ export default function ChatGroupScreen() {
                     keyExtractor={(item, index) => index.toString()}
                 />
             }
-            {message && user && <MessageInput subChatRoomId={route.params?.id} userChatRoomId={user && user.find(x => x.UserId === userId).ChatRoomUsers[0].UserChatRoomId} setMessage={setMessage} IsCrypted={false} onReply={onReply} setOnReply={setOnReply}/>}
+            {message && user && 
+                <MessageInput
+                    subChatRoomId={route.params?.id} 
+                    userChatRoomId={user && user.find(x => x.UserId === userId).ChatRoomUsers[0].UserChatRoomId} 
+                    setMessage={setMessage} 
+                    IsCrypted={false} 
+                    onReply={onReply} 
+                    setOnReply={setOnReply}
+                    typing={typing} 
+                    setTyping={setTyping} 
+                    nameTyping={nameTyping}
+                />
+            }
         </SafeAreaView>
     )
 };
