@@ -8,7 +8,6 @@ import { SocketContext } from "../../components/context/socket";
 import { API_URL } from "@env";
 const API = API_URL
 
-
 async function save(key, value) {
     await SecureStore.setItemAsync(key, value);
 }
@@ -33,7 +32,7 @@ export default function SignIn() {
             email,
             password,
         };
-        fetch(`${API}/login`, {
+        fetch(`https://checkpcs.com:5000/api/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
