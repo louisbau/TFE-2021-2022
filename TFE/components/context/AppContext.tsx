@@ -2,7 +2,7 @@ import React, { createContext } from 'react'
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
-import { API_URL } from "@env";
+import { API_URL } from 'react-native-dotenv'
 export const AppContext = createContext();
 const API = API_URL
 

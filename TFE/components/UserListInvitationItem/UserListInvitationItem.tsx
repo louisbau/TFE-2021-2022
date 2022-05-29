@@ -1,7 +1,7 @@
 import React, {useContext, useState, useRef}from 'react';
 import { Text, Image, View, Pressable, Platform } from 'react-native';
 import styles from './styles';
-import { API_URL } from "@env";
+import { API_URL } from 'react-native-dotenv'
 import * as SecureStore from 'expo-secure-store';
 import CustomButton from '../CustomButton';
 const API =  API_URL

@@ -3,7 +3,7 @@ import React, { useEffect, useState} from 'react'
 import {  View, Switch, Text, Image, useWindowDimensions, Pressable,TextInput,  Alert,Modal, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons'; 
 import * as SecureStore from 'expo-secure-store';
-import { API_URL } from "@env";
+import { API_URL } from 'react-native-dotenv'
 import CustomInput from '../CustomInput';
 import CustomButton from '../CustomButton';
 const API = API_URL

@@ -2,7 +2,7 @@ import React, {useContext, useState, useRef}from 'react';
 import { Text, Image, View, Pressable, Platform, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 import styles from './styles';
-import { API_URL } from "@env";
+import { API_URL } from 'react-native-dotenv'
 import * as SecureStore from 'expo-secure-store';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import CustomButton from '../CustomButton';

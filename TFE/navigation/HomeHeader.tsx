@@ -4,7 +4,7 @@ import {  View, Switch, Text, Image, useWindowDimensions, Pressable,TextInput,  
 import { Feather } from '@expo/vector-icons';
 import CustomFeather from '../components/CustomFeather';
 import * as SecureStore from 'expo-secure-store';
-import { API_URL } from "@env";
+import { API_URL } from 'react-native-dotenv'
 const API = API_URL
 import AddGroupItem from '../components/AddGroupItem';
 import AddConvItem from '../components/AddConvItem';

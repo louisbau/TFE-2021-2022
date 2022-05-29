@@ -11,7 +11,7 @@ import TabNavigator from "./TabNavigator";
 import UsersScreen from '../screens/UserScreen';
 import HomeHeader from "./HomeHeader";
 import * as SecureStore from 'expo-secure-store';
-import { API_URL } from "@env";
+import { API_URL } from 'react-native-dotenv'
 import {  View, Switch, Text, Image, useWindowDimensions, Pressable,TextInput,  Alert,Modal, StyleSheet } from 'react-native';
 const API = API_URL
 const Drawer = createDrawerNavigator();

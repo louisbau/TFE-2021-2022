@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { Text, Image, View, Pressable, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
-import { API_URL } from "@env";
+import { API_URL } from 'react-native-dotenv'
 import styles from "./styles";
 import * as SecureStore from 'expo-secure-store';
 import { AppContext } from "../context/AppContext";

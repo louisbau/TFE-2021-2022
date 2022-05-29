@@ -3,7 +3,7 @@ import { View, Image, Text, Modal, Pressable, StyleSheet, FlatList } from "react
 import CustomInput from "../components/CustomInput";
 import CustomFeather from "../components/CustomFeather";
 import CustomButton from "../components/CustomButton";
-import { API_URL } from "@env";
+import { API_URL } from 'react-native-dotenv'
 const API = API_URL
 import * as SecureStore from 'expo-secure-store';
 import UserListInvitationItem from "../components/UserListInvitationItem";

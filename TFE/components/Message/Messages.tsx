@@ -12,7 +12,7 @@ import {
   stringToUint8Array,
 } from "../../utils/crypto";
 import CustomFeather from '../CustomFeather';
-import { API_URL } from "@env";
+import { API_URL } from 'react-native-dotenv'
 const API = API_URL
 import * as SecureStore from 'expo-secure-store';
 

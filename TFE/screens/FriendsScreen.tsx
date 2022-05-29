@@ -5,7 +5,7 @@ import UserListItem from '../components/UserListItem';
 import CustomInput from '../components/CustomInput';
 import CustomButton from '../components/CustomButton';
 import CustomFeather from '../components/CustomFeather';
-import { API_URL } from "@env";
+import { API_URL } from 'react-native-dotenv'
 const API = API_URL
 
 export default function FriendsScreen() {

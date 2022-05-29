@@ -5,8 +5,7 @@ import { useNavigation } from '@react-navigation/core';
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import { SocketContext } from "../../components/context/socket";
-import { API_URL } from "@env";
-const API = API_URL
+import {API_URL} from 'react-native-dotenv'
 
 async function save(key, value) {
     await SecureStore.setItemAsync(key, value);
@@ -32,7 +31,7 @@ export default function SignIn() {
             email,
             password,
         };
-        fetch(`https://checkpcs.com:5000/api/login`, {
+        fetch(`${API_URL}/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

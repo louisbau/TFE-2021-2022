@@ -3,7 +3,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import * as SecureStore from 'expo-secure-store';
 import { View, StyleSheet, FlatList, Text, SectionList, StatusBar, SafeAreaView, Image } from 'react-native';
 import GroupItem from '../components/GroupItem';
-import { API_URL } from "@env";
+import { API_URL } from 'react-native-dotenv'
 import CustomInput from '../components/CustomInput';
 const API = API_URL
 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ImageBackground, View, Text, StyleSheet, TouchableOpacity, TextInput, Platform } from 'react-native';
-import { API_URL } from "@env"
+import { API_URL } from 'react-native-dotenv'
 
 import { useRoute, useNavigation } from '@react-navigation/core';
 import CustomInput from "../../components/CustomInput";

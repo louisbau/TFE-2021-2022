@@ -2,7 +2,7 @@ import React, {useContext, useState, useEffect}from 'react';
 import { Text, Image, View, Pressable, Platform, FlatList, Modal } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 import styles from './styles';
-import { API_URL } from "@env";
+import { API_URL } from 'react-native-dotenv'
 import * as SecureStore from 'expo-secure-store';
 import ListSubChatItem from '../ListSubChatItem';
 import CustomFeather from '../CustomFeather';

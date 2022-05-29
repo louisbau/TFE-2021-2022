@@ -4,7 +4,7 @@ import { useRoute, useNavigation,f } from '@react-navigation/core';
 import Message from "../components/Message";
 import MessageInput from "../components/MessageInput";
 import * as SecureStore from 'expo-secure-store';
-import { API_URL } from "@env";
+import { API_URL } from 'react-native-dotenv'
 import { SocketContext } from "../components/context/socket";
 
 

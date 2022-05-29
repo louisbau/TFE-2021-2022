@@ -3,7 +3,7 @@ import { View, Text, Pressable, Alert } from "react-native";
 import { generateKeyPair } from "../utils/crypto";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRoute, useNavigation } from '@react-navigation/core';
-import { API_URL } from "@env";
+import { API_URL } from 'react-native-dotenv'
 const API = API_URL
 import * as SecureStore from 'expo-secure-store';
 import { PRIVATE_KEY } from "../utils/crypto";
