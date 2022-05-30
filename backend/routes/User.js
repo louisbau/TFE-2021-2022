@@ -47,15 +47,10 @@ router.get("/:id",verifyJWT, async (req, res) => {
     res.json(listUserCopy);
 });
 
-router.get('/logout', verifyJWT, (req, res) => {
-    req.session = null
-    res.redirect('/Login')
-})
 
 router.get('/forgot/:email', async (req, res) =>{
     try {
-      
-        User.findOne({ where : {
+        await User.findOne({ where : {
             email: req.params.email
         }})
         .then(dbUser => {

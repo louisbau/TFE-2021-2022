@@ -21,7 +21,6 @@ export default function ForgotPassword() {
     }
 
     const fetchForgot = async () => {
-        
         fetch(`${API}/forgot/${email}`, {
             method: 'GET',
             headers: {
@@ -32,23 +31,25 @@ export default function ForgotPassword() {
         .then(async (res) => { 
             try {
                 const jsonRes = await res.json();
+                
                 if (res.status !== 200) {
                     console.log('error fetch conv private')
                     setIsError(true)
                     setToken(jsonRes.message)
                     
                 } else {
+                    console.log("yes")
                     setToken(jsonRes.token)
                 }
             } catch (err) {
-                console.log(err);
+                console.log(err, 'quoi1');
                 setIsError(true)
                 
                 
             };
         })
         .catch(err => {
-            console.log(err);
+            console.log(err, 'quoi');
             setIsError(true)
             
             
@@ -59,7 +60,7 @@ export default function ForgotPassword() {
         SecureStore.deleteItemAsync('token')
         AsyncStorage.removeItem(PRIVATE_KEY)
         await fetchForgot()
-        if (isError || email) {
+        if (isError) {
             Alert.alert(
                 "wrong email, error error"
             );

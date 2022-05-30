@@ -25,7 +25,7 @@ export default function SignIn() {
     const onSignUp = () => {
         navigation.navigate('SignUp');
     }
-    
+    console.log(API)
     const onLogin = () => {
         const payload = {
             email,
