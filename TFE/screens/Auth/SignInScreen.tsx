@@ -6,7 +6,7 @@ import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import { SocketContext } from "../../components/context/socket";
 import {API_URL} from 'react-native-dotenv'
-
+const API = API_URL
 async function save(key, value) {
     await SecureStore.setItemAsync(key, value);
 }
@@ -31,7 +31,7 @@ export default function SignIn() {
             email,
             password,
         };
-        fetch(`${API_URL}/login`, {
+        fetch(`${API}/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

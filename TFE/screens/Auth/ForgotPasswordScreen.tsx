@@ -1,19 +1,73 @@
 import React, { useState } from "react";
-import { ImageBackground, View, Text, StyleSheet, TouchableOpacity, TextInput, Platform } from 'react-native';
+import { ImageBackground, View, Text, StyleSheet, TouchableOpacity, TextInput, Platform, Alert } from 'react-native';
 import { API_URL } from 'react-native-dotenv'
-
+import * as SecureStore from 'expo-secure-store';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRoute, useNavigation } from '@react-navigation/core';
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
+import { PRIVATE_KEY } from "../../utils/crypto";
+const API = API_URL
+
 
 export default function ForgotPassword() {
     const [email, setEmail] = useState('');
+    const [token, setToken] = useState('');
     const navigation = useNavigation();
+    const [isError, setIsError] = useState(false);
+    
     const onLogin = () => {
         navigation.navigate('SignIn');
     }
-    const onForgotPassword = () => {
-        navigation.navigate('ResetPassword');
+
+    const fetchForgot = async () => {
+        
+        fetch(`${API}/forgot/${email}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'credentials': 'include'
+            }
+        })
+        .then(async (res) => { 
+            try {
+                const jsonRes = await res.json();
+                if (res.status !== 200) {
+                    console.log('error fetch conv private')
+                    setIsError(true)
+                    setToken(jsonRes.message)
+                    
+                } else {
+                    setToken(jsonRes.token)
+                }
+            } catch (err) {
+                console.log(err);
+                setIsError(true)
+                
+                
+            };
+        })
+        .catch(err => {
+            console.log(err);
+            setIsError(true)
+            
+            
+        });
+    };
+    
+    const onForgotPassword = async () => {
+        SecureStore.deleteItemAsync('token')
+        AsyncStorage.removeItem(PRIVATE_KEY)
+        await fetchForgot()
+        if (isError || email) {
+            Alert.alert(
+                "wrong email, error error"
+            );
+        }
+        else {
+            navigation.navigate("ResetPassword", { token: token});
+        }
+        
     }
     
 

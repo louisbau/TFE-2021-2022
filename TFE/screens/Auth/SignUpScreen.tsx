@@ -1,15 +1,18 @@
 import React, { useState } from "react";
-import { ImageBackground, View, Text, StyleSheet, TouchableOpacity, TextInput, Platform } from 'react-native';
+import { ImageBackground, View, Text, StyleSheet, TouchableOpacity, TextInput, Platform, Alert } from 'react-native';
 import { API_URL } from 'react-native-dotenv'
 
 import { useRoute, useNavigation } from '@react-navigation/core';
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 const API = API_URL
+
+
 export default function SignUp() {
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
     const navigation = useNavigation();
 
     const [isError, setIsError] = useState(false);
@@ -19,6 +22,9 @@ export default function SignUp() {
         navigation.navigate('SignIn');
     }
     const onSignUp = () => {
+        if (password !== newPassword && password.length <= 9) {
+            return Alert.alert('not same password ')
+        }
         const payload = {
             email,
             name,
@@ -59,6 +65,7 @@ export default function SignUp() {
             <CustomInput placeholder='email' value={email} setValue={setEmail} secureTextEntry={false}/>
             <CustomInput placeholder='name' value={name} setValue={setName} secureTextEntry={false}/>
             <CustomInput placeholder='password' value={password} setValue={setPassword} secureTextEntry/>
+            <CustomInput placeholder='password again' value={newPassword} setValue={setNewPassword} secureTextEntry/>
             <CustomButton text={'Register'} onPress={onSignUp}/>
             <CustomButton text={'Login'} onPress={onLogin}/>
         </View>

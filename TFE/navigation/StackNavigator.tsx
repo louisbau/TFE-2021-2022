@@ -17,8 +17,9 @@ import TabNavigator from "./TabNavigator";
 import UsersScreen from "../screens/UserScreen";
 import FriendsScreen from "../screens/FriendsScreen";
 import FriendHeader from "./FriendHeader";
-import CallScreen from "../screens/CallScreen";
+//import CallScreen from "../screens/CallScreen";
 import Settings from "../screens/Settings";
+import AgendaScreen from "../screens/AgendaScreen";
 const Stack = createStackNavigator();
 
 const screenOptionStyle = {
@@ -88,7 +89,7 @@ const MainStackNavigator = ({ nav }) => {
             />
             {/* <Stack.Screen name="Call" component={CallScreen} /> */}
             <Stack.Screen name="Setting" component={Settings} />
-            
+            <Stack.Screen name="Agenda" component={AgendaScreen} />
         </Stack.Navigator>
     );
 };

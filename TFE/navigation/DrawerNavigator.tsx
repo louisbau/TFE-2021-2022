@@ -83,6 +83,7 @@ const DrawerNavigator = ({ navigation, nav }) => {
                     </View>
                     {user && <DrawerItem label="Friend" onPress={() => props.navigation.navigate("Friend")} />}
                     {user && <DrawerItem label="Settings" onPress={() => props.navigation.navigate("Setting")} />}
+                    {user && <DrawerItem label="Agenda" onPress={() => props.navigation.navigate("Agenda")} />}
                     {user && <DrawerItem label="Sign out" onPress={()=>logout(props)} />}
                     
                     
