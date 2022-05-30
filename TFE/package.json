@@ -28,6 +28,7 @@
     "@stablelib/base64": "^1.0.1",
     "@stablelib/utf8": "^1.0.1",
     "@types/react-native-crypto-js": "^1.0.0",
+    "@types/react-native-vector-icons": "^6.4.10",
     "axios": "^0.26.0",
     "dotenv": "^10.0.0",
     "expo": "~44.0.0",

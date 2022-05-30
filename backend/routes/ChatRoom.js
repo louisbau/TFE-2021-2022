@@ -195,6 +195,15 @@ router.get("/list", verifyJWT, async (req, res) => {
     
 });
 
+router.post("/addPics",verifyJWT, async (req, res) => {
+    const { pics, id } = req.body;
+    const userResult = await ChatRoom.update({imageUri: pics}, {
+        where : {id : id}
+    })
+    
+    res.json(userResult);
+});
+
 
 router.patch("/renameGroup", verifyJWT, async (req, res) => {
     const { groupname, groupid } = req.body;

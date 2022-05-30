@@ -18,6 +18,17 @@ const Settings = () => {
     AsyncStorage.removeItem(PRIVATE_KEY)
     navigation.navigate("SignIn")
   };
+  
+  useEffect(() => {
+      const loggedIn = async () => { 
+          const t = await SecureStore.getItemAsync('token')
+          if (t === null) {
+              navigation.navigate('SignIn')
+          }
+      }
+      loggedIn()
+
+  }, [])
   const updateKeyPair = async () => {
     // generate private/public key
     const { publicKey, secretKey } = generateKeyPair();

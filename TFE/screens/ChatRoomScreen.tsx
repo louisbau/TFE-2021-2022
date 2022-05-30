@@ -22,6 +22,17 @@ export default function ChatRoomScreen() {
     const API = API_URL
     const socket = useContext(SocketContext);
     const [onReply, setOnReply] = useState();
+    
+    useEffect(() => {
+        const loggedIn = async () => { 
+            const t = await SecureStore.getItemAsync('token')
+            if (t === null) {
+                navigation.navigate('SignIn')
+            }
+        }
+        loggedIn()
+
+    }, [])
     useEffect(() => {
         fetchAuthentification()
     }, [])

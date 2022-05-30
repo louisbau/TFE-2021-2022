@@ -24,6 +24,17 @@ export default function ChatGroupScreen() {
     const [onReply, setOnReply] = useState();
     
     useEffect(() => {
+        const loggedIn = async () => { 
+            const t = await SecureStore.getItemAsync('token')
+            if (t === null) {
+                navigation.navigate('SignIn')
+            }
+        }
+        loggedIn()
+
+    }, [])
+    
+    useEffect(() => {
         fetchAuthentification()
     }, [])
 

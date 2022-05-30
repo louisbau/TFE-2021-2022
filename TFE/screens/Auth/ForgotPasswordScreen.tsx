@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ImageBackground, View, Text, StyleSheet, TouchableOpacity, TextInput, Platform, Alert } from 'react-native';
+import { ImageBackground, View, Text, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
 import { API_URL } from 'react-native-dotenv'
 import * as SecureStore from 'expo-secure-store';
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -38,8 +38,8 @@ export default function ForgotPassword() {
                     setToken(jsonRes.message)
                     
                 } else {
-                    console.log("yes")
                     setToken(jsonRes.token)
+                    navigation.navigate("ResetPassword", { token: jsonRes.token });
                 }
             } catch (err) {
                 console.log(err, 'quoi1');
@@ -65,42 +65,57 @@ export default function ForgotPassword() {
                 "wrong email, error error"
             );
         }
-        else {
-            navigation.navigate("ResetPassword", { token: token});
-        }
+        
         
     }
     
 
     return (
-        <View>
+        <View style={styles.container}>
+            <Image source={require('../../assets/images/opentalk_logo.jpg')} style={styles.image} />
             <Text style={styles.heading}>Forgot password</Text>
-            <CustomInput placeholder='email' value={email} setValue={setEmail} secureTextEntry={false}/>
-            <CustomButton text={'Forgot'} onPress={onForgotPassword}/>
-            <CustomButton text={'Login'} onPress={onLogin}/>
+            <CustomInput placeholder='Email' value={email} setValue={setEmail} secureTextEntry={false}/>
+            <CustomButton text={'SEND EMAIL'} onPress={onForgotPassword}/>
+            <View style={styles.row}>
+                <Text>Go back to </Text>
+                <TouchableOpacity onPress={onLogin}>
+                    <Text style={styles.link}>Sign in</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     container : {
-        backgroundColor: 'black',
         width: '100%',
-        borderRadius: 5,
-        padding: 15,
+        height: '100%',
+        padding: 20,
         alignItems: 'center',
-        marginVertical: 5,
+        marginTop: 50,
     },
     text: {
         fontWeight: 'bold',
         color: 'white'
     },
     heading: {
-        fontSize: 30,
+        fontSize: 35,
         fontWeight: 'bold',
-        marginLeft: '10%',
-        marginTop: '5%',
-        marginBottom: '30%',
+        padding: 15,
         color: 'black',
+        textAlign: 'center',
+    },
+    image: {
+        width: 200,
+        height: 100,
+        marginBottom: 8,
+    },
+    row: {
+        flexDirection: 'row',
+        marginTop: 7,
+    },
+    link: {
+        fontWeight: 'bold',
+        // color: theme.colors.primary,
     },
 });

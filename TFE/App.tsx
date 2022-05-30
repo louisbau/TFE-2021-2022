@@ -11,6 +11,7 @@ import { box } from "tweetnacl";
 import { generateKeyPair, encrypt, decrypt } from "./utils/crypto";
 import { SocketContext, socket } from './components/context/socket';
 
+
 // const obj = { hello: "world" };
 // const pairA = generateKeyPair();
 // const pairB = generateKeyPair();

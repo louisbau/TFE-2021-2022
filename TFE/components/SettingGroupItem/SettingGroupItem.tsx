@@ -47,7 +47,47 @@ export default function SettingGroupItem({ modalVisible, setModalVisible, group 
             console.log(err);
         });
     };
-    
+    const pickImage = async () => {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 0.5,
+      });
+      
+      
+  
+      if (!result.cancelled) {
+        
+        const fetchAddPics = async () => {
+          fetch(`${API}/ChatRoom/addPics`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
+                  'credentials': 'include'
+              },
+              body: JSON.stringify({ pics: result.uri, id: group.id })
+          })
+          .then(async (res) => { 
+              try {
+                  const jsonRes = await res.json();
+                  if (res.status !== 200) {
+                    console.log(jsonRes)
+                  } else {
+                    console.log(jsonRes)
+                  }
+              } catch (err) {
+                  console.log(err);
+              };
+          })
+          .catch(err => {
+              console.log(err);
+          });
+        };
+        fetchAddPics()
+      }
+    };
     
   
     const onPress = (event) => {
@@ -173,7 +213,7 @@ export default function SettingGroupItem({ modalVisible, setModalVisible, group 
                 </View>
                 <CustomButton text={'Add'} onPress={onPress}/>
                 
-                <Text style={styles.modalText}>Change pic</Text>
+                <CustomButton text={'modify pics'} onPress={pickImage}/>
                 <View style={{ 
                     flexDirection: 'row',
                     alignItems: 'center',

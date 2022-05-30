@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ImageBackground, View, Text, StyleSheet, Alert} from 'react-native';
+import { ImageBackground, View, Text, StyleSheet, Alert, Image} from 'react-native';
 import { API_URL } from 'react-native-dotenv'
 import * as SecureStore from 'expo-secure-store';
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -41,7 +41,6 @@ export default function ResetPassword() {
        
     }
     const fetchReset = async () => {
-        
         fetch(`${API}/newPassword`, {
             method: 'Post',
             headers: {
@@ -78,35 +77,46 @@ export default function ResetPassword() {
     };
     
     return (
-        <View>
-            <Text style={styles.heading}>Login</Text>
+        <View style={styles.container}>
+            <Image source={require('../../assets/images/opentalk_logo.jpg')} style={styles.image} />
+            <Text style={styles.heading}>Restore Password</Text>
             <CustomInput placeholder='password' value={password} setValue={setPassword} secureTextEntry/>
             <CustomInput placeholder='again password' value={newpassword} setValue={setNewPassword} secureTextEntry/>
             <CustomButton text={'Reset password'} onPress={onResetPassword}/>
-            <CustomButton text={'Login'} onPress={onLogin}/>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     container : {
-        backgroundColor: 'black',
         width: '100%',
-        borderRadius: 5,
-        padding: 15,
+        height: '100%',
+        padding: 20,
         alignItems: 'center',
-        marginVertical: 5,
+        marginTop: 50,
     },
     text: {
         fontWeight: 'bold',
         color: 'white'
     },
     heading: {
-        fontSize: 30,
+        fontSize: 35,
         fontWeight: 'bold',
-        marginLeft: '10%',
-        marginTop: '5%',
-        marginBottom: '30%',
+        padding: 15,
         color: 'black',
+        textAlign: 'center',
+    },
+    image: {
+        width: 200,
+        height: 100,
+        marginBottom: 8,
+    },
+    row: {
+        flexDirection: 'row',
+        marginTop: 7,
+    },
+    link: {
+        fontWeight: 'bold',
+        // color: theme.colors.primary,
     },
 });

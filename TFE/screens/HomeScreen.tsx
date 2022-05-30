@@ -10,6 +10,8 @@ import CustomInput from "../components/CustomInput";
 import { io } from "socket.io-client";
 import CustomButton from "../components/CustomButton";
 import { SocketContext } from "../components/context/socket";
+import { useNavigation } from "@react-navigation/native";
+
 export default function TabOneScreen() {
   
   const [conv, setConv] = useState([]);
@@ -19,9 +21,17 @@ export default function TabOneScreen() {
   const [friends, setFriends] = useState();
   const [masterDataSource, setMasterDataSource] = useState([]);
   const API = API_URL
-  
-  
-  
+  const navigation = useNavigation()
+  useEffect(() => {
+      const loggedIn = async () => { 
+          const t = await SecureStore.getItemAsync('token')
+          if (t === null) {
+              navigation.navigate('SignIn')
+          }
+      }
+      loggedIn()
+
+  }, [])
 
   useEffect(() => {
     fetchAuthentification()
@@ -32,6 +42,16 @@ export default function TabOneScreen() {
     useCallback(() => {
       setSearch('')
       fetchChatRooms()
+      
+      return () => {
+        setSearch('')
+      };
+    }, [])
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      setSearch('')
       fetchFriends()
       return () => {
         setSearch('')
@@ -159,32 +179,39 @@ export default function TabOneScreen() {
   
   return (
     <SafeAreaView style={styles.container}>
+      <View>
+          <CustomInput placeholder='Search Here' value={search} setValue={searchFilterFunction} secureTextEntry={false}/>
+      </View>
+      <View style={styles.friend}>
+        <FlatList 
+          data={friends}
+          renderItem={({ item }) => <UserItem user={item} isMe={userId}/>}
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item, index) => index.toString()}
+          horizontal
+        />
+      </View>
+      <View style={styles.conv}>
+        <FlatList 
+          data={conv}
+          renderItem={({ item }) => <ChatRoomItem chatRoom={item} isMe={userId}/>}
+          keyExtractor={(item, index) => index.toString()}
+          // horizontal; allow horizental display (exemple stories)
+          ListFooterComponent={<View style={{height: 150}}/>}
+        />
+      </View>
       
-      <CustomInput placeholder='Search Here' value={search} setValue={searchFilterFunction} secureTextEntry={false}/>
-      {friends !== null && <FlatList 
-        data={friends}
-        renderItem={({ item }) => <UserItem user={item} isMe={userId}/>}
-        showsHorizontalScrollIndicator={false}
-        keyExtractor={(item, index) => index.toString()}
-        horizontal
-      />}
-      
-      <FlatList 
-        data={conv}
-        renderItem={({ item }) => <ChatRoomItem chatRoom={item} isMe={userId}/>}
-        showsHorizontalScrollIndicator={false}
-        keyExtractor={(item, index) => index.toString()}
-        // horizontal; allow horizental display (exemple stories)
-      />
       
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  page: {
-    backgroundColor: 'white',
-    flex:1,
+  conv: {
+    
+  },
+  friend: {
+    paddingLeft: 10,
   },
   itemStyle: {
     padding: 10,
@@ -198,8 +225,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   container: {
-    backgroundColor: 'white',
     flex: 1,
-    paddingTop: StatusBar.currentHeight
+    backgroundColor: 'white',
+    paddingBottom: StatusBar.currentHeight,
   },
 })

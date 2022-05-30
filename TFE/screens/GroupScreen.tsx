@@ -5,12 +5,24 @@ import { View, StyleSheet, FlatList, Text, SectionList, StatusBar, SafeAreaView,
 import GroupItem from '../components/GroupItem';
 import { API_URL } from 'react-native-dotenv'
 import CustomInput from '../components/CustomInput';
+import { useNavigation } from '@react-navigation/native';
 const API = API_URL
 
 export default function GroupScreen() {
     const [group, setGroup] = useState([]);
     const [search, setSearch] = useState('');
     const [masterDataSource, setMasterDataSource] = useState([]);
+    const navigation = useNavigation()
+    useEffect(() => {
+        const loggedIn = async () => { 
+            const t = await SecureStore.getItemAsync('token')
+            if (t === null) {
+                navigation.navigate('SignIn')
+            }
+        }
+        loggedIn()
+
+    }, [])
     
     useFocusEffect(
         useCallback(() => {

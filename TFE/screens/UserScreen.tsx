@@ -8,13 +8,25 @@ import CustomFeather from '../components/CustomFeather';
 import { API_URL } from 'react-native-dotenv'
 const API = API_URL
 import * as ImagePicker from "expo-image-picker";
+import { useNavigation } from '@react-navigation/native';
 
 
 export default function UsersScreen() {
   const [user, setUser] = useState()
-  const [image, setImage] = useState()
+  
   useEffect(() => {
       fetchUser();
+  }, [])
+  const navigation = useNavigation()
+  useEffect(() => {
+      const loggedIn = async () => { 
+          const t = await SecureStore.getItemAsync('token')
+          if (t === null) {
+              navigation.navigate('SignIn')
+          }
+      }
+      loggedIn()
+
   }, [])
 
   const pickImage = async () => {
@@ -24,6 +36,8 @@ export default function UsersScreen() {
       aspect: [4, 3],
       quality: 0.5,
     });
+    
+    
 
     if (!result.cancelled) {
       

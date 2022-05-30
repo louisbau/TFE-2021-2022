@@ -1,11 +1,12 @@
-import React, { useState, useContext } from "react";
-import { ImageBackground, View, Text, StyleSheet, Platform } from 'react-native';
+import React, { useState, useContext, useEffect } from "react";
+import { ImageBackground, View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { useNavigation } from '@react-navigation/core';
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import { SocketContext } from "../../components/context/socket";
 import {API_URL} from 'react-native-dotenv'
+
 const API = API_URL
 async function save(key, value) {
     await SecureStore.setItemAsync(key, value);
@@ -17,15 +18,24 @@ export default function SignIn() {
     const navigation = useNavigation();
     const [isError, setIsError] = useState(false);
     const [message, setMessage] = useState('');
-    const [isLogin, setIsLogin] = useState(true);
     const socket = useContext(SocketContext);
+    console.log(API)
+    useEffect(() => {
+        const loggedIn = async () => { 
+            const t = await SecureStore.getItemAsync('token')
+            if (t !== null) {
+                navigation.navigate('Home')
+            }
+        }
+        loggedIn()
+  
+    }, [])
     const onForgotPassword = () => {
         navigation.navigate('ForgotPassword');
     }
     const onSignUp = () => {
         navigation.navigate('SignUp');
     }
-    console.log(API)
     const onLogin = () => {
         const payload = {
             email,
@@ -64,36 +74,66 @@ export default function SignIn() {
     }
 
     return (
-        <View>
-            <Text style={styles.heading}>Login</Text>
-            <CustomInput placeholder='email' value={email} setValue={setEmail} secureTextEntry={false}/>
-            <CustomInput placeholder='password' value={password} setValue={setPassword} secureTextEntry/>
-            <CustomButton text={'Login'} onPress={onLogin}/>
-            <CustomButton text={'Forgot password'} onPress={onForgotPassword}/>
-            <CustomButton text={'Sign up'} onPress={onSignUp}/>
+        <View style={styles.container}>
+            <Text style={styles.heading}>Welcome To</Text>
+            <Image source={require('../../assets/images/opentalk_logo.jpg')} style={styles.image} />
+            <CustomInput placeholder='Email' value={email} setValue={setEmail} secureTextEntry={false}/>
+            <CustomInput placeholder='Password' value={password} setValue={setPassword} secureTextEntry/>
+            <View style={styles.forgotPassword}>
+                <TouchableOpacity onPress={onForgotPassword}>
+                    <Text style={styles.forgot}>Forgot your password?</Text>
+                </TouchableOpacity>
+            </View>
+            <CustomButton text={'LOGIN'} onPress={onLogin}/>
+            <View style={styles.row}>
+                <Text>Don’t have an account? </Text>
+                <TouchableOpacity onPress={onSignUp}>
+                    <Text style={styles.link}>Sign up</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     container : {
-        backgroundColor: 'black',
         width: '100%',
-        borderRadius: 5,
+        height: '100%',
         padding: 15,
         alignItems: 'center',
-        marginVertical: 5,
+        marginTop: 50,
     },
     text: {
         fontWeight: 'bold',
         color: 'white'
     },
     heading: {
-        fontSize: 30,
+        fontSize: 40,
         fontWeight: 'bold',
-        marginLeft: '10%',
-        marginTop: '5%',
-        marginBottom: '30%',
+        padding: 15,
         color: 'black',
+        textAlign: 'center',
+    },
+    image: {
+        width: 200,
+        height: 100,
+        marginBottom: 8,
+    },
+    forgotPassword: {
+        width: '100%',
+        alignItems: 'flex-end',
+        marginBottom: 24,
+    },
+    row: {
+        flexDirection: 'row',
+        marginTop: 4,
+    },
+    forgot: {
+        fontSize: 13,
+        // color: theme.colors.secondary,
+    },
+    link: {
+        fontWeight: 'bold',
+        // color: theme.colors.primary,
     },
 });

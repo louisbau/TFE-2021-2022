@@ -1,4 +1,4 @@
-import React, { useEffect, useState} from 'react'
+import React, { useContext, useEffect, useState} from 'react'
 
 import { createDrawerNavigator,
     DrawerContentScrollView,
@@ -15,9 +15,9 @@ import { API_URL } from 'react-native-dotenv'
 import {  View, Switch, Text, Image, useWindowDimensions, Pressable,TextInput,  Alert,Modal, StyleSheet } from 'react-native';
 const API = API_URL
 const Drawer = createDrawerNavigator();
-import { PRIVATE_KEY } from '../utils/crypto';
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { PRIVATE_KEY } from '../utils/crypto';
 
 const DrawerNavigator = ({ navigation, nav }) => {
     const [isEnabledTheme, setIsEnabledTheme] = useState(false);
@@ -25,10 +25,11 @@ const DrawerNavigator = ({ navigation, nav }) => {
     const [isEnabledDispo, setIsEnabledDispo] = useState(false);
     const toggleSwitchDispo = () => setIsEnabledDispo(previousState => !previousState);
     const [user, setUser] = useState()
+    
     const logout = (props) => {
         SecureStore.deleteItemAsync('token')
         AsyncStorage.removeItem(PRIVATE_KEY)
-        props.navigation.navigate("SignIn")
+        props.navigation.navigate('SignIn')
     }
     useEffect(() => {
         fetchUser();

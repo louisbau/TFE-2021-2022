@@ -20,36 +20,42 @@ const HomeHeader = ({ nav }) => {
     
     
     return (
-      <View style={styles.centeredView}>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-            setModalVisible(!modalVisible);
-          }}
-        >
-          {Tab ? <AddGroupItem modalVisible={modalVisible} setModalVisible={setModalVisible}/> : <AddConvItem modalVisible={modalVisible} setModalVisible={setModalVisible}/> }
-        </Modal>
-        <View style={{ 
-         flexDirection: 'row',
-         alignItems: 'center',
-         justifyContent: "center",
-        }}>
-          <Text style={{fontWeight: 'bold', color: 'black' , backgroundColor:'red'}}>{Tab ? "Group" : "Chat"}</Text>
-          <CustomFeather name="edit" size={24} onPress={() => setModalVisible(true)} color="black"/>
+        <View>
+            <View style={styles.centeredView}>
+              <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                  Alert.alert("Modal has been closed.");
+                  setModalVisible(!modalVisible);
+                }}
+              >
+                {Tab ? <AddGroupItem modalVisible={modalVisible} setModalVisible={setModalVisible}/> : <AddConvItem modalVisible={modalVisible} setModalVisible={setModalVisible}/> }
+              </Modal>
+            </View>
+            <View style={styles.row}>
+                <Text style={styles.head}>{Tab ? "Group" : "Chats"}</Text>
+                <View style={styles.feather}>
+                    <CustomFeather name="edit" size={24} onPress={() => setModalVisible(true)} color="black"/>
+                </View>
+            </View>
         </View>
-      </View>
+      
     )
 };
   
 const styles = StyleSheet.create({
     centeredView: {
-      
       justifyContent: "center",
       alignItems: "center",
       marginTop: 0
+    },
+    row: {
+      flexDirection: 'row',
+      alignItems:'center',
+      alignContent:'center',
+      marginTop: 4,
     },
     modalView: {
       width: "100%",
@@ -95,7 +101,18 @@ const styles = StyleSheet.create({
     modalText: {
       marginBottom: 15,
       textAlign: "center"
-    }
+    },
+    feather: {
+      width:'25%',
+      alignItems: 'flex-end'
+    }, 
+    head: {
+      fontWeight: 'bold', 
+      color: 'black',
+      textAlign:'center',
+      width: '100%',
+      fontSize: 20,
+    },
 });
 
 export default HomeHeader;
