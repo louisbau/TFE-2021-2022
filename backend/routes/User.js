@@ -13,6 +13,12 @@ router.get("/list",verifyJWT, async (req, res) => {
 
 });
 
+router.get("/test2", async (req, res) => {
+    const listOfUser = await User.findAll();
+    res.json(listOfUser);
+
+});
+
 
 
 router.get("/card",verifyJWT, async (req, res) => {
