@@ -46,7 +46,7 @@ db.sequelize.sync({ force: true }).then(() => {
 
 io.on("connection", (socket) => {
   const index = {}
-  console.log("----------CONNECTED-------------", socket.id);
+  console.log("----------CONNECTED-------------", socket.id, 'alller');
   
   socket.on("Join", ({userId}) => {
     console.log('---------- JOIN -------------', userId)
