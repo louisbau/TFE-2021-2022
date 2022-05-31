@@ -4,6 +4,7 @@ import styles from './styles';
 import { API_URL } from 'react-native-dotenv'
 import * as SecureStore from 'expo-secure-store';
 import CustomButton from '../CustomButton';
+import CustomFeather from '../CustomFeather';
 const API =  API_URL
 
 export default function UserListInvitationItem({ user }) {
@@ -75,15 +76,13 @@ export default function UserListInvitationItem({ user }) {
     
     <View style={styles.container}>
       <Image source={{ uri: user.imageUri}} style={styles.image} />
-      <Text>{user.name}</Text>
+      <Text style={styles.text}>{user.name}</Text>
       <View style={styles.button}>
-        <CustomButton  text={'V'} onPress={onPressAccept}/>
+        <CustomFeather name="check" size={24} onPress={onPressAccept} color="black"/>
       </View>
       <View style={styles.button}>
-        <CustomButton text={'X'} onPress={onPressDecline}/>
+        <CustomFeather name="trash-2" size={24} onPress={onPressDecline} color="black"/>
       </View>
-      
-      
     </View>
     
     

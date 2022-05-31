@@ -19,12 +19,41 @@ export default function SignIn() {
     const [isError, setIsError] = useState(false);
     const [message, setMessage] = useState('');
     const socket = useContext(SocketContext);
-    console.log(API)
+    
+
+    const fetchAuthentification = async () => {
+        fetch(`${API}/authentification`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
+                'credentials': 'include'
+            }
+        })
+        .then(async (res) => { 
+            try {
+                const jsonRes = await res.json();
+                if (res.status !== 200) {
+                    
+                } else {
+                    console.log(jsonRes.UserId)
+                    socket.emit("Join", { userId: jsonRes.UserId })
+                    navigation.navigate('Home')
+                }
+            } catch (err) {
+                console.log(err);
+            };
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    };
     useEffect(() => {
         const loggedIn = async () => { 
             const t = await SecureStore.getItemAsync('token')
             if (t !== null) {
-                navigation.navigate('Home')
+                await fetchAuthentification()
+                
             }
         }
         loggedIn()
@@ -57,7 +86,6 @@ export default function SignIn() {
                     setIsError(true);
                     setMessage(jsonRes.message);
                 } else {
-                    
                     setIsError(false);
                     setMessage(jsonRes.message);
                     save('token', jsonRes.token)

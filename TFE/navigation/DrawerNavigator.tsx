@@ -66,27 +66,27 @@ const DrawerNavigator = ({ navigation, nav }) => {
             useLegacyImplementation
             drawerContent={props => {
                 return (
-                <DrawerContentScrollView {...props}>
-                    {user && <DrawerItem label={user.name} onPress={() => props.navigation.navigate("User")} />}
-                    <View style={{ 
+                <DrawerContentScrollView {...props} style={{top: 0, bottom: 0, padding:10}}>
+                    {user && <DrawerItem style={{padding:10}} labelStyle={{fontSize: 18, color:'black'}} label={"User : "+user.name} onPress={() => props.navigation.navigate("User")} />}
+                    {user && <DrawerItem style={{padding:10}} labelStyle={{fontSize: 18, color:'black'}} label="Friend" onPress={() => props.navigation.navigate("Friend")} />}
+                    {user && <DrawerItem style={{padding:10}} labelStyle={{fontSize: 18, color:'black'}} label="Settings" onPress={() => props.navigation.navigate("Setting")} />}
+                    {user && <DrawerItem style={{padding:10}} labelStyle={{fontSize: 18, color:'black'}} label="Agenda" onPress={() => props.navigation.navigate("Agenda")} />}
+                    {user && <DrawerItem style={{padding:10}} labelStyle={{fontSize: 18, color:'black'}} label="Sign out" onPress={()=>logout(props)} />}
+                    {/* <View style={{ 
                         flexDirection: 'row',
                         alignItems: 'center',
                     }}>
-                        <Text>
-                            {isEnabledDispo ? 'Disponible : ' : 'Indisponible : '}
-                        </Text>
+                        
                         <Switch
                             trackColor={{ false: "#767577", true: "#81b0ff" }}
                             thumbColor={isEnabledDispo ? "#f5dd4b" : "#f4f3f4"}
                             onValueChange={toggleSwitchDispo}
                             value={isEnabledDispo}
                         />
-                    </View>
-                    {user && <DrawerItem label="Friend" onPress={() => props.navigation.navigate("Friend")} />}
-                    {user && <DrawerItem label="Settings" onPress={() => props.navigation.navigate("Setting")} />}
-                    {user && <DrawerItem label="Agenda" onPress={() => props.navigation.navigate("Agenda")} />}
-                    {user && <DrawerItem label="Sign out" onPress={()=>logout(props)} />}
-                    
+                        <Text>
+                            {isEnabledDispo ? ': Disponible' : '  : Indisponible'} COMMING SOON
+                        </Text>
+                    </View> */}
                     
                     
                 </DrawerContentScrollView>

@@ -157,18 +157,23 @@ const FriendHeader = ( ) => {
                 
             </Modal>
             <View
-            style={{
-                flexDirection: "row",
-                justifyContent: "center",
-            }}
+                style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems:'center', 
+                    alignContent:'center',
+                }}
             >
 
-                <Text style={{ marginLeft: 10, fontWeight: "bold" }}>
+                <Text style={{ fontWeight: "bold",textAlign:'center', width: '100%', paddingLeft:90, fontSize:20 }}>
                     Friend
                 </Text>
-                <CustomFeather name="edit-2" size={24} onPress={() => setModalVisible(true)} color="black"/>
-                <CustomFeather name="edit-2" size={24} onPress={() => setModalVisible1(true)} color="black"/>
-                
+                <View style={styles.feather}>
+                    <CustomFeather name="user-plus" size={24} onPress={() => setModalVisible(true)} color="black"/>
+                </View>
+                <View style={styles.feather}>
+                    <CustomFeather name="inbox" size={24} onPress={() => setModalVisible1(true)} color="black"/>
+                </View>
             </View>
         </View>
     );
@@ -179,6 +184,9 @@ const styles = StyleSheet.create({
       justifyContent: "center",
       alignItems: "center",
       marginTop: 0
+    },
+    feather: {
+        paddingLeft: 25
     },
     modalView: {
       width: "100%",

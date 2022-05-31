@@ -105,16 +105,19 @@ export default function UsersScreen() {
     <View style={styles.page}>
       {user && <Image 
           source={{ uri: user.imageUri}}
-          style={{ width: 30, height: 30, borderRadius: 30, backgroundColor:'blue'}}
+          style={{ width: 150, height: 150, borderRadius: 30, backgroundColor:'blue'}}
       />}
-      <CustomButton text={'modify pics'} onPress={pickImage}/>
+      <View style={styles.button}>
+        <CustomButton text={'modify pics'} onPress={pickImage}/>
+      </View>
       
-      {user && <Text>nom généré</Text>}
-
-      {user && <Text>Name : {user.name}</Text>}
-      {user && <Text>Email : {user.email}</Text>}
-      {user && <Text>Status : {user.status}</Text>}
-      {user && <Text>Organisation : faire organisation</Text>}
+      <View style={styles.para}>
+        {user && <Text style={styles.text}>Name : {user.name}</Text>}
+        {user && <Text style={styles.text}>Email : {user.email}</Text>}
+        {user && <Text style={styles.text}>Status : {user.status}</Text>}
+        {user && <Text style={styles.text}>Organisation : faire organisation</Text>}
+      </View>
+      
     </View>
   );
 }
@@ -122,8 +125,18 @@ export default function UsersScreen() {
 const styles = StyleSheet.create({
   page: {
     backgroundColor: 'white',
-    flex: 2,
-    justifyContent: "center",
+    width:"100%",
+    height: "100%",
     alignItems: "center",
+  },
+  button :{
+
+  },
+  para: {
+    padding: 20,
+  },
+  text: {
+    padding: 20,
+    
   }
 });

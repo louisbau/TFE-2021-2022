@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     marginBottom: 3,
   },
   text: {
-    color: 'grey',
+    width:"50%",
   },
   button: {
     width: '20%',

@@ -208,10 +208,11 @@ export default function TabOneScreen() {
 
 const styles = StyleSheet.create({
   conv: {
-    
+    padding: 10,
   },
   friend: {
     paddingLeft: 10,
+    
   },
   itemStyle: {
     padding: 10,
