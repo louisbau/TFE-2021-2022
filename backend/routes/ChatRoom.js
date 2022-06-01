@@ -8,50 +8,6 @@ router.get("/ping", (req, res) => {
     res.status(200).json('pong')
 });
 
-router.get("/test",verifyJWT, async (req, res) => {
-    try {
-        index = []
-        table = []
-        dic = {}
-        const listChatRoomIndex = await ChatRoomUser.findAll({where: {UserId: req.id.UserId}});
-        
-        for (i in listChatRoomIndex) {
-            index.push(listChatRoomIndex [i].ChatRoomId)
-        }
-        const listChatRoom = await ChatRoom.findAll({where: {id: index}});
-        
-        for (i in listChatRoom) {
-            dic = listChatRoom[i].dataValues
-            const UserMessage = await User.findOne({
-                include: {
-                    model: Message,
-                    where : {id: dic["lastMessageId"]}
-                },
-                attributes: { exclude: ['password', 'email'] }
-            })
-            dic["lastMessage"] = UserMessage
-            const listUser = await User.findAll({
-                include: {
-                    model: ChatRoomUser, 
-                    where: {ChatRoomId:dic.id}
-                },
-                attributes: { exclude: ['password', 'email'] }
-            })
-            dic["Users"] = listUser
-            
-            table.push(dic)
-        }
-        
-        
-        res.json(table);
-    } catch (error) {
-        res.status(400).send(error)
-    }
-    
-});
-
-
-
 
 
 router.get("/listPrivateConv",verifyJWT, async (req, res) => {
