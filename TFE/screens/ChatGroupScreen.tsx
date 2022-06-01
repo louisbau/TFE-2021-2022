@@ -20,7 +20,7 @@ export default function ChatGroupScreen() {
     const [typing, setTyping] = useState(false)
     const [nameTyping, setNameTyping] = useState()
     const socket = useContext(SocketContext);
-    const API = API_URL
+    const API = "https://checkpcs.com/api"
     const [onReply, setOnReply] = useState();
     
     useEffect(() => {

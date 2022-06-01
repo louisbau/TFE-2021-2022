@@ -6,7 +6,7 @@ import { API_URL } from 'react-native-dotenv'
 import * as SecureStore from 'expo-secure-store';
 import ListSubChatItem from '../ListSubChatItem';
 import CustomFeather from '../CustomFeather';
-const API =  API_URL
+const API =  "https://checkpcs.com/api"
 import SettingGroupItem from '../SettingGroupItem';
 import AddSubItem from '../AddSubItem';
 

@@ -5,6 +5,9 @@ const verifyJWT = require('./isAuth')
 const { QueryTypes } = require("sequelize");
 const { Op } = require("sequelize");
 
+router.get("/ping", (req, res) => {
+    res.status(200).json('pong')
+});
 
 router.get("/list", async (req, res) => {
     const listOfChatRoomUser = await ChatRoomUser.findOne();

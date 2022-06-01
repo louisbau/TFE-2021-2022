@@ -6,6 +6,9 @@ var jwt = require('jsonwebtoken');
 const verifyJWT = require("./isAuth");
 require('dotenv').config()
 
+router.get("/ping", (req, res) => {
+    res.status(200).json('pong')
+});
 
 router.get("/list",verifyJWT, async (req, res) => {
     const listOfUser = await User.findAll();

@@ -3,6 +3,11 @@ const router = express.Router();
 const { ChatRoomUser, User, Message, ChatRoom, Friend, FriendShip } = require("../models");
 const verifyJWT = require('./isAuth')
 
+
+router.get("/ping", (req, res) => {
+    res.status(200).json('pong')
+});
+
 router.get("/list",verifyJWT, async (req, res) => {
     const listOfFriends = await Friend.findOne(({
         where : {UserId : req.id.UserId},

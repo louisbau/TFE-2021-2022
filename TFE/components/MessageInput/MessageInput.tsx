@@ -23,7 +23,7 @@ import AudioPlayer from "../AudioPlayer";
 import { SimpleLineIcons, Feather, MaterialCommunityIcons, AntDesign, Ionicons } from '@expo/vector-icons';
 import { TypingAnimation } from "react-native-typing-animation";
 import { API_URL } from 'react-native-dotenv'
-const API = API_URL
+const API = "https://checkpcs.com/api"
 import { box } from "tweetnacl";
 import {
   encrypt,

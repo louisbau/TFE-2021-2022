@@ -4,7 +4,7 @@ import CustomInput from "../components/CustomInput";
 import CustomFeather from "../components/CustomFeather";
 import CustomButton from "../components/CustomButton";
 import { API_URL } from 'react-native-dotenv'
-const API = API_URL
+const API = "https://checkpcs.com/api"
 import * as SecureStore from 'expo-secure-store';
 import UserListInvitationItem from "../components/UserListInvitationItem";
 

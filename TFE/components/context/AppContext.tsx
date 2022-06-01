@@ -4,7 +4,7 @@ import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
 import { API_URL } from 'react-native-dotenv'
 export const AppContext = createContext();
-const API = API_URL
+const API = "https://checkpcs.com/api"
 
 class AppContextProvider extends React.Component {
   constructor (props) {

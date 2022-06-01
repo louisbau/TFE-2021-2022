@@ -4,6 +4,12 @@ const { ChatRoomUser, User, Message, ChatRoom, UserChatRoom, SubChatRoom } = req
 const verifyJWT = require('./isAuth')
 const { Op } = require("sequelize");
 
+
+router.get("/ping", (req, res) => {
+    res.status(200).json('pong')
+});
+
+
 router.get("/:id",verifyJWT, async (req, res) => {
     const OneUserChatRoom = await UserChatRoom.findOne({ 
         where: {id: req.params.id}

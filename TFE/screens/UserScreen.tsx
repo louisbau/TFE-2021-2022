@@ -6,7 +6,7 @@ import CustomInput from '../components/CustomInput';
 import CustomButton from '../components/CustomButton';
 import CustomFeather from '../components/CustomFeather';
 import { API_URL } from 'react-native-dotenv'
-const API = API_URL
+const API = "https://checkpcs.com/api"
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from '@react-navigation/native';
 

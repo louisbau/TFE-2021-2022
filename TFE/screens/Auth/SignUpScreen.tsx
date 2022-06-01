@@ -5,8 +5,7 @@ import { API_URL } from 'react-native-dotenv'
 import { useRoute, useNavigation } from '@react-navigation/core';
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
-const API = API_URL
-
+const API = "https://checkpcs.com/api"
 
 export default function SignUp() {
     const [email, setEmail] = useState('');
