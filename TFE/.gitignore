@@ -49,7 +49,7 @@ build/
 local.properties
 *.iml
 *.hprof
-
+eas.json
 # node.js
 #
 node_modules/
