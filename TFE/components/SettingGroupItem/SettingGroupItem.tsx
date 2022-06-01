@@ -7,7 +7,7 @@ import { API_URL } from 'react-native-dotenv'
 import CustomInput from '../CustomInput';
 import CustomButton from '../CustomButton';
 import * as ImagePicker from "expo-image-picker";
-const API = API_URL
+const API = "https://checkpcs.com/api"
 
 
 

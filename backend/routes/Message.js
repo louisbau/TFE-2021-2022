@@ -5,6 +5,10 @@ const moment = require("moment");
 const verifyJWT = require("./isAuth");
 const { Op } = require("sequelize");
 
+router.get("/ping", (req, res) => {
+    res.status(200).json('pong')
+});
+
 
 router.get("/:id",verifyJWT, async (req, res) => {
     const listMessage = await Message.findAll(

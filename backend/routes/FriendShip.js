@@ -4,6 +4,12 @@ const { ChatRoomUser, User, Message, ChatRoom, UserChatRoom, SubChatRoom, Friend
 const verifyJWT = require('./isAuth')
 const { Op } = require("sequelize");
 
+
+router.get("/ping", (req, res) => {
+    res.status(200).json('pong')
+});
+
+
 router.post("/addFriendship", verifyJWT, async (req, res) => {
     const { name } = req.body;
     const OtherUser = await User.findOne(({

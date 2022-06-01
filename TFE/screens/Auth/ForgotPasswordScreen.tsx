@@ -7,7 +7,7 @@ import { useRoute, useNavigation } from '@react-navigation/core';
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import { PRIVATE_KEY } from "../../utils/crypto";
-const API = API_URL
+const API = "https://checkpcs.com/api"
 
 
 export default function ForgotPassword() {

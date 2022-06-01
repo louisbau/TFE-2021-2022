@@ -5,7 +5,7 @@ import { API_URL } from 'react-native-dotenv'
 import * as SecureStore from 'expo-secure-store';
 import CustomButton from '../CustomButton';
 import CustomFeather from '../CustomFeather';
-const API =  API_URL
+const API =  "https://checkpcs.com/api"
 
 export default function UserListInvitationItem({ user }) {
   const onPressAccept = async (event) => {
