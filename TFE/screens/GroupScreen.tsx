@@ -6,7 +6,7 @@ import GroupItem from '../components/GroupItem';
 import { API_URL } from 'react-native-dotenv'
 import CustomInput from '../components/CustomInput';
 import { useNavigation } from '@react-navigation/native';
-const API = API_URL
+const API = "https://checkpcs.com/api"
 
 export default function GroupScreen() {
     const [group, setGroup] = useState([]);

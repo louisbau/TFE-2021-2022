@@ -7,7 +7,7 @@ import CustomButton from "../../components/CustomButton";
 import { SocketContext } from "../../components/context/socket";
 import {API_URL} from 'react-native-dotenv'
 
-const API = API_URL
+const API = "https://checkpcs.com/api"
 async function save(key, value) {
     await SecureStore.setItemAsync(key, value);
 }

@@ -13,7 +13,7 @@ import {
 } from "../../utils/crypto";
 import CustomFeather from '../CustomFeather';
 import { API_URL } from 'react-native-dotenv'
-const API = API_URL
+const API = "https://checkpcs.com/api"
 import * as SecureStore from 'expo-secure-store';
 
 const Messages = ({ message, user, isMeUserId, setOnReply }) => {

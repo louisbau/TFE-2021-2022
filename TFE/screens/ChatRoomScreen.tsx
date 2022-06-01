@@ -19,7 +19,7 @@ export default function ChatRoomScreen() {
     const [subId, setsubId] = useState()
     const [typing, setTyping] = useState(false)
     const [nameTyping, setNameTyping] = useState()
-    const API = API_URL
+    const API = "https://checkpcs.com/api"
     const socket = useContext(SocketContext);
     const [onReply, setOnReply] = useState();
     
