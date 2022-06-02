@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import * as SecureStore from 'expo-secure-store';
-import { View, StyleSheet, FlatList, Platform, TextInput, Text, Image } from 'react-native';
+import { View, StyleSheet, FlatList, Platform, TextInput, Text, Image, Alert } from 'react-native';
 import UserItem from '../components/UserItem';
 import CustomInput from '../components/CustomInput';
 import CustomButton from '../components/CustomButton';
@@ -83,7 +83,37 @@ export default function OtherUserScreen({ }) {
             } else {
               
                 console.log(jsonRes)
-              
+                
+                fetchDeleteChat()
+                Alert.alert("user blocked and delete")
+                navigation.navigate('Home')
+            }
+        } catch (err) {
+            console.log(err);
+        };
+    })
+    .catch(err => {
+        console.log(err);
+    });
+  };
+
+  const fetchDeleteChat = async () => {
+    fetch(`${API}/ChatRoom/deleteChatRoom`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
+            'credentials': 'include'
+        },
+        body: JSON.stringify({ id: route.params?.SubChatRoomId })
+    })
+    .then(async (res) => { 
+        try {
+            const jsonRes = await res.json();
+            if (res.status !== 200) {
+              console.log(jsonRes)
+            } else {
+              console.log(jsonRes)
             }
         } catch (err) {
             console.log(err);

@@ -16,7 +16,8 @@ const ChatRoomHeader = ({ id, chat }) => {
   }
   const onPressUser = (event) => {
     event.preventDefault()
-    navigation.navigate("OtherUser", { id: chat.UserId });
+    console.log(chat)
+    navigation.navigate("OtherUser", { id: chat.UserId, SubChatRoomId: chat.ChatRoomUsers[0].SubChatRoomId });
   }
 
   

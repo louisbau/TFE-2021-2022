@@ -74,7 +74,14 @@ export default function AddConvItem({modalVisible, setModalVisible}) {
               } else {
                 setModalVisible(!modalVisible);
                 onChangeText("")
-                navigation.navigate("ChatRoom", { id: jsonRes.SubChatRooms[0].id, chat: jsonRes.UserChatRooms.find((x)=> x.UserId !== user.id) });
+                console.log(jsonRes, 'quoi')
+                if (jsonRes === "you user block you") {
+                  Alert.alert("the user block you")
+                }
+                if (jsonRes && jsonRes !== "you user block you") {
+                  navigation.navigate("ChatRoom", { id: jsonRes.SubChatRooms[0].id, chat: jsonRes.UserChatRooms.find((x)=> x.UserId !== user.id) });
+                }
+                
                 
               }
           } catch (err) {

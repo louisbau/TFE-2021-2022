@@ -148,7 +148,7 @@ router.post("/newConv",verifyJWT, async (req, res) => {
 
         for (a in block) {
             if (block[a].userIdBlock == req.id.UserId) {
-                return res.json("you user block you");
+                return res.json(false);
             }
         }
         const IsConv = await UserChatRoom.findAll(({
