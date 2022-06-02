@@ -1,11 +1,15 @@
 import React, { useState, useContext, useEffect } from "react";
-import { ImageBackground, View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { ImageBackground, View, Text, StyleSheet, Image, TouchableOpacity, Modal, Alert, Pressable} from 'react-native';
+
 import * as SecureStore from 'expo-secure-store';
 import { useNavigation } from '@react-navigation/core';
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import { SocketContext } from "../../components/context/socket";
 import {API_URL} from 'react-native-dotenv'
+
+import Terms from "./Terms";
+import Privacies from "./Privacies";
 
 const API = "https://checkpcs.com/api"
 async function save(key, value) {
@@ -19,8 +23,18 @@ export default function SignIn() {
     const [isError, setIsError] = useState(false);
     const [message, setMessage] = useState('');
     const socket = useContext(SocketContext);
-    
-
+    const [modalVisible1, setModalVisible1] = useState(false);
+    const [isTerms, setIsTerms] = useState(true);
+    const terms = () => {
+        setModalVisible1(!modalVisible1)
+        
+        
+    }
+    const policie = () => {
+        setIsTerms(false)
+        setModalVisible1(!modalVisible1)
+    }
+   
     const fetchAuthentification = async () => {
         fetch(`${API}/authentification`, {
             method: 'GET',
@@ -103,6 +117,24 @@ export default function SignIn() {
 
     return (
         <View style={styles.container}>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible1}
+                onRequestClose={() => {
+                    Alert.alert("Modal has been closed.");
+                    setModalVisible1(!modalVisible1);
+                }}
+            >
+                
+                {isTerms ? <Terms /> : <Privacies />}
+                <Pressable
+                    style={[styles.button, styles.buttonClose]}
+                    onPress={() => setModalVisible1(!modalVisible1)}
+                >
+                    <Text style={styles.textStyle}>Close</Text>
+                </Pressable>
+            </Modal>
             <Text style={styles.heading}>Welcome To</Text>
             <Image source={require('../../assets/images/opentalk_logo.jpg')} style={styles.image} />
             <CustomInput placeholder='Email' value={email} setValue={setEmail} secureTextEntry={false}/>
@@ -112,11 +144,25 @@ export default function SignIn() {
                     <Text style={styles.forgot}>Forgot your password?</Text>
                 </TouchableOpacity>
             </View>
+            
+            
             <CustomButton text={'LOGIN'} onPress={onLogin}/>
             <View style={styles.row}>
                 <Text>Don’t have an account? </Text>
                 <TouchableOpacity onPress={onSignUp}>
                     <Text style={styles.link}>Sign up</Text>
+                </TouchableOpacity>
+            </View>
+            <View style={styles.row}>
+                <Text style={styles.text1}>By using our app you agree to our </Text>
+            </View>
+            <View style={styles.row}>
+                <TouchableOpacity onPress={() => terms()}>
+                    <Text style={styles.link1}>Terms and Conditions</Text>
+                </TouchableOpacity>
+                <Text style={styles.text1}>and </Text>
+                <TouchableOpacity onPress={() => policie()}>
+                    <Text style={styles.link1}>Privacy Policy</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -164,4 +210,28 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         // color: theme.colors.primary,
     },
+    link1: {
+        fontWeight: 'bold',
+        fontSize: 10
+        //color: theme.colors.primary,
+    },
+    text1: {
+        fontSize: 10
+    },
+    button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2
+      },
+      buttonOpen: {
+        backgroundColor: "#F194FF",
+      },
+      buttonClose: {
+        backgroundColor: "#2196F3",
+      },
+      textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center"
+      },
 });

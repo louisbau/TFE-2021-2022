@@ -1,6 +1,7 @@
 import React, {useContext, useState, useEffect}from 'react'
 import { View, Text, StyleSheet,Image, Keyboard } from 'react-native'
 import AudioPlayer from "../AudioPlayer";
+import Filter from "bad-words";
 import { useWindowDimensions } from "react-native";
 import { useNavigation } from "@react-navigation/core";
 const blue = "lightblue";
@@ -23,6 +24,7 @@ const Messages = ({ message, user, isMeUserId, setOnReply }) => {
     const isMe = UserMessageID === isMeUserChatID
     const [decryptedContent, setDecryptedContent] = useState("");
     const [replyMessage, setReplyMessage] = useState();
+    let filter = new Filter();
     
     // const [soundURI, setSoundURI] = useState(null);
     const { width } = useWindowDimensions();
@@ -62,6 +64,7 @@ const Messages = ({ message, user, isMeUserId, setOnReply }) => {
     useEffect(() => {
         if (!message?.content || !isMeUserChatID?.publicKey) {
             if (!message.isCrypted) {
+                
                 setDecryptedContent(message.content);
                 return;
             }
@@ -105,7 +108,7 @@ const Messages = ({ message, user, isMeUserId, setOnReply }) => {
     return (
         <View style={[styles.container, isMe ? styles.rightContainer : styles.leftContainer]}>
             <View style={[styles.container, isMe ? styles.rightMessageColor : styles.leftMessageColor]}>
-                {replyMessage && <Text style={{ backgroundColor:"grey" }}>{replyMessage.content}</Text>}
+                {replyMessage && <Text style={{ backgroundColor:"grey" }}>{filter.clean(replyMessage.content)}</Text>}
                 {message.image && (
                     <View style={{ marginBottom: message.content ? 10 : 0 }}>
                         <Image
@@ -119,7 +122,7 @@ const Messages = ({ message, user, isMeUserId, setOnReply }) => {
                 
                 {!!decryptedContent && (
                     <Text style={{ color: isMe ? "black" : "white" }}>
-                        {decryptedContent}
+                        {filter.clean(decryptedContent)}
                     </Text>
                 )}
             </View>

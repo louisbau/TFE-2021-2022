@@ -20,6 +20,8 @@ import FriendHeader from "./FriendHeader";
 //import CallScreen from "../screens/CallScreen";
 import Settings from "../screens/Settings";
 import AgendaScreen from "../screens/AgendaScreen";
+import Terms from "../screens/Auth/Terms";
+import Privacies from "../screens/Auth/Privacies";
 
 const Stack = createStackNavigator();
 
@@ -93,6 +95,8 @@ const MainStackNavigator = ({ nav }) => {
                 {/* <Stack.Screen name="Call" component={CallScreen} /> */}
                 <Stack.Screen name="Setting" component={Settings} />
                 <Stack.Screen name="Agenda" component={AgendaScreen} />
+                <Stack.Screen name="Terms" component={Terms} />
+                <Stack.Screen name="Privacies" component={Privacies} />
                 
             </>
                 
