@@ -1,5 +1,5 @@
 import React, {useContext, useState, useEffect}from 'react'
-import { View, Text, StyleSheet,Image, Keyboard } from 'react-native'
+import { View, Text, StyleSheet,Image, Keyboard, Alert } from 'react-native'
 import AudioPlayer from "../AudioPlayer";
 import Filter from "bad-words";
 import { useWindowDimensions } from "react-native";
@@ -24,7 +24,39 @@ const Messages = ({ message, user, isMeUserId, setOnReply }) => {
     const isMe = UserMessageID === isMeUserChatID
     const [decryptedContent, setDecryptedContent] = useState("");
     const [replyMessage, setReplyMessage] = useState();
+    const [id, setId] = useState(null);
+    const [reason, setReason] = useState(null);
     let filter = new Filter();
+
+    const fetchReport = async () => {
+        fetch(`${API}/ReportMessage/message`, {
+            method: 'Post',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
+                'credentials': 'include'
+            },
+            body: JSON.stringify({ id:id, reason: reason })
+        })
+        .then(async (res) => { 
+            try {
+                const jsonRes = await res.json();
+                if (res.status !== 200) {
+                  console.log(jsonRes)
+                } else {
+                  
+                  onChangeText("")
+                  navigation.navigate("ChatRoom", { id: jsonRes.SubChatRooms[0].id, chat: jsonRes.UserChatRooms.find((x)=> x.UserId !== user.id) });
+                  
+                }
+            } catch (err) {
+                console.log(err);
+            };
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    };
     
     // const [soundURI, setSoundURI] = useState(null);
     const { width } = useWindowDimensions();
@@ -101,8 +133,14 @@ const Messages = ({ message, user, isMeUserId, setOnReply }) => {
             setOnReply(['audio', message])
         }
         if (!!decryptedContent) {
-            setOnReply([decryptedContent, message])
+            setOnReply([filter.clean(decryptedContent), message])
         }
+    }
+
+    const onPressReport = () => {
+        setId(message.id)
+        fetchReport()
+        Alert.alert("message report")
     }
     
     return (
@@ -131,6 +169,7 @@ const Messages = ({ message, user, isMeUserId, setOnReply }) => {
                 {user && <Text>{UserMessage.pseudo}</Text>}
                 
                 <CustomFeather name="corner-down-right" size={24} onPress={onPressReply} color="black"/>
+                <CustomFeather name="alert-triangle" size={24} onPress={onPressReport} color="black"/>
 
             </View>
         </View>

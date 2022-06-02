@@ -42,6 +42,7 @@ module.exports = (sequelize, Sequelize) => {
       User.hasMany(models.UserChatRoom);
       User.hasMany(models.Friend);
       User.hasMany(models.FriendShip);
+      User.hasMany(models.BlockUser);
     };
     return User;
 };

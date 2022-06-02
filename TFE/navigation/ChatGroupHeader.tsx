@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { View, Image, Text, useWindowDimensions, Platform } from "react-native";
+import { View, Image, Text, useWindowDimensions, Platform, Pressable } from "react-native";
 
 import CustomFeather from "../components/CustomFeather";
 
@@ -10,6 +10,10 @@ const ChatGroupHeader = ({ id, group }) => {
     console.log('call or video')
 
   }
+  const onPressUser = (event) => {
+    event.preventDefault()
+    
+  }
   return (
     <View
       style={{
@@ -17,12 +21,14 @@ const ChatGroupHeader = ({ id, group }) => {
         alignItems: "center",
       }}
     >
-      <Image
-        source={{
-          uri: group.imageUri
-        }}
-        style={{ width: 30, height: 30, borderRadius: 30 }}
-      />
+      <Pressable onPress={onPressUser}>
+        <Image
+          source={{
+            uri: group.imageUri
+          }}
+          style={{ width: 30, height: 30, borderRadius: 30 }}
+        />
+      </Pressable>
       <Text style={{ fontWeight: "bold" }}>
         {group.name}
       </Text>
