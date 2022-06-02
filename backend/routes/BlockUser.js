@@ -11,7 +11,7 @@ router.post("/block", verifyJWT, async (req, res) => {
 
     await BlockUser.create(({
         UserId: req.id.UserId,
-        userIdBlock: userIdBlock
+        userIdBlock: id
     }))
 
     res.json("success blocking")
