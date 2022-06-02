@@ -22,6 +22,14 @@ router.get("/card",verifyJWT, async (req, res) => {
     res.json(user);
 });
 
+router.get("/card/:id",verifyJWT, async (req, res) => {
+    const user = await User.findOne({
+            where: {id : req.params.id},
+            attributes: ['id', 'name', "imageUri", "status"]
+    })
+    res.json(user);
+});
+
 router.get("/authentification",verifyJWT, async (req, res) => {
     const result = {UserId :req.id.UserId, role: req.id.role}
     res.json(result);

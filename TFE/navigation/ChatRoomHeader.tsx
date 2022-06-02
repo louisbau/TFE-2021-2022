@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { View, Image, Text, useWindowDimensions, Platform } from "react-native";
+import { View, Image, Text, useWindowDimensions, Platform, Pressable } from "react-native";
 import { Feather } from "@expo/vector-icons";
 // const API_URL = Platform.OS === 'ios' ? 'http://192.168.1.44:5000/api' : 'http://192.168.1.44:5000/api';
 import { AppContext } from "../components/context/AppContext";
@@ -14,6 +14,11 @@ const ChatRoomHeader = ({ id, chat }) => {
     navigation.navigate("Call");
 
   }
+  const onPressUser = (event) => {
+    event.preventDefault()
+    navigation.navigate("OtherUser", { id: chat.UserId });
+  }
+
   
   return (
     <View
@@ -22,12 +27,15 @@ const ChatRoomHeader = ({ id, chat }) => {
         justifyContent: "center",
       }}
     >
-      <Image
-        source={{
-          uri: chat.imageUri
-        }}
-        style={{ width: 30, height: 30, borderRadius: 30 }}
-      />
+      <Pressable onPress={onPressUser}>
+        <Image
+          source={{
+            uri: chat.imageUri
+          }}
+          style={{ width: 30, height: 30, borderRadius: 30 }}
+        />
+      </Pressable>
+      
       <Text style={{ marginLeft: 10, fontWeight: "bold" }}>
         {chat.pseudo}
       </Text>
