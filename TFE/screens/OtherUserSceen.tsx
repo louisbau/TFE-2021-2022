@@ -81,7 +81,7 @@ export default function OtherUserScreen({ id }) {
               console.log(jsonRes)
             } else {
               
-              
+                console.log(jsonRes)
               
             }
         } catch (err) {
