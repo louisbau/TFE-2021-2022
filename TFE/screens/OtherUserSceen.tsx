@@ -8,18 +8,19 @@ import CustomFeather from '../components/CustomFeather';
 import { API_URL } from 'react-native-dotenv'
 const API = "https://checkpcs.com/api"
 import * as ImagePicker from "expo-image-picker";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 
-export default function OtherUserScreen({ id }) {
+export default function OtherUserScreen({ }) {
   const [user, setUser] = useState()
+  const route = useRoute();
   
   useEffect(() => {
       fetchUser();
   }, [])
 
   const fetchUser = async () => {
-    fetch(`${API}/card/${id}`, {
+    fetch(`${API}/card/${route.params?.id}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -35,7 +36,7 @@ export default function OtherUserScreen({ id }) {
             } else {
               
               setUser(jsonRes) 
-              
+              console.log(jsonRes)
             }
         } catch (err) {
             console.log(err);
@@ -61,24 +62,24 @@ export default function OtherUserScreen({ id }) {
 
   const onPress = (event) => {
     event.preventDefault()
-    fetchAddConv()
+    fetchBlock()
 
   }
-  const fetchAddConv = async () => {
-    fetch(`${API}/ChatRoomUser/NewConv`, {
+  const fetchBlock = async () => {
+    fetch(`${API}/BlockUser/block`, {
         method: 'Post',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`,
             'credentials': 'include'
         },
-        body: JSON.stringify({ id: id })
+        body: JSON.stringify({ id: route.params?.id })
     })
     .then(async (res) => { 
         try {
             const jsonRes = await res.json();
             if (res.status !== 200) {
-              console.log(jsonRes)
+              console.log(jsonRes, "lol")
             } else {
               
                 console.log(jsonRes)

@@ -115,7 +115,7 @@ export default function ChatRoomItem({ chatRoom, isMe }) {
       fetchDeleteChat()
 
     }
-    const time = moment(lastMessage.createdAt).from(moment());
+    const time = lastMessage && moment(lastMessage.createdAt).from(moment());
 
     return (
       <Swipeable
