@@ -8,7 +8,7 @@ import Swipeable from 'react-native-gesture-handler/Swipeable';
 import CustomButton from '../CustomButton';
 import CustomInput from '../CustomInput';
 import { SocketContext } from "../context/socket";
-const API =  API_URL
+const API =  "https://checkpcs.com/api"
 
 export default function ListSubChatItem({ list, isAdmin, IsOnEdit }) {
   const navigation = useNavigation();

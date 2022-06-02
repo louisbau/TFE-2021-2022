@@ -5,7 +5,7 @@ import { Feather } from '@expo/vector-icons';
 import CustomFeather from '../components/CustomFeather';
 import * as SecureStore from 'expo-secure-store';
 import { API_URL } from 'react-native-dotenv'
-const API = API_URL
+const API = "https://checkpcs.com/api"
 import AddGroupItem from '../components/AddGroupItem';
 import AddConvItem from '../components/AddConvItem';
 

@@ -1,10 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const { ChatRoomUser, User, Message, ChatRoom, UserChatRoom,SubChatRoom, FriendShip, Friend } = require("../models");
+const { ChatRoomUser, User, Message, ChatRoom, UserChatRoom,SubChatRoom, FriendShip, Friend, BlockUser } = require("../models");
 const verifyJWT = require('./isAuth')
 const { QueryTypes } = require("sequelize");
 const { Op } = require("sequelize");
 
+router.get("/ping", (req, res) => {
+    res.status(200).json('pong')
+});
 
 router.get("/list", async (req, res) => {
     const listOfChatRoomUser = await ChatRoomUser.findOne();
@@ -23,34 +26,7 @@ router.get("/:id",verifyJWT, async (req, res) => {
     res.json(listOfChatRoomUser);
 });
 
-router.get("/:id",verifyJWT, async (req, res) => {
-    const listOfChatRoomUser = await User.findAll({ include: [{
-        model: ChatRoomUser,
-        where: {ChatRoomId: req.params.id}
-       }, {
-        model: Message,
-        where: {ChatRoomId: req.params.id}
-       }] 
-    });
-    res.json(listOfChatRoomUser);
-});
 
-
-
-router.post("/newChatRoom/", async (req, res) => {
-    const { user } = req.body;
-    const users = await sequelize.query(
-        "select distinct a.*, b.* from chatroomusers as a join chatroomusers as b on a.ChatRoomId = b.ChatRoomId join chatrooms as c on b.ChatRoomId = c.id where (a.UserId = :userA and b.UserId = :userB) and c.isGroupe = False",
-        { 
-            nest: true,
-            replacements : { userA: 3, userB: 1},
-            type: QueryTypes.SELECT 
-        }
-    );
-    
-    console.log(users)
-    res.json(users);
-});
 
 
 router.post("/newChat", verifyJWT, async (req, res) => {
@@ -164,7 +140,17 @@ router.post("/newConv",verifyJWT, async (req, res) => {
         where : {name : name}
     }));
     index = []
+    
     if (IsUser) {
+        const block = await BlockUser.findAll(({
+            where: {UserId : IsUser.id}
+        }))
+
+        for (a in block) {
+            if (block[a].userIdBlock == req.id.UserId) {
+                return res.json("you user block you");
+            }
+        }
         const IsConv = await UserChatRoom.findAll(({
             where : {UserId : IsUser.id}
         }));

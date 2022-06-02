@@ -6,7 +6,7 @@ import * as SecureStore from 'expo-secure-store';
 import CustomInput from '../CustomInput';
 import CustomButton from '../CustomButton';
 import {API_URL} from 'react-native-dotenv'
-const API = API_URL
+const API = "https://checkpcs.com/api"
 
 
 export default function AddConvItem({modalVisible, setModalVisible}) {

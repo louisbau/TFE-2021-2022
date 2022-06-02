@@ -5,9 +5,11 @@ import { API_URL } from 'react-native-dotenv'
 import styles from "./styles";
 import * as SecureStore from 'expo-secure-store';
 import { AppContext } from "../context/AppContext";
-const API = API_URL
+const API = "https://checkpcs.com/api"
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { SocketContext } from "../context/socket";
+import moment from "moment";
+import Filter from "bad-words";
 
 const LeftSwipeActions = () => {
   return (
@@ -41,6 +43,7 @@ export default function ChatRoomItem({ chatRoom, isMe }) {
     const lastMessage = lastMessageChat && lastMessageChat.Messages
     const isLastMessageIsMe = lastMessage && isMeUserChatId === lastMessage.UserChatRoomId
     const content = lastMessage && (lastMessage.content ? lastMessage.content : (lastMessage.image ? 'image': (lastMessage.audio && 'vocal')))
+    let filter = new Filter();
     const swipeFromLeftOpen = () => {
       swipeableRef.current.close();
       navigation.navigate("ChatRoom", { id: chatRoom.SubChatRooms.id, chat: otherChatUser, IsCrypted: true });
@@ -112,6 +115,8 @@ export default function ChatRoomItem({ chatRoom, isMe }) {
       fetchDeleteChat()
 
     }
+    const time = moment(lastMessage.createdAt).from(moment());
+
     return (
       <Swipeable
         renderLeftActions={LeftSwipeActions}
@@ -127,9 +132,9 @@ export default function ChatRoomItem({ chatRoom, isMe }) {
           <View style={styles.rightContainer}>
               <View style={styles.row}>
                 <Text style={styles.name}>{otherChatUser.pseudo}</Text>
-                <Text style={styles.text}>{lastMessage && lastMessage.createdAt}</Text>
+                <Text style={styles.text}>{lastMessage && time}</Text>
               </View>
-              {content && <Text numberOfLines={1} style={styles.text}>{ isLastMessageIsMe ? 'ME' : otherChatUser.pseudo } : {content && content}</Text>}
+              {content && <Text numberOfLines={1} style={styles.text}>{ isLastMessageIsMe ? 'ME' : otherChatUser.pseudo } : {content && filter.clean(content)}</Text>}
           </View>
         </Pressable>
       </Swipeable>

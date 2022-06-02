@@ -1,11 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const { User, ChatRoomUser, ChatRoom, UserChatRoom, SubChatRoom, Friend } = require("../models");
+const { User, ChatRoomUser, ChatRoom, UserChatRoom, SubChatRoom, Friend, Message, FriendShip } = require("../models");
 const bcrypt = require("bcrypt");
 var jwt = require('jsonwebtoken');
 const verifyJWT = require("./isAuth");
 require('dotenv').config()
 
+router.get("/ping", (req, res) => {
+    res.status(200).json('pong')
+});
 
 router.get("/list",verifyJWT, async (req, res) => {
     const listOfUser = await User.findAll();
@@ -13,16 +16,17 @@ router.get("/list",verifyJWT, async (req, res) => {
 
 });
 
-router.get("/test2", async (req, res) => {
-    const listOfUser = await User.findAll();
-    res.json(listOfUser);
-
-});
-
-
 
 router.get("/card",verifyJWT, async (req, res) => {
     const user = await User.findOne({where: {id : req.id.UserId}})
+    res.json(user);
+});
+
+router.get("/card/:id",verifyJWT, async (req, res) => {
+    const user = await User.findOne({
+            where: {id : req.params.id},
+            attributes: ['id', 'name', "imageUri", "status"]
+    })
     res.json(user);
 });
 
@@ -197,30 +201,51 @@ router.post("/login", async (req, res) => {
 });
 
 
-router.post('/isUserAuth', (req, res) => {
-    const authHeader = req.get("Authorization");
-    if (!authHeader) {
-        return res.status(401).json({ message: 'not authenticated' });
-    };
-    const token = authHeader.split(' ')[1];
-    let decodedToken; 
-    try {
-        decodedToken = jwt.verify(token, 'secret');
-        
-    } catch (err) {
-        console.log(err)
-        return res.status(500).json({ message: err.message || 'could not decode the token' });
-        
-    };
-    if (!decodedToken) {
-        res.status(401).json({ message: 'unauthorized' });
-        
-    } else {
-        res.status(200).json({ message: 'here is your resource' });
-        
-    };
-});
+router.delete("/ban", async (req, res) => {
+    const { id } = req.body;
+    const listUserChat = await UserChatRoom.findAll(({
+        where : {UserId : id}
+    }))
+    const FriendShipNumber = await Friend.findOne(({
+        where : {UserId : id}
+    }))
 
+    index = []
+    for (i in listUserChat) {
+        index.push(listUserChat[i].id)
+    }
+    
+    await Message.destroy(({
+        where : {UserChatRoomId : index}
+    }))
+
+    await ChatRoomUser.destroy(({
+        where : {UserChatRoomId : index}
+    }))
+    
+    await UserChatRoom.destroy(({
+        where : {id : index}
+    }))
+
+    await FriendShip.destroy(({
+        where : {FriendId : FriendShipNumber.id}
+    }))
+
+    await FriendShip.destroy(({
+        where : {UserId : id}
+    }))
+
+    await Friend.destroy(({
+        where : {UserId : id}
+    }))
+    
+    await User.destroy(({
+        where : {id : id}
+    }))
+    
+    res.json("succes")
+
+});
 
 
 module.exports = router;

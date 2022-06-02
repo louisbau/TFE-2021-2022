@@ -20,7 +20,7 @@ export default function TabOneScreen() {
   const [role, setRole] = useState();
   const [friends, setFriends] = useState();
   const [masterDataSource, setMasterDataSource] = useState([]);
-  const API = API_URL
+  const API = "https://checkpcs.com/api"
   const navigation = useNavigation()
   useEffect(() => {
       const loggedIn = async () => { 

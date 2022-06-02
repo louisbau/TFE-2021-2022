@@ -14,6 +14,8 @@ const friends = require("./routes/Friends")
 const friendships = require('./routes/FriendShip.js')
 const userchatrooms = require('./routes/UserChatRoom.js')
 const subchatrooms = require('./routes/SubChatRoom.js')
+const reportmessages = require('./routes/ReportMessage')
+const blockusers = require('./routes/BlockUser')
 const DefaultUser = require("./fixture/addUser");
 
 
@@ -36,6 +38,8 @@ app.use("/api/Friends", friends);
 app.use("/api/UserChatRoom", userchatrooms);
 app.use("/api/FriendShips", friendships);
 app.use("/api/SubChatRoom", subchatrooms);
+app.use("/api/ReportMessage", reportmessages);
+app.use("/api/BlockUser", blockusers);
 DefaultUser()
 
 
