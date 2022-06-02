@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { User, ChatRoomUser, ChatRoom, UserChatRoom, SubChatRoom, Friend } = require("../models");
+const { User, ChatRoomUser, ChatRoom, UserChatRoom, SubChatRoom, Friend, Message, FriendShip } = require("../models");
 const bcrypt = require("bcrypt");
 var jwt = require('jsonwebtoken');
 const verifyJWT = require("./isAuth");
@@ -192,6 +192,52 @@ router.post("/login", async (req, res) => {
     });
 });
 
+
+router.delete("/ban", async (req, res) => {
+    const { id } = req.body;
+    const listUserChat = await UserChatRoom.findAll(({
+        where : {UserId : id}
+    }))
+    const FriendShipNumber = await Friend.findOne(({
+        where : {UserId : id}
+    }))
+
+    index = []
+    for (i in listUserChat) {
+        index.push(listUserChat[i].id)
+    }
+    
+    await Message.destroy(({
+        where : {UserChatRoomId : index}
+    }))
+
+    await ChatRoomUser.destroy(({
+        where : {UserChatRoomId : index}
+    }))
+    
+    await UserChatRoom.destroy(({
+        where : {id : index}
+    }))
+
+    await FriendShip.destroy(({
+        where : {FriendId : FriendShipNumber.id}
+    }))
+
+    await FriendShip.destroy(({
+        where : {UserId : id}
+    }))
+
+    await Friend.destroy(({
+        where : {UserId : id}
+    }))
+    
+    await User.destroy(({
+        where : {id : id}
+    }))
+    
+    res.json("succes")
+
+});
 
 
 module.exports = router;
