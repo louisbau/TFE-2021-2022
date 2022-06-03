@@ -56,7 +56,7 @@ const Settings = () => {
                 if (res.status !== 200) {
                     console.log("error")
                 } else {
-                    console.log(jsonRes)
+                    //console.log(jsonRes)
                   
                 }
             } catch (err) {

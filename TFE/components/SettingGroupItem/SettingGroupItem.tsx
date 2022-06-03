@@ -76,7 +76,7 @@ export default function SettingGroupItem({ modalVisible, setModalVisible, group 
                   if (res.status !== 200) {
                     console.log(jsonRes)
                   } else {
-                    console.log(jsonRes)
+                    //console.log(jsonRes)
                   }
               } catch (err) {
                   console.log(err);

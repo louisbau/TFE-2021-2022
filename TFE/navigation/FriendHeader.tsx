@@ -45,7 +45,7 @@ const FriendHeader = ( ) => {
                   
               } else {
                   setFriends(jsonRes)
-                  console.log(jsonRes)
+                  //console.log(jsonRes)
               }
           } catch (err) {
               console.log(err);

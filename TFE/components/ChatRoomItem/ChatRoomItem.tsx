@@ -65,7 +65,7 @@ export default function ChatRoomItem({ chatRoom, isMe }) {
               if (res.status !== 200) {
                 console.log(jsonRes)
               } else {
-                console.log(jsonRes)
+                //console.log(jsonRes)
               }
           } catch (err) {
               console.log(err);

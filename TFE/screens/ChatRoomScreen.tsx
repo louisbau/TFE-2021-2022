@@ -71,7 +71,7 @@ export default function ChatRoomScreen() {
                 if (res.status !== 200) {
                   console.log(jsonRes)
                 } else {
-                    console.log(jsonRes)
+                    //console.log(jsonRes)
                     setNameTyping(jsonRes.pseudo)
                 }
             } catch (err) {

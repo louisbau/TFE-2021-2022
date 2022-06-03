@@ -33,7 +33,7 @@ export default function UserListInvitationItem({ user }) {
             if (res.status !== 200) {
               console.log(jsonRes)
             } else {
-              console.log(jsonRes)
+              //console.log(jsonRes)
             }
         } catch (err) {
             console.log(err);
@@ -60,7 +60,7 @@ export default function UserListInvitationItem({ user }) {
             if (res.status !== 200) {
               console.log(jsonRes)
             } else {
-              console.log(jsonRes)
+              //console.log(jsonRes)
             }
         } catch (err) {
             console.log(err);

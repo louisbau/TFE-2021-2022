@@ -22,8 +22,8 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSCameraUsageDescription": "This app uses the camera to scan barcodes on event tickets.",
-        "NSMicrophoneUsageDescription": "this app use the micro to call peopel"
+        "NSCameraUsageDescription": "the camera is use to send pics in chat and to change profil pics",
+        "NSMicrophoneUsageDescription": "the microphone is use to send audio message"
       },
       "bundleIdentifier": "com.OpenTalkApp",
       "buildNumber":"3"

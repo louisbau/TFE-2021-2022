@@ -36,7 +36,7 @@ export default function OtherUserScreen({ }) {
             } else {
               
               setUser(jsonRes) 
-              console.log(jsonRes)
+              //console.log(jsonRes)
             }
         } catch (err) {
             console.log(err);
@@ -82,7 +82,7 @@ export default function OtherUserScreen({ }) {
               console.log(jsonRes, "lol")
             } else {
               
-                console.log(jsonRes)
+                //console.log(jsonRes)
                 
                 fetchDeleteChat()
                 Alert.alert("user blocked and delete")
@@ -113,7 +113,7 @@ export default function OtherUserScreen({ }) {
             if (res.status !== 200) {
               console.log(jsonRes)
             } else {
-              console.log(jsonRes)
+              //console.log(jsonRes)
             }
         } catch (err) {
             console.log(err);

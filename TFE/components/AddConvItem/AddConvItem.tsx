@@ -74,7 +74,6 @@ export default function AddConvItem({modalVisible, setModalVisible}) {
               } else {
                 setModalVisible(!modalVisible);
                 onChangeText("")
-                console.log(jsonRes, 'quoi')
                 if (jsonRes === "you user block you") {
                   Alert.alert("the user block you")
                 }
