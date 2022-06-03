@@ -37,8 +37,8 @@ export default function ChatRoomItem({ chatRoom, isMe }) {
     const socket = useContext(SocketContext);
     const otherChatUser = chatRoom.Users.find((x) => x.UserId !== isMe)
     const isMeChatUser = chatRoom.Users.find((x) => x.UserId === isMe)
-    const isMeUserChatId =isMeChatUser.ChatRoomUsers[0].UserChatRoomId
-    const otherUserChatId = otherChatUser.ChatRoomUsers[0].UserChatRoomId
+    const isMeUserChatId = isMeChatUser.ChatRoomUsers[0].UserChatRoomId
+    const otherUserChatId = otherChatUser && otherChatUser.ChatRoomUsers[0].UserChatRoomId
     const lastMessageChat = chatRoom.lastMessage && chatRoom.lastMessage
     const lastMessage = lastMessageChat && lastMessageChat.Messages
     const isLastMessageIsMe = lastMessage && isMeUserChatId === lastMessage.UserChatRoomId
@@ -125,13 +125,13 @@ export default function ChatRoomItem({ chatRoom, isMe }) {
         ref={swipeableRef}
       >
         <Pressable onPress={onPress} style={styles.container}>
-          <Image source={{ uri: otherChatUser.imageUri }} style={styles.image} />
+          <Image source={{ uri: otherChatUser && otherChatUser.imageUri }} style={styles.image} />
           <View style={styles.badgeContainer}>
               <Text style={styles.badgeText}>0</Text>
           </View>
           <View style={styles.rightContainer}>
               <View style={styles.row}>
-                <Text style={styles.name}>{otherChatUser.pseudo}</Text>
+                <Text style={styles.name}>{otherChatUser && otherChatUser.pseudo}</Text>
                 <Text style={styles.text}>{lastMessage && time}</Text>
               </View>
               {content && <Text numberOfLines={1} style={styles.text}>{ isLastMessageIsMe ? 'ME' : otherChatUser.pseudo } : {content && filter.clean(content)}</Text>}

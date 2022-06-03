@@ -22,8 +22,9 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSCameraUsageDescription": "the camera is use to send pics in chat and to change profil pics",
-        "NSMicrophoneUsageDescription": "the microphone is use to send audio message"
+        "NSCameraUsageDescription": "Allow access to the camera, allow you to take photos and send them to other people that are using the app",
+        "NSMicrophoneUsageDescription": "Allow access to the microphone, allow you to take audio's message and send them to other people that are using the app",
+        "NSPhotoLibraryUsageDescription": "Allow access to your photos, allow you to upload photos in the chat and also to change your profile pic"
       },
       "bundleIdentifier": "com.OpenTalkApp",
       "buildNumber":"3"

@@ -31,14 +31,14 @@ const ChatRoomHeader = ({ id, chat }) => {
       <Pressable onPress={onPressUser}>
         <Image
           source={{
-            uri: chat.imageUri
+            uri: chat && chat.imageUri
           }}
           style={{ width: 30, height: 30, borderRadius: 30 }}
         />
       </Pressable>
       
       <Text style={{ marginLeft: 10, fontWeight: "bold" }}>
-        {chat.pseudo}
+        {chat && chat.pseudo}
       </Text>
       <CustomFeather name="phone" size={24} onPress={onPress} color="black"/>
       <CustomFeather name="video" size={24} onPress={onPress} color="black"/>
