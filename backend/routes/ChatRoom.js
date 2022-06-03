@@ -5,7 +5,13 @@ const verifyJWT = require('./isAuth')
 const { Op } = require("sequelize");
 
 router.get("/ping", (req, res) => {
-    res.status(200).json('pong')
+    try {
+        res.status(200).json('pong')
+    }
+    catch (error) {
+        res.json(error)
+    }
+    
 });
 
 
@@ -156,45 +162,57 @@ router.get("/list", verifyJWT, async (req, res) => {
 });
 
 router.post("/addPics",verifyJWT, async (req, res) => {
-    const { pics, id } = req.body;
-    const userResult = await ChatRoom.update({imageUri: pics}, {
-        where : {id : id}
-    })
+    try {
+        const { pics, id } = req.body;
+        const userResult = await ChatRoom.update({imageUri: pics}, {
+            where : {id : id}
+        })
+        
+        res.json(userResult);
+    }
+    catch (error) {
+        res.json(error)
+    }
     
-    res.json(userResult);
 });
 
 
 router.patch("/renameGroup", verifyJWT, async (req, res) => {
-    const { groupname, groupid } = req.body;
+    try {
+        const { groupname, groupid } = req.body;
     
-    await ChatRoom.update({name: groupname}, {
-        where : {id : groupid}
-    })
-    console.log(groupname, groupid)
-    
+        await ChatRoom.update({name: groupname}, {
+            where : {id : groupid}
+        })
+        console.log(groupname, groupid)
+        
 
 
-    const ChatRoomGroup = await ChatRoom.findAll({
-        include: [
-            {
-                model: SubChatRoom,
-                right: true, // will create a right join
-            },
-            {
-                model: UserChatRoom,
-                right: true, // will create a right join
+        const ChatRoomGroup = await ChatRoom.findAll({
+            include: [
+                {
+                    model: SubChatRoom,
+                    right: true, // will create a right join
+                },
+                {
+                    model: UserChatRoom,
+                    right: true, // will create a right join
+                }
+            ],
+            where: {
+            [Op.and]: [
+                { id: groupid },
+                { isGroupe: true }
+            ]
             }
-        ],
-        where: {
-          [Op.and]: [
-            { id: groupid },
-            { isGroupe: true }
-          ]
-        }
-    });
+        });
 
-    res.json(ChatRoomGroup[0])
+        res.json(ChatRoomGroup[0])
+    }
+    catch (error) {
+        res.json(error)
+    }
+    
 
     
 });
@@ -236,27 +254,33 @@ router.get("/:id",verifyJWT, async (req, res) => {
 });
 
 router.delete("/deleteChatRoom", verifyJWT, async (req, res) => {
-    const { id } = req.body;
+    
+    try {
+        const { id } = req.body;
+        await Message.destroy(({
+            where : {SubChatRoomId : id}
+        }))
+    
+        await ChatRoomUser.destroy(({
+            where : {SubChatRoomId : id}
+        }))
+        
+        
+        
+        await SubChatRoom.destroy(({
+            where : {id : id}
+        }))
+        
+        
+    
+    
+        res.json("succes")
 
-    
-    await Message.destroy(({
-        where : {SubChatRoomId : id}
-    }))
-
-    await ChatRoomUser.destroy(({
-        where : {SubChatRoomId : id}
-    }))
+    } catch (error) {
+        res.status(400).json(error)
+    }
     
     
-    
-    await SubChatRoom.destroy(({
-        where : {id : id}
-    }))
-    
-    
-
-
-    res.json("succes")
 
     
 });
