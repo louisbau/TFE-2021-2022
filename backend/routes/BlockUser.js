@@ -6,15 +6,21 @@ const verifyJWT = require("./isAuth");
 
 
 router.post("/block", verifyJWT, async (req, res) => {
-    const { id } = req.body;
+    try {
+        const { id } = req.body;
 
 
-    await BlockUser.create(({
-        UserId: req.id.UserId,
-        userIdBlock: id
-    }))
+        await BlockUser.create(({
+            UserId: req.id.UserId,
+            userIdBlock: id
+        }))
 
-    res.json("success blocking")
+        res.json("success blocking")
+    }
+    catch (error) {
+        res.json(error)
+    }
+    
 
     
 });
