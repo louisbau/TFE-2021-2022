@@ -3,7 +3,15 @@ const router = express.Router();
 const { ChatRoomUser, User, Message, ChatRoom, UserChatRoom, SubChatRoom, BlockUser } = require("../models");
 const verifyJWT = require("./isAuth");
 
-
+router.get("/ping", (req, res) => {
+    try {
+        res.status(200).json('pong')
+    }
+    catch (error) {
+        res.json(error)
+    }
+    
+});
 
 router.post("/block", verifyJWT, async (req, res) => {
     try {
