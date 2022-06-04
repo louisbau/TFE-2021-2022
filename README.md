@@ -27,11 +27,6 @@
     $ cd TFE
     $ 
 
-
-
-
-
-
 ### Node js 
 
 - #### Node installation on Windows
@@ -61,7 +56,15 @@ If you need to update `npm`, you can make it using `npm`! Cool right? After runn
 
     $ npm install npm -g
 
+## Create .env in the root directory of backend/
 
+    Port=
+    HOST=
+    USER=
+    PASSWORD=
+    DB=
+    NODE_ENV = 
+    TOKEN_SECRET=
 
 ## Running the project
 
@@ -79,10 +82,15 @@ If you need to update `npm`, you can make it using `npm`! Cool right? After runn
 ### Docker
 
 
+- #### Running the project
+    $ docker-compose up --build
 
 ### Mysql
 
+
 ### Nginx
+
+follow that guideline to make the Https working : https://mindsers.blog/fr/post/configurer-https-nginx-docker-lets-encrypt/
 
 ## Code of conduct
 The code of conduct guidelines : [Code of conduct](https://github.com/louisbau/TFE-2021-2022/blob/main/CODE_OF_CONDUCT.md)
