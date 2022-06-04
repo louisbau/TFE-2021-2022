@@ -9,7 +9,7 @@
 ![Issues](https://img.shields.io/github/issues/louisbau/TFE-2021-2022)
 
 <a href="https://discord.gg/PYGNuba6Zn">
-<img alt="Join us on Discord" src="https://img.shields.io/discord/591914197219016707.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2" width="165"/>
+<img alt="Join us on Discord" src="https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" width="165"/>
 </a>
 
 ![Logo](https://github.com/louisbau/TFE-2021-2022/blob/main/TFE/assets/images/opentalk_logo.jpg)
