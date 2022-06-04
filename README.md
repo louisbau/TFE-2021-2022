@@ -78,10 +78,10 @@ If you need to update `npm`, you can make it using `npm`! Cool right? After runn
 
 ### React Native Expo
 
-- https://docs.expo.dev/bare/existing-apps/
+existing app : https://docs.expo.dev/bare/existing-apps/
 
 
-#### `npm start`
+- #### `npm start`
 
 Runs your app in development mode.
 
@@ -131,8 +131,6 @@ The contribution guidelines : [Contributing](https://github.com/louisbau/TFE-202
 The licence : [MIT](https://github.com/louisbau/TFE-2021-2022/blob/main/LICENSE)
 
 ## Documentation
-
-
 
 
 - Expo Doc: https://docs.expo.dev/
