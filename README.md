@@ -2,15 +2,12 @@
 ## OpenTalk App
 
 
-![Open in Visual Studio Code](https://open.vscode.dev/badges/open-in-vscode.svg)](https://open.vscode.dev/larymak/Python-project-Scripts)
-![Contributors](https://img.shields.io/github/contributors/larymak/Python-project-Scripts?style=plastic)
-![Forks](https://img.shields.io/github/forks/larymak/Python-project-Scripts)
-![Stars](https://img.shields.io/github/stars/larymak/Python-project-Scripts)
-![Licence](https://img.shields.io/github/license/larymak/Python-project-Scripts)
-![Issues](https://img.shields.io/github/issues/larymak/Python-project-Scripts)
-<a href="https://join.slack.com/t/ngc-goz8665/shared_invite/zt-r01kumfq-dQUT3c95BxEP_fnk4yJFfQ">
-<img alt="Join us on Slack" src="https://raw.githubusercontent.com/netlify/netlify-cms/master/website/static/img/slack.png" width="165"/>
-</a>
+![Contributors](https://img.shields.io/github/contributors/louisbau/TFE-2021-2022?style=plastic)
+![Forks](https://img.shields.io/github/forks/louisbau/TFE-2021-2022)
+![Stars](https://img.shields.io/github/stars/louisbau/TFE-2021-2022)
+![Licence](https://img.shields.io/github/license/louisbau/TFE-2021-2022)
+![Issues](https://img.shields.io/github/issues/louisbau/TFE-2021-2022)
+
 
 
 ![Logo](https://github.com/louisbau/TFE-2021-2022/blob/main/TFE/assets/images/opentalk_logo.jpg)
