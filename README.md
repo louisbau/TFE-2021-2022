@@ -5,7 +5,14 @@
 
 ## Installation manual
 
+## Code of conduct
+[Code of conduct](https://github.com/louisbau/TFE-2021-2022/blob/main/CODE_OF_CONDUCT.md)
 
+## Contributing
+[Contributing](https://github.com/louisbau/TFE-2021-2022/blob/main/CONTRIBUTING.md)
+
+## License
+[MIT](https://github.com/louisbau/TFE-2021-2022/blob/main/LICENSE)
 
 ## Documentation
 
