@@ -1,24 +1,23 @@
 # TFE-2021-2022
 ## OpenTalk App
 
-![image]({https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2F{username}1212%2Fhit-counter})
 
+![Open in Visual Studio Code](https://open.vscode.dev/badges/open-in-vscode.svg)](https://open.vscode.dev/larymak/Python-project-Scripts)
+![Contributors](https://img.shields.io/github/contributors/larymak/Python-project-Scripts?style=plastic)
+![Forks](https://img.shields.io/github/forks/larymak/Python-project-Scripts)
+![Stars](https://img.shields.io/github/stars/larymak/Python-project-Scripts)
+![Licence](https://img.shields.io/github/license/larymak/Python-project-Scripts)
+![Issues](https://img.shields.io/github/issues/larymak/Python-project-Scripts)
+<a href="https://join.slack.com/t/ngc-goz8665/shared_invite/zt-r01kumfq-dQUT3c95BxEP_fnk4yJFfQ">
+<img alt="Join us on Slack" src="https://raw.githubusercontent.com/netlify/netlify-cms/master/website/static/img/slack.png" width="165"/>
+</a>
 
 
 ![Logo](https://github.com/louisbau/TFE-2021-2022/blob/main/TFE/assets/images/opentalk_logo.jpg)
-https://img.shields.io/badge/App_Store-0D96F6?style=for-the-badge&logo=app-store&logoColor=white
+
 
 ## Installation manual
-https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white
-https://img.shields.io/badge/iOS-000000?style=for-the-badge&logo=ios&logoColor=white
-https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white
 
-https://img.shields.io/badge/Sequelize-52B0E7?style=for-the-badge&logo=Sequelize&logoColor=white
-
-https://img.shields.io/badge/React_Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
-
-
-https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white
 
 
 ## Code of conduct
