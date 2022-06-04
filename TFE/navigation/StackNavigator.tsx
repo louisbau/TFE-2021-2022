@@ -34,6 +34,9 @@ const screenOptionStyle = {
   headerBackTitle: "Back",
 };
 
+/**
+ * Component that allow tthe main navigation in app
+ */
 
 
 const MainStackNavigator = ({ nav }) => {

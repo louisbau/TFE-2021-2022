@@ -7,6 +7,9 @@ import * as SecureStore from 'expo-secure-store';
 import { API_URL } from 'react-native-dotenv'
 import { SocketContext } from "../components/context/socket";
 
+/**
+ * Component that shows the interface of a groupe conv
+ */
 
 
 export default function ChatGroupScreen() {

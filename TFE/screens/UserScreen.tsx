@@ -10,6 +10,9 @@ const API = "https://checkpcs.com/api"
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from '@react-navigation/native';
 
+/**
+ * Component that show the profil of the user connected
+ */
 
 export default function UsersScreen() {
   const [user, setUser] = useState()

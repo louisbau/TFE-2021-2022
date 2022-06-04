@@ -5,6 +5,9 @@ import { Feather } from "@expo/vector-icons";
 import { AppContext } from "../components/context/AppContext";
 import CustomFeather from "../components/CustomFeather";
 import { useNavigation } from '@react-navigation/core';
+/**
+ * Component that is used has the header of the chatroomscreen 
+ */
 
 const ChatRoomHeader = ({ id, chat }) => {
   const { width } = useWindowDimensions();

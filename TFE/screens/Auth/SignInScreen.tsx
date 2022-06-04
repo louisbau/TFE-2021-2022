@@ -16,6 +16,10 @@ async function save(key, value) {
     await SecureStore.setItemAsync(key, value);
 }
 
+/**
+ * Component that is used to allow the user to sign in in the application
+ */
+
 export default function SignIn() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');

@@ -19,6 +19,10 @@ const Drawer = createDrawerNavigator();
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PRIVATE_KEY } from '../utils/crypto';
 
+/**
+ * Component that make the navigation side bar working
+ */
+
 const DrawerNavigator = ({ navigation, nav }) => {
     const [isEnabledTheme, setIsEnabledTheme] = useState(false);
     const toggleSwitchTheme = () => setIsEnabledTheme(previousState => !previousState);

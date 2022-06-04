@@ -9,6 +9,10 @@ import { Feather } from '@expo/vector-icons';
 const Tab = createBottomTabNavigator();
 import { ImageBackground, View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
+/**
+ * Component that is used to make the bootom naviagation
+ */
+
 
 const BottomTabNavigator = () => {
   return (

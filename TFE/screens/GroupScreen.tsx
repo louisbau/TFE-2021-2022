@@ -8,6 +8,10 @@ import CustomInput from '../components/CustomInput';
 import { useNavigation } from '@react-navigation/native';
 const API = "https://checkpcs.com/api"
 
+/**
+ * Component that shows the list of group and help the user to make modification on group
+ */
+
 export default function GroupScreen() {
     const [group, setGroup] = useState([]);
     const [search, setSearch] = useState('');

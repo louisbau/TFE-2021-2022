@@ -9,6 +9,11 @@ const API = "https://checkpcs.com/api"
 import AddGroupItem from '../components/AddGroupItem';
 import AddConvItem from '../components/AddConvItem';
 
+
+/**
+ * Component that is used has the header of the friendscreen 
+ */
+
 const HomeHeader = ({ nav }) => {
     const [modalVisible, setModalVisible] = useState(false);
     

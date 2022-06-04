@@ -12,6 +12,10 @@ import CustomButton from "../components/CustomButton";
 import { SocketContext } from "../components/context/socket";
 import { useNavigation } from "@react-navigation/native";
 
+/**
+ * Component that shows the list of private conv and help the user to make modification on conv and show friens
+ */
+
 export default function TabOneScreen() {
   
   const [conv, setConv] = useState([]);

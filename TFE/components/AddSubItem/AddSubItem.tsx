@@ -103,7 +103,7 @@ export default function AddSubItem({modalVisible, setModalVisible, group, setGro
                 };
                 fetchGroup()
                 
-                setModalVisible(!modalVisible);
+                setModalVisible(false);
                 setSubName("")
               }
           } catch (err) {
@@ -127,7 +127,7 @@ export default function AddSubItem({modalVisible, setModalVisible, group, setGro
                     <Text style={styles.modalText}>Add a chat</Text>
                     <Pressable
                     style={[styles.button, styles.buttonClose]}
-                    onPress={() => setModalVisible(!modalVisible)}
+                    onPress={() => setModalVisible(false)}
                     >  
                         <Text style={styles.textStyle}>Cancel</Text>
                     

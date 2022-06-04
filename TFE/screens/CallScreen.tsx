@@ -12,6 +12,14 @@
 
 // import InCallManager from 'react-native-incall-manager';
 
+/**
+ * Class Function AgendaSreen
+ * that is a example of new feature that a contributer can work on
+ * in this case, it is the implementation of the calling system
+ * 
+ * 
+ */
+
 // import {
   
 //   RTCView,

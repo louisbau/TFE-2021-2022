@@ -8,6 +8,11 @@ import CustomFeather from '../components/CustomFeather';
 import { API_URL } from 'react-native-dotenv'
 const API = "https://checkpcs.com/api"
 
+
+/**
+ * Component that the list of friends
+ */
+
 export default function FriendsScreen() {
   const [friends, setFriends] = useState([]);
   

@@ -11,6 +11,11 @@ import {
 } from "@stablelib/base64";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+
+/**
+ * that file is use to deal with the encryption feature 
+ */
+
 export const PRIVATE_KEY = "PRIVATE_KEY";
 
 setPRNG((x, n) => {

@@ -7,7 +7,9 @@ import * as SecureStore from 'expo-secure-store';
 import { SocketContext } from "../components/context/socket";
 import { API_URL } from 'react-native-dotenv'
 
-
+/**
+ * Component that shows the interface of a private conv
+ */
 
 export default function ChatRoomScreen() {
     const navigation = useNavigation();

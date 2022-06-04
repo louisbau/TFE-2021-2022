@@ -8,6 +8,11 @@ const API = "https://checkpcs.com/api"
 import * as SecureStore from 'expo-secure-store';
 import UserListInvitationItem from "../components/UserListInvitationItem";
 
+
+/**
+ * Component that is used has the header of the friendscreen 
+ */
+
 const FriendHeader = ( ) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [modalVisible1, setModalVisible1] = useState(false);

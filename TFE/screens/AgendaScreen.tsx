@@ -3,6 +3,14 @@ import {Alert, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {Agenda, DateData, AgendaEntry, AgendaSchedule} from 'react-native-calendars';
 import testIDs from './testID';
 
+/**
+ * Class Function AgendaSreen
+ * that is a example of new feature that a contributer can work on
+ * in this case, it is the implementation of an agenda
+ * 
+ * 
+ */
+
 interface State {
   items?: AgendaSchedule;
 }

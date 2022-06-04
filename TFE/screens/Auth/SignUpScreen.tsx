@@ -11,6 +11,12 @@ import Checkbox from 'expo-checkbox';
 import Terms from "./Terms";
 import Privacies from "./Privacies";
 
+
+/**
+ * Component that is used to allow the user to sign up in the application and to accepte terms
+ */
+
+
 export default function SignUp() {
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');

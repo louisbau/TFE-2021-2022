@@ -9,6 +9,10 @@ import CustomButton from "../../components/CustomButton";
 const API = "https://checkpcs.com/api"
 import { PRIVATE_KEY } from "../../utils/crypto";
 
+/**
+ * Component that is used to allow the user to change is password
+ */
+
 export default function ResetPassword() {
     const [password, setPassword] = useState('');
     const [newpassword, setNewPassword] = useState('');

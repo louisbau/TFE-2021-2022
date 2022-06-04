@@ -22,7 +22,9 @@ import { SocketContext, socket } from './components/context/socket';
 // const sharedB = box.before(pairA.publicKey, pairB.secretKey);
 // const decrypted = decrypt(sharedB, encrypted);
 // console.log(obj, sharedA, encrypted, decrypted);
-
+/**
+ * this is the main component 
+ */
 
 export default function App() {
   const isLoadingComplete = useCachedResources();

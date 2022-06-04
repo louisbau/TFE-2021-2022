@@ -9,7 +9,9 @@ import * as SecureStore from 'expo-secure-store';
 import { PRIVATE_KEY } from "../utils/crypto";
 
 
-
+/**
+ * Component that allow to make someUpdate on group
+ */
 
 const Settings = () => {
   const navigation = useNavigation()

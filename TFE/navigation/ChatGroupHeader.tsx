@@ -2,6 +2,9 @@ import React, { useEffect, useState, useContext } from "react";
 import { View, Image, Text, useWindowDimensions, Platform, Pressable } from "react-native";
 
 import CustomFeather from "../components/CustomFeather";
+/**
+ * Component that is used has the header of the chatgroupscreen 
+ */
 
 const ChatGroupHeader = ({ id, group }) => {
   const { width } = useWindowDimensions();
