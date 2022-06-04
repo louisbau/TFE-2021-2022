@@ -14,6 +14,15 @@
 
 ![Logo](https://github.com/louisbau/TFE-2021-2022/blob/main/TFE/assets/images/opentalk_logo.jpg)
 
+## Code of conduct
+The code of conduct guidelines : [Code of conduct](https://github.com/louisbau/TFE-2021-2022/blob/main/CODE_OF_CONDUCT.md)
+
+## Contributing
+The contribution guidelines : [Contributing](https://github.com/louisbau/TFE-2021-2022/blob/main/CONTRIBUTING.md)
+
+## License
+The licence : [MIT](https://github.com/louisbau/TFE-2021-2022/blob/main/LICENSE)
+
 
 ## Installation manual
 
@@ -121,14 +130,7 @@ Like `npm start`, but also attempts to open your app on a connected Android devi
 
 follow that guideline to make the Https working : https://mindsers.blog/fr/post/configurer-https-nginx-docker-lets-encrypt/
 
-## Code of conduct
-The code of conduct guidelines : [Code of conduct](https://github.com/louisbau/TFE-2021-2022/blob/main/CODE_OF_CONDUCT.md)
 
-## Contributing
-The contribution guidelines : [Contributing](https://github.com/louisbau/TFE-2021-2022/blob/main/CONTRIBUTING.md)
-
-## License
-The licence : [MIT](https://github.com/louisbau/TFE-2021-2022/blob/main/LICENSE)
 
 ## Documentation
 
@@ -141,3 +143,4 @@ The licence : [MIT](https://github.com/louisbau/TFE-2021-2022/blob/main/LICENSE)
 - Mysql Doc : https://dev.mysql.com/doc/
 - Docker Doc : https://docs.docker.com/
 
+creator: Louis Bauchau
