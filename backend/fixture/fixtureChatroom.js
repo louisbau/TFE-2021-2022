@@ -43,7 +43,7 @@ const fixtureChat = {
             }, {
               id: '4',
               name: 'Arthur',
-              imageUri: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/zuck.jpeg',
+              imageUri: '../image/Arthur.jpg',
             }, {
               id: '3',
               name: 'Martin',
