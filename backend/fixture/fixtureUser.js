@@ -8,17 +8,17 @@ const fixtureUser = {
         }, 
         {
             id: 'u2',
-            name: 'Elon Musk',
+            name: 'Pierre',
             imageUri: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/elon.png',
         }, 
         {
             id: 'u3',
-            name: 'Jeff',
+            name: 'Martin',
             imageUri: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/jeff.jpeg',
         }, 
         {
             id: 'u4',
-            name: 'Zuck',
+            name: 'Arthur',
             imageUri: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/zuck.jpeg',
         }, 
         {
@@ -28,12 +28,12 @@ const fixtureUser = {
         }, 
         {
             id: 'u6',
-            name: 'Biahaze',
+            name: 'Thomas',
             imageUri: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/biahaze.jpg',
         }, 
         {
             id: 'u7',
-            name: 'Sus?',
+            name: 'Maud',
             imageUri: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/1.jpg',
         }, 
         {
@@ -48,7 +48,7 @@ const fixtureUser = {
         }, 
         {
             id: 'u10',
-            name: 'Angelina Jolie',
+            name: 'Elise',
             imageUri: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/4.jpg',
         }
     ]
