@@ -10,7 +10,7 @@ const fixtureMessages = {
                 }, 
                 {
                     id: '2',
-                    name: 'Elon Musk',
+                    name: 'Pierre',
                     imageUri: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/elon.png',
                 }
             ],
@@ -30,7 +30,7 @@ const fixtureMessages = {
                     createdAt: '2020-10-03T14:49:00.000Z',
                     user: {
                         id: '2',
-                        name: 'Elon Musk',
+                        name: 'Pierre',
                     },
                 }, 
                 {
@@ -39,7 +39,7 @@ const fixtureMessages = {
                     createdAt: '2020-10-03T14:49:40.000Z',
                     user: {
                         id: '2',
-                        name: 'Elon Musk',
+                        name: 'Pierre',
                     },
                 }, 
                 {
@@ -66,7 +66,7 @@ const fixtureMessages = {
                     createdAt: '2020-10-03T14:49:00.000Z',
                     user: {
                         id: '2',
-                        name: 'Elon Musk',
+                        name: 'Pierre',
                     },
                 }, 
                 {
@@ -75,7 +75,7 @@ const fixtureMessages = {
                     createdAt: '2020-10-03T14:53:00.000Z',
                     user: {
                         id: '2',
-                        name: 'Elon Musk',
+                        name: 'Pierre',
                     },
                 }
             ]

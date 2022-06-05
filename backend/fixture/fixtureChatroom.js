@@ -8,7 +8,7 @@ const fixtureChat = {
               imageUri: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/vadim.jpg',
             }, {
               id: '2',
-              name: 'Elon Musk',
+              name: 'Pierre',
               imageUri: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/elon.png',
             }],
             lastMessage: {
@@ -25,7 +25,7 @@ const fixtureChat = {
               imageUri: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/vadim.jpg',
             }, {
               id: '3',
-              name: 'Jeff',
+              name: 'Martin',
               imageUri: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/jeff.jpeg',
             }],
             lastMessage: {
@@ -42,11 +42,11 @@ const fixtureChat = {
               imageUri: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/vadim.jpg',
             }, {
               id: '4',
-              name: 'Zuck',
+              name: 'Arthur',
               imageUri: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/zuck.jpeg',
             }, {
               id: '3',
-              name: 'Jeff',
+              name: 'Martin',
               imageUri: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/jeff.jpeg',
             }],
             lastMessage: {
@@ -81,7 +81,7 @@ const fixtureChat = {
               imageUri: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/vadim.jpg',
             }, {
               id: '6',
-              name: 'Biahaze',
+              name: 'Thomas',
               imageUri: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/biahaze.jpg',
             }],
             lastMessage: {
@@ -98,12 +98,12 @@ const fixtureChat = {
               imageUri: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/vadim.jpg',
             }, {
               id: '7',
-              name: 'Sus?',
+              name: 'Maud',
               imageUri: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/1.jpg',
             }],
             lastMessage: {
               id: '6',
-              content: 'Who sus?',
+              content: 'Who Maud?',
               createdAt: '2020-10-02T15:40:00.000Z',
             }
         }, 
@@ -150,7 +150,7 @@ const fixtureChat = {
               imageUri: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/vadim.jpg',
             }, {
               id: '10',
-              name: 'Angelina Jolie',
+              name: 'Elise',
               imageUri: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/4.jpg',
             }],
             lastMessage: {
