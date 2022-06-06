@@ -24,8 +24,6 @@ router.get("/list",verifyJWT, async (req, res) => {
     catch (error) {
         res.json(error)
     }
-    
-
 });
 
 

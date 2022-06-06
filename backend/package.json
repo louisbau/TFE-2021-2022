@@ -4,9 +4,10 @@
   "description": "server backend tfe",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --watch --verbose",
     "start": "node index.js",
-    "watch": "nodemon index.js"
+    "watch": "nodemon index.js",
+    "test:watch": "npm run test -- --watch"
   },
   "author": "louis bauchau",
   "license": "ISC",
@@ -22,5 +23,9 @@
     "nodemon": "^2.0.15",
     "sequelize": "^6.17.0",
     "socket.io": "^4.5.1"
+  },
+  "devDependencies": {
+    "jest": "^28.1.0",
+    "supertest": "^6.2.3"
   }
 }
