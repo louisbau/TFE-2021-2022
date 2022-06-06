@@ -20,7 +20,7 @@ async function  DefaultUser () {
     for (i in fixtureChat.Chatroom) {
         if (fixtureChat.Chatroom[i].users.length > 2) {
             const image = fixtureChat.Chatroom[i].imageUri ? fixtureChat.Chatroom[i].imageUri : null
-            const name = fixtureChat.Chatroom[i].name ? fixtureChat.Chatroom[i].name : 'Group'
+            const name = fixtureChat.Chatroom[i].name ? fixtureChat.Chatroom[i].name :'Classe 2TI'
             const chat = await ChatRoom.create(({
                 isGroupe: true,
                 name : name,
