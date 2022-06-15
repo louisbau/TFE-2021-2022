@@ -30,6 +30,7 @@ export const generateKeyPair = () => box.keyPair();
 
 export const encrypt = (secretOrSharedKey, json, key) => {
   const nonce = newNonce();
+  
   const messageUint8 = encodeUTF8(JSON.stringify(json));
   const encrypted = key
     ? box(messageUint8, nonce, key, secretOrSharedKey)
@@ -44,6 +45,7 @@ export const encrypt = (secretOrSharedKey, json, key) => {
 };
 
 export const decrypt = (secretOrSharedKey, messageWithNonce, key) => {
+  
   const messageWithNonceAsUint8Array = decodeBase64(messageWithNonce);
   const nonce = messageWithNonceAsUint8Array.slice(0, box.nonceLength);
   const message = messageWithNonceAsUint8Array.slice(
@@ -56,7 +58,8 @@ export const decrypt = (secretOrSharedKey, messageWithNonce, key) => {
     : box.open.after(message, nonce, secretOrSharedKey);
 
   if (!decrypted) {
-    throw new Error("Could not decrypt message");
+    
+    return Error("Could not decrypt message");
   }
 
   const base64DecryptedMessage = decodeUTF8(decrypted);

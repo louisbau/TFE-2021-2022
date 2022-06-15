@@ -108,6 +108,7 @@ const Messages = ({ message, user, isMeUserId, setOnReply }) => {
                     }
                     // decrypt message.content
                     else {
+                        
                         const sharedKey = box.before(stringToUint8Array(UserMessage.publicKey), myKey);
                         const decrypted = decrypt(sharedKey, message.content);
                         setDecryptedContent(decrypted.content);
