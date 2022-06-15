@@ -100,23 +100,22 @@ const Messages = ({ message, user, isMeUserId, setOnReply }) => {
                 setDecryptedContent(message.content);
                 return;
             }
-            return;
-        }
-        else{
-            const decryptMessage = async () => {
-                const myKey = await getMySecretKey(navigation);
-                if (!myKey) {
-                  return;
-                }
-                // decrypt message.content
-                else {
-                    const sharedKey = box.before(stringToUint8Array(UserMessage.publicKey), myKey);
-                    const decrypted = decrypt(sharedKey, message.content);
-                    setDecryptedContent(decrypted.content);
-                }
-                
-            };
-            decryptMessage()
+            else{
+                const decryptMessage = async () => {
+                    const myKey = await getMySecretKey(navigation);
+                    if (!myKey) {
+                    return;
+                    }
+                    // decrypt message.content
+                    else {
+                        const sharedKey = box.before(stringToUint8Array(UserMessage.publicKey), myKey);
+                        const decrypted = decrypt(sharedKey, message.content);
+                        setDecryptedContent(decrypted.content);
+                    }
+                    
+                };
+                decryptMessage()
+            }
         }
     
         
