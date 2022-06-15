@@ -2,7 +2,7 @@
   "expo": {
     "name": "OpenTalk App",
     "slug": "OpenTalkApp",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -27,7 +27,7 @@
         "NSPhotoLibraryUsageDescription": "Allow access to your photos, allow you to upload photos in the chat and also to change your profile pic"
       },
       "bundleIdentifier": "com.OpenTalkApp",
-      "buildNumber":"4"
+      "buildNumber":"5"
     },
     "android": {
       "adaptiveIcon": {
